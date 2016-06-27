@@ -1,0 +1,47 @@
+signInfo1,Welcome to the adventure.,Do you like this so far?,0
+signInfo1,Which pill do you want to take?,The blue or the red?,1
+signInfo1Red,You have chosen the red pill!,Wise decision,0
+signInfo1Blue,You have chosen the blue pill!,You will wake up knowing nothing,0
+signInfo1RedYes,You have told yes without,knowing what the Question was,0
+signInfo1RedYes,You stupid little piece,of shit!!,1
+signInfo1RedNo,You have told no which,was correct!,0
+signInfo1RedNo,You rock!,,1
+useAlcohol,What do you want to do?,,0
+useAlcoholDrink,this will make you drunk,but not high...,0
+useAlcoholDrop,dropping alcohol!,,0
+useApple,What do you want to do?,,0
+useAppleEat,Eating apple...,nothing happens!,0
+useAppleDrop,Dropping apple,,0
+useBacon,What do you want to do?,,0
+useBaconEat,Eating bacon...,ah this feels soo good,0
+useBaconDrop,Dropping bacon,,0
+useBanana,What do you want to do?,,0
+useBananaEat,Eating banana...,nothing happens!,0
+useBananaDrop,Dropping banana,,0
+useBeer,What do you want to do?,,0
+useBeerDrink,Drinking beer...,aaaah so fresh,0
+useBeerDrop,No one would drop a full,Beer! This is not acceptable,0
+useBurger,What do you want to do?,,0
+useBurgerEat,Eating burger...,this is tasty,0
+useBurgerDrop,Dropping burger,,0
+useCarrot,What do you want to do?,,0
+useCarrotEat,Eating carrot...,nothing happens,0
+useCarrotDrop,Dropping carrot,,0
+useCheese,What do you want to do?,,0
+useCheeseEat,Eating cheese...,nothing happens,0
+useCheeseDrop,Dropping cheese,,0
+useRibs,What do you want to do?,,0
+useRibsEat,Eating ribs...,ah men. i need more!,0
+useRibsDrop,Dropping ribs,,0
+useSeeds,What do you want to do?,,0
+useSeedsPlant,planting the seed,maby a joint tree will grow...,0
+useSeedsDrop,You cannot drop seeds.,They are very valuable,0
+useSteak,What do you want to do?,,0
+useSteakEat,Eating stake...,ah this feels soo good,0
+useSteakDrop,Dropping stake,,0
+useVeganJuice,What do you want to do?,,0
+useVeganJuiceDrink,no no no! i will not drink this!,,0
+useVeganJuiceDrop,Yes. i don't need this,stupid shit,0
+npcDoesNotInteract,He does not react,,0
+greenGuyNormalDialogue1,The Green Guy speaks,everything works!,0
+greenGuyNormalDialogue2,different Text,everything works!,0
