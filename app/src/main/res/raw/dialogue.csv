@@ -36,6 +36,9 @@ useSeedsDrop;BOTTOM
 useSteak;BOTTOM
 useSteakEat;BOTTOM
 useSteakDrop;BOTTOM
+smokeJoint;BOTTOM
+smokeJointNow;BOTTOM
+smokeJointLater;BOTTOM
 useVeganJuice;BOTTOM
 useVeganJuiceDrink;BOTTOM
 useVeganJuiceDrop;BOTTOM

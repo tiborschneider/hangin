@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 
 /**
  * Created by Tibor Schneider on 20.06.2016.
@@ -68,9 +69,9 @@ public abstract class GameObject {
         updateMovement();
     }
 
-    public void draw(Canvas canvas)
+    public void draw(Canvas canvas, Paint stonedPaint)
     {
-        canvas.drawBitmap(image, x* InterfaceElement.tileSize + tmpX + InterfaceElement.gameBorderSize, y* InterfaceElement.tileSize + tmpY + InterfaceElement.gameBorderSize, null);
+        canvas.drawBitmap(image, x* InterfaceElement.tileSize + tmpX + InterfaceElement.gameBorderSize, y* InterfaceElement.tileSize + tmpY + InterfaceElement.gameBorderSize, stonedPaint);
     }
 
     public void walk(Direction aDir)

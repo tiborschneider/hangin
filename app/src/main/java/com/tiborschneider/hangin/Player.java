@@ -16,7 +16,9 @@ public class Player extends GameObject {
     private static int meterMaximum = 100;
     private Inventory inventory;
     private int munchiesMeter = 100;
-    private int stonedMeter = 100;
+    private int stonedMeter = 0;
+    private int nextMunchiesMeter = 100;
+    private int nextStonedMeter = 0;
     private Bitmap[] imageArray = new Bitmap[numImages];
 
     public Player(GamePanel aGamePanel, Context aContext, int aX, int aY)
@@ -66,6 +68,13 @@ public class Player extends GameObject {
             motionCounter = 0;
             if (prevMotionCounter != 0)
                 updateImage();
+        }
+        if (nextStonedMeter > stonedMeter) {
+            gamePanel.redrawScene();
+            stonedMeter++;
+        } else if (nextStonedMeter < stonedMeter) {
+            gamePanel.redrawScene();
+            stonedMeter--;
         }
     }
 
@@ -129,15 +138,15 @@ public class Player extends GameObject {
 
     public boolean updateStonedMeter(int change)
     {
-        if (stonedMeter + change < meterMaximum) {
-            if (stonedMeter + change > 0) {
-                stonedMeter += change;
+        if (nextStonedMeter + change < meterMaximum) {
+            if (nextStonedMeter + change > 0) {
+                nextStonedMeter += change;
             } else {
-                stonedMeter = 0;
+                nextStonedMeter = 0;
                 return false;
             }
         } else {
-            stonedMeter = meterMaximum;
+            nextStonedMeter = meterMaximum;
         }
         return true;
     }
@@ -231,5 +240,21 @@ public class Player extends GameObject {
             default:
                 image = imageArray[0];
         }
+    }
+
+    public int getStonedMeter() {
+        return stonedMeter;
+    }
+
+    public int getMunchiesMeter() {
+        return munchiesMeter;
+    }
+
+    public void setMunchiesMeter(int munchiesMeter) {
+        this.munchiesMeter = munchiesMeter;
+    }
+
+    public void setStonedMeter(int stonedMeter) {
+        this.stonedMeter = stonedMeter;
     }
 }

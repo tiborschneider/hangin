@@ -53,6 +53,9 @@ public class Item {
                 break;
             case VEGAN_JUICE:
                 break;
+            case JOINT:
+                munchiesChange = -20;
+                stonedChange = 25;
         }
 
     }
@@ -95,6 +98,8 @@ public class Item {
                 return "steak";
             case VEGAN_JUICE:
                 return "vegan juice. stupid vegans...";
+            case JOINT:
+                return "Prerolled Joint";
         }
         return "none";
     }
@@ -143,6 +148,9 @@ public class Item {
                 break;
             case VEGAN_JUICE:
                 dialogueName = "useVeganJuice";
+                break;
+            case JOINT:
+                dialogueName = "smokeJoint";
                 break;
             default:
                 return;

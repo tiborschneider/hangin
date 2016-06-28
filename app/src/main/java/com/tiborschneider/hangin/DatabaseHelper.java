@@ -106,6 +106,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_PLAYER_SAVE_COL_X = "coord_x";
     public static final String TABLE_PLAYER_SAVE_COL_Y = "coord_y";
     public static final String TABLE_PLAYER_SAVE_COL_DIRECTION = "direction";
+    public static final String TABLE_PLAYER_SAVE_COL_MUNCHIES = "munchies_meter";
+    public static final String TABLE_PLAYER_SAVE_COL_STONED = "stoned_meter";
 
     public static final String TABLE_INVENTORY_NAME = "db_inventory";
     public static final String TABLE_INVENTORY_COL_ID = "id";
@@ -219,7 +221,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 TABLE_PLAYER_SAVE_COL_SCENE + " INTEGER, " +
                 TABLE_PLAYER_SAVE_COL_X + " INTEGER, " +
                 TABLE_PLAYER_SAVE_COL_Y + " INTEGER, " +
-                TABLE_PLAYER_SAVE_COL_DIRECTION + " STRING);";
+                TABLE_PLAYER_SAVE_COL_DIRECTION + " STRING, " +
+                TABLE_PLAYER_SAVE_COL_MUNCHIES + " INTEGER, " +
+                TABLE_PLAYER_SAVE_COL_STONED + " INTEGER);";
         db.execSQL(sqlQuery);
 
         sqlQuery = "CREATE TABLE " + TABLE_INVENTORY_NAME + " ( " +
@@ -625,6 +629,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             System.out.println("Reload Player State.");
             playerSave.moveToFirst();
             player.teleport(playerSave.getInt(2), playerSave.getInt(3), Direction.valueOf(playerSave.getString(4)));
+            player.setMunchiesMeter(playerSave.getInt(5));
+            player.setStonedMeter(playerSave.getInt(6));
             gamePanel.setCurrentScene(playerSave.getInt(1));
             initInventory();
         }
@@ -639,11 +645,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 TABLE_PLAYER_SAVE_COL_SCENE + ", " +
                 TABLE_PLAYER_SAVE_COL_X + ", " +
                 TABLE_PLAYER_SAVE_COL_Y + ", " +
-                TABLE_PLAYER_SAVE_COL_DIRECTION + ") VALUES (" +
+                TABLE_PLAYER_SAVE_COL_DIRECTION  + ", " +
+                TABLE_PLAYER_SAVE_COL_MUNCHIES + ", " +
+                TABLE_PLAYER_SAVE_COL_STONED + ") VALUES (" +
                 gamePanel.getCurrentScene() + ", " +
                 player.getX() + ", " +
                 player.getY() + ", '" +
-                player.getDirection().name() + "');";
+                player.getDirection().name() + "', " +
+                player.getMunchiesMeter() + ", " +
+                player.getStonedMeter() + ");";
         db.execSQL(insertSaveQuery);
     }
 

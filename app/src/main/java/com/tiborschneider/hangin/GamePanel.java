@@ -2,12 +2,16 @@ package com.tiborschneider.hangin;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 /**
  * Created by Tibor Schneider on 18.06.2016.
+ * Main Game calss which manages all objects
  */
 
 
@@ -21,6 +25,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     private GameScene[] scenes = new GameScene[numScenes];
     private NonPlayerCharacter[] npc = new NonPlayerCharacter[numNpc];
     private int currentScene = 0;
+    private int lastScene = -1;
     private Player player;
     private InteractionHandler interactionHandler;
     private DatabaseHelper databaseHelper;
@@ -119,13 +124,28 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         super.draw(canvas);
         if (canvas != null)
         {
-            scenes[currentScene].draw(canvas);
-            player.draw(canvas);
+            //get player's stoned level
+            float stonedLevel = ((float)player.getStonedMeter())/100;
+            Paint stonedPaint = new Paint();
+            ColorMatrix cm = new ColorMatrix();
+            cm.setSaturation(stonedLevel);
+            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(cm);
+            stonedPaint.setColorFilter(filter);
+
+            //draw scene if scene has changed
+            if (sceneHasChanged()) {
+                lastScene = currentScene;
+                //create Scene image
+                scenes[currentScene].createSceneImage(stonedPaint);
+            }
+
+            scenes[currentScene].draw(canvas, null);
+            player.draw(canvas, stonedPaint);
 
             //npc npc on the same GameScene
             for (int i = 0; i < numNpc; i++) {
                 if (npc[i] != null && npc[i].isOnScene(scenes[currentScene])) {
-                    npc[i].draw(canvas);
+                    npc[i].draw(canvas, stonedPaint);
                 }
             }
 
@@ -134,6 +154,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 
         }
+    }
+
+    private boolean sceneHasChanged()
+    {
+        //return true;
+        return currentScene != lastScene;
+    }
+
+    public void redrawScene()
+    {
+        lastScene = -1;
     }
 
     public boolean onTouchEvent(MotionEvent e)

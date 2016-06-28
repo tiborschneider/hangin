@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 
 /**
  * Created by Tibor Schneider on 19.06.2016.
@@ -17,6 +18,7 @@ public class GameScene {
     private Bitmap jumpImage;
     private Lootbox[] lootboxes = new Lootbox[maxNumLootbox];
     private GamePanel gamePanel;
+    private static Bitmap sceneImage = null;
 
 
     public GameScene(GamePanel aGamePanel, Context aContext)
@@ -26,6 +28,7 @@ public class GameScene {
         gameJumpHandler = new GameJumpHandler();
         jumpImage = BitmapFactory.decodeResource(context.getResources(),R.drawable.jump);
         jumpImage = InterfaceElement.resizeImage(jumpImage, InterfaceElement.tileSize, InterfaceElement.tileSize);
+        sceneImage = Bitmap.createBitmap(InterfaceElement.tileSize * InterfaceElement.numTiles, InterfaceElement.tileSize * InterfaceElement.numTiles, Bitmap.Config.ARGB_8888);
     }
 
     public void createNewTile(int x, int y, TileType setType, boolean isInteractive)
@@ -43,23 +46,39 @@ public class GameScene {
         tiles[x][y] = new StandardTile(context, setType);
     }
 
-    public void draw(Canvas canvas)
+    public void draw(Canvas canvas, Paint stonedPaint)
+    {
+        canvas.drawBitmap(sceneImage, InterfaceElement.gameBorderSize, InterfaceElement.gameBorderSize, stonedPaint);
+    }
+
+    public void drawOnScreenImage(Canvas canvas, Paint stonedPaint)
     {
         for (int ix = 0; ix < 16; ix++)
         {
             for (int iy = 0; iy < 16; iy++)
             {
-                canvas.drawBitmap(tiles[ix][iy].getBitmap(), ix* InterfaceElement.tileSize + InterfaceElement.gameBorderSize, iy* InterfaceElement.tileSize + InterfaceElement.gameBorderSize, null);
+                canvas.drawBitmap(tiles[ix][iy].getBitmap(), ix* InterfaceElement.tileSize, iy* InterfaceElement.tileSize, stonedPaint);
                 if (isJumpTile(ix, iy))
-                    canvas.drawBitmap(jumpImage, ix* InterfaceElement.tileSize + InterfaceElement.gameBorderSize, iy* InterfaceElement.tileSize + InterfaceElement.gameBorderSize, null);
+                    canvas.drawBitmap(jumpImage, ix* InterfaceElement.tileSize, iy* InterfaceElement.tileSize, stonedPaint);
             }
         }
 
         //draw Lootboxes
         for (int i = 0; i < numLootbox; i++) {
-            lootboxes[i].draw(canvas);
+            lootboxes[i].draw(canvas, stonedPaint);
         }
     }
+
+    public void createSceneImage(Paint stonedPaint) {
+        System.out.println("Update Scene Image...");
+        sceneImage = Bitmap.createBitmap(InterfaceElement.tileSize * InterfaceElement.numTiles, InterfaceElement.tileSize * InterfaceElement.numTiles, Bitmap.Config.ARGB_8888);
+        Canvas tempCanvas = new Canvas(sceneImage);
+        drawOnScreenImage(tempCanvas, stonedPaint);
+
+    }
+
+
+
 
     public boolean isWalkable(int aX, int aY)
     {

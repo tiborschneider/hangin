@@ -42,6 +42,9 @@ useSteakDrop;Dropping stake;;0
 useVeganJuice;What do you want to do?;;0
 useVeganJuiceDrink;no no no! i will not drink this!;;0
 useVeganJuiceDrop;Yes. i don't need this;stupid shit;0
+smokeJoint;Do you want to smoke the Joint;now?;0
+smokeJointNow;Ah this is perfect. Now,;let's chill!;0
+smokeJointLater;Ah come on! just a little;bit...;0
 npcDoesNotInteract;He does not react;;0
 greenGuyNormalDialogue1;The Green Guy speaks;everything works!;0
 greenGuyNormalDialogue2;different Text;everything works!;0

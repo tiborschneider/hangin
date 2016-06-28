@@ -11,6 +11,7 @@ import java.util.Random;
 
 /**
  * Created by Tibor Schneider on 19.06.2016.
+ * Abstract GameTile class to initialize the correct image
  */
 public abstract class GameTile {
     protected boolean walkable = true;
@@ -229,8 +230,7 @@ public abstract class GameTile {
     private int randInt(int min, int max)
     {
         Random rand = new Random();
-        int randomNum = rand.nextInt((max - min) + 1) + min;
-        return randomNum;
+        return rand.nextInt((max - min) + 1) + min;
     }
 
     public boolean setDialogue(Dialogue aDialogue)

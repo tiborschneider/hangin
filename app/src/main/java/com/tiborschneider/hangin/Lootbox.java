@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 
 /**
  * Created by Tibor Schneider on 24.06.2016.
@@ -24,8 +25,10 @@ public class Lootbox {
         context = aContext;
         x = aX;
         y = aY;
-        posX = InterfaceElement.gameBorderSize + x* InterfaceElement.tileSize;
-        posY = InterfaceElement.gameBorderSize + y* InterfaceElement.tileSize;
+        //posX = InterfaceElement.gameBorderSize + x* InterfaceElement.tileSize;
+        //posY = InterfaceElement.gameBorderSize + y* InterfaceElement.tileSize;
+        posX = x* InterfaceElement.tileSize;
+        posY = y* InterfaceElement.tileSize;
         image = BitmapFactory.decodeResource(context.getResources(), R.drawable.lootbox);
         image = InterfaceElement.resizeImage(image, InterfaceElement.tileSize, InterfaceElement.tileSize);
     }
@@ -66,9 +69,9 @@ public class Lootbox {
         return numItems;
     }
 
-    public void draw(Canvas canvas)
+    public void draw(Canvas canvas, Paint stonedPaint)
     {
-        canvas.drawBitmap(image, posX, posY, null);
+        canvas.drawBitmap(image, posX, posY, stonedPaint);
     }
 
     public Bitmap getImageOfItem(int index)

@@ -168,6 +168,7 @@ public class InteractionHandler {
 
     public void createDialogue(Dialogue aDialogue)
     {
+        gamePanel.redrawScene();
         interfaceDialogue = new InterfaceDialogue(gamePanel, context, aDialogue);
         interfaceActive = true;
         if (interfaceDialogue.mustSelectOption()) {
@@ -181,8 +182,10 @@ public class InteractionHandler {
             interfaceDialogue = null;
             controller.setWaitForInteractionRelease(false);
             interfaceActive = false;
+            gamePanel.redrawScene();
         } else if (interfaceDialogue.mustSelectOption()) {
             interfaceSelectionActive = true;
+            gamePanel.redrawScene();
         }
     }
 
@@ -193,6 +196,7 @@ public class InteractionHandler {
         if (interfaceDialogue.mustSelectOption()) {
             interfaceSelectionActive = true;
         }
+        gamePanel.redrawScene();
     }
 
     public Dialogue getDialogueFromDatabase(String dialogueName)
@@ -250,6 +254,7 @@ public class InteractionHandler {
             interfaceLootbox = null;
             controller.setWaitForInteractionRelease(false);
             interfaceActive = false;
+            gamePanel.redrawScene();
         }
     }
 
@@ -266,6 +271,7 @@ public class InteractionHandler {
         interfaceInventory = null;
         controller.setWaitForInteractionRelease(false);
         interfaceActive = false;
+        gamePanel.redrawScene();
     }
 
     private void useEquippedItem()

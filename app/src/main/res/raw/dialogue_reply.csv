@@ -26,3 +26,5 @@ useSteak;Eat;useSteakEat;CONSUME;NULL;0
 useSteak;Drop;useSteakDrop;DROP;NULL;0
 useVeganJuice;Drink;useVeganJuiceDrink;NULL;NULL;0
 useVeganJuice;Drop;useVeganJuiceDrop;DROP;NULL;0
+smokeJoint;Smoke now;smokeJointNow;CONSUME;NULL;0
+smokeJoint;Smoke later;smokeJointLater;NULL;NULL;0

@@ -2,6 +2,7 @@ package com.tiborschneider.hangin;
 
 /**
  * Created by Tibor Schneider on 24.06.2016.
+ * All item Types
  */
 public enum ItemType {
     ALCOHOL,
@@ -16,4 +17,6 @@ public enum ItemType {
     SEED,
     STEAK,
     VEGAN_JUICE,
+    JOINT,
+
 }
