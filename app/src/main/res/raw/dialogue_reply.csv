@@ -1,28 +1,28 @@
-signInfo1,Blue pill,signInfo1Blue,NULL,NULL,0
-signInfo1,Red pill,signInfo1Red,NULL,greenGuyRelations,1
-signInfo1Red,Yes,signInfo1RedYes,NULL,NULL,0
-signInfo1Red,No,signInfo1RedNo,NULL,NULL,0
-useAlcohol,Drink,useAlcoholDrink,NULL,NULL,0
-useAlcohol,Drop,useAlcoholDrop,DROP,NULL,0
-useApple,Eat,useAppleEat,CONSUME,NULL,0
-useApple,Drop,useAppleDrop,DROP,NULL,0
-useBacon,Eat,useBaconEat,CONSUME,NULL,0
-useBacon,Drop,useBaconDrop,DROP,NULL,0
-useBanana,Est,useBananaEat,CONSUME,NULL,0
-useBanana,Drop,useBananaDrop,DROP,NULL,0
-useBeer,Drink,useBeerDrink,CONSUME,NULL,0
-useBeer,Drop,useBeerDrop,DROP,NULL,0
-useBurger,Eat,useBurgerEat,CONSUME,NULL,0
-useBurger,Drop,useBurgerDrop,DROP,NULL,0
-useCarrot,Eat,useCarrotEat,CONSUME,NULL,0
-useCarrot,Drop,useCarrotDrop,DROP,NULL,0
-useCheese,Eat,useCheeseEat,CONSUME,NULL,0
-useCheese,Drop,useCheeseDrop,DROP,NULL,0
-useRibs,Eat,useRibsEat,CONSUME,NULL,0
-useRibs,Drop,useRibsDrop,DROP,NULL,0
-useSeeds,Plant seed,useSeedsPlant,PLANT_SEED,NULL,0
-useSeeds,Drop,useSeedsDrop,DROP,NULL,0
-useSteak,Eat,useSteakEat,CONSUME,NULL,0
-useSteak,Drop,useSteakDrop,DROP,NULL,0
-useVeganJuice,Drink,useVeganJuiceDrink,NULL,NULL,0
-useVeganJuice,Drop,useVeganJuiceDrop,DROP,NULL,0
+signInfo1;Blue pill;signInfo1Blue;NULL;NULL;0
+signInfo1;Red pill;signInfo1Red;NULL;greenGuyRelations;1
+signInfo1Red;Yes;signInfo1RedYes;NULL;NULL;0
+signInfo1Red;No;signInfo1RedNo;NULL;NULL;0
+useAlcohol;Drink;useAlcoholDrink;NULL;NULL;0
+useAlcohol;Drop;useAlcoholDrop;DROP;NULL;0
+useApple;Eat;useAppleEat;CONSUME;NULL;0
+useApple;Drop;useAppleDrop;DROP;NULL;0
+useBacon;Eat;useBaconEat;CONSUME;NULL;0
+useBacon;Drop;useBaconDrop;DROP;NULL;0
+useBanana;Est;useBananaEat;CONSUME;NULL;0
+useBanana;Drop;useBananaDrop;DROP;NULL;0
+useBeer;Drink;useBeerDrink;CONSUME;NULL;0
+useBeer;Drop;useBeerDrop;DROP;NULL;0
+useBurger;Eat;useBurgerEat;CONSUME;NULL;0
+useBurger;Drop;useBurgerDrop;DROP;NULL;0
+useCarrot;Eat;useCarrotEat;CONSUME;NULL;0
+useCarrot;Drop;useCarrotDrop;DROP;NULL;0
+useCheese;Eat;useCheeseEat;CONSUME;NULL;0
+useCheese;Drop;useCheeseDrop;DROP;NULL;0
+useRibs;Eat;useRibsEat;CONSUME;NULL;0
+useRibs;Drop;useRibsDrop;DROP;NULL;0
+useSeeds;Plant seed;useSeedsPlant;PLANT_SEED;NULL;0
+useSeeds;Drop;useSeedsDrop;DROP;NULL;0
+useSteak;Eat;useSteakEat;CONSUME;NULL;0
+useSteak;Drop;useSteakDrop;DROP;NULL;0
+useVeganJuice;Drink;useVeganJuiceDrink;NULL;NULL;0
+useVeganJuice;Drop;useVeganJuiceDrop;DROP;NULL;0

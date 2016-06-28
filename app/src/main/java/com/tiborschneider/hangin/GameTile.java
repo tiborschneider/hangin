@@ -195,7 +195,6 @@ public abstract class GameTile {
 
         //resize Image
         float scale = ((float) InterfaceElement.tileSize) / image.getWidth();
-        System.out.println("calculated Scale = " + scale + " (from TileSize = " + InterfaceElement.tileSize + " ) on image width = " + image.getWidth() + " and height = " + image.getHeight());
         Matrix matrix = new Matrix();
         matrix.postScale(scale,scale);
         image = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, false);
