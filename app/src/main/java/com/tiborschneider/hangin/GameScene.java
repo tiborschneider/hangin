@@ -13,7 +13,7 @@ public class GameScene {
     public static int maxNumLootbox = 10;
     private int numLootbox = 0;
     private Context context;
-    private GameTile[][] tiles = new GameTile[InterfaceElement.numTiles][InterfaceElement.numTiles];;
+    private GameTile[][] tiles = new GameTile[InterfaceElement.numTiles][InterfaceElement.numTiles];
     private GameJumpHandler gameJumpHandler;
     private Bitmap jumpImage;
     private Lootbox[] lootboxes = new Lootbox[maxNumLootbox];
@@ -70,7 +70,6 @@ public class GameScene {
     }
 
     public void createSceneImage(Paint stonedPaint) {
-        System.out.println("Update Scene Image...");
         sceneImage = Bitmap.createBitmap(InterfaceElement.tileSize * InterfaceElement.numTiles, InterfaceElement.tileSize * InterfaceElement.numTiles, Bitmap.Config.ARGB_8888);
         Canvas tempCanvas = new Canvas(sceneImage);
         drawOnScreenImage(tempCanvas, stonedPaint);
@@ -247,8 +246,6 @@ public class GameScene {
             case RIGHT:
                 aX++;
                 break;
-            case NDEF:
-                return false;
         }
         return checkLootbox(aX, aY);
     }

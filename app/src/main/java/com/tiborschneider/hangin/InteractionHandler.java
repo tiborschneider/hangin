@@ -219,7 +219,7 @@ public class InteractionHandler {
                 tmpX--;
                 break;
             case RIGHT:
-                tmpY++;
+                tmpX++;
                 break;
         }
         if (scene.checkLootbox(tmpX, tmpY)) {
@@ -244,7 +244,7 @@ public class InteractionHandler {
                 tmpX--;
                 break;
             case RIGHT:
-                tmpY++;
+                tmpX++;
                 break;
         }
         if (scene.checkLootbox(tmpX, tmpY)) {

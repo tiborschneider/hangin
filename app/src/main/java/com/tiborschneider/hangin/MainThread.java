@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Tibor Schneider on 18.06.2016.
+ * Main Thread
  */
 public class MainThread extends Thread
 {

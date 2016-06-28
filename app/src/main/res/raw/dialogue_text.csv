@@ -45,6 +45,15 @@ useVeganJuiceDrop;Yes. i don't need this;stupid shit;0
 smokeJoint;Do you want to smoke the Joint;now?;0
 smokeJointNow;Ah this is perfect. Now,;let's chill!;0
 smokeJointLater;Ah come on! just a little;bit...;0
+smokeBigJoint;Do you want to smoke this big;joint now?;0
+smokeBigJointNow;Wow this is good stuff man!;And it draws so good.;0
+smokeBigJointLater;I can't wait to light that;motherfucker up!;0
+smokeUglyJoint;Do you want to smoke this ugly;Jointnow?;0
+smokeUglyJointNow;Well, this is not so pleasant,;but still better than nothing;0
+smokeUglyJointLater;Yes, probably a good idea.;I'll might find a better one;0
+rollOne;Do you want to roll a joint?;;0
+rollOneYes;Sure, lets do this;;0
+rollOneNo;Well, an other time;;0
 npcDoesNotInteract;He does not react;;0
 greenGuyNormalDialogue1;The Green Guy speaks;everything works!;0
 greenGuyNormalDialogue2;different Text;everything works!;0

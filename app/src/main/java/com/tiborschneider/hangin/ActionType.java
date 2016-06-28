@@ -8,5 +8,6 @@ public enum ActionType
     DROP,
     CONSUME,
     PLANT_SEED,
+    ROLL,
     NULL,
 }

@@ -31,6 +31,9 @@ public class Action {
             case PLANT_SEED:
                 plantSeed();
                 break;
+            case ROLL:
+                roll();
+                break;
             case NULL:
                 //do nothing
                 break;
@@ -54,5 +57,20 @@ public class Action {
     private void plantSeed()
     {
         //TODO: plant seed
+    }
+
+    private void roll()
+    {
+        Item item = gamePanel.getPlayer().getEquippedItem();
+        if (SpecialItem.isSpecialItem(item.getItemType())) {
+            //add a normal Joint to Inventory
+            gamePanel.getPlayer().getInventory().addItem(Item.createNewItem(gamePanel.getContext(), ItemType.JOINT));
+
+            //reduce Number of Item used
+            if (!item.useOnce()) {
+                //delete Item
+                gamePanel.getPlayer().getInventory().useItem(item);
+            }
+        }
     }
 }

@@ -46,7 +46,7 @@ public class Lootbox {
     public boolean addItem(ItemType aType)
     {
         if (numItems < maxNumItem) {
-            items[numItems++] = new Item(context, aType);
+            items[numItems++] = Item.createNewItem(context, aType);
             return true;
         } else {
             return false;

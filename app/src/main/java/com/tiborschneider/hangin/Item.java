@@ -13,6 +13,7 @@ public class Item {
     protected Context context;
     protected int munchiesChange = 0;
     protected int stonedChange = 0;
+    protected boolean isSpecial = false;
 
     public Item(Context aContext, ItemType aType)
     {
@@ -56,6 +57,15 @@ public class Item {
             case JOINT:
                 munchiesChange = -20;
                 stonedChange = 25;
+                break;
+            case BIG_JOINT:
+                munchiesChange = -25;
+                stonedChange = 40;
+                break;
+            case UGLY_JOINT:
+                munchiesChange = -15;
+                stonedChange = 10;
+                break;
         }
 
     }
@@ -99,7 +109,11 @@ public class Item {
             case VEGAN_JUICE:
                 return "vegan juice. stupid vegans...";
             case JOINT:
-                return "Prerolled Joint";
+                return "normal joint";
+            case BIG_JOINT:
+                return "really big joint";
+            case UGLY_JOINT:
+                return "ugly joint";
         }
         return "none";
     }
@@ -152,6 +166,12 @@ public class Item {
             case JOINT:
                 dialogueName = "smokeJoint";
                 break;
+            case BIG_JOINT:
+                dialogueName = "smokeBigJoint";
+                break;
+            case UGLY_JOINT:
+                dialogueName = "smokeUglyJoint";
+                break;
             default:
                 return;
         }
@@ -166,5 +186,28 @@ public class Item {
     public int getStonedChange()
     {
         return stonedChange;
+    }
+
+    public static Item createNewItem(Context aContext, ItemType aType)
+    {
+        if (SpecialItem.isSpecialItem(aType))
+            return new SpecialItem(aContext, aType);
+        else
+            return new Item(aContext, aType);
+    }
+
+    public boolean useOnce()
+    {
+        return false;
+    }
+
+    public void setCount(int count)
+    {
+        //do nothing;
+    }
+
+    public int getCount()
+    {
+        return 0;
     }
 }

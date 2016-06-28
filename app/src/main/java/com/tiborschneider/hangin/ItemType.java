@@ -18,5 +18,7 @@ public enum ItemType {
     STEAK,
     VEGAN_JUICE,
     JOINT,
-
+    UGLY_JOINT,
+    BIG_JOINT,
+    WEED_BAG,
 }

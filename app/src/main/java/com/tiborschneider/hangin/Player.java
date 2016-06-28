@@ -256,5 +256,6 @@ public class Player extends GameObject {
 
     public void setStonedMeter(int stonedMeter) {
         this.stonedMeter = stonedMeter;
+        this.nextStonedMeter = stonedMeter;
     }
 }
