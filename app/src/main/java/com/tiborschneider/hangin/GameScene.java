@@ -25,6 +25,7 @@ public class GameScene {
         context = aContext;
         gameJumpHandler = new GameJumpHandler();
         jumpImage = BitmapFactory.decodeResource(context.getResources(),R.drawable.jump);
+        jumpImage = InterfaceElement.resizeImage(jumpImage, InterfaceElement.tileSize, InterfaceElement.tileSize);
     }
 
     public void createNewTile(int x, int y, TileType setType, boolean isInteractive)

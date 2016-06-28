@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.text.TextPaint;
 
 /**
@@ -51,7 +52,6 @@ public class InterfaceDialogue extends InterfaceElement{
                 y = x;
         }
 
-        backgroundImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_dialog_window);
         xPosTextLine1 = x + borderWidth + innerTextMargin;
         xPosTextLine2 = xPosTextLine1;
         yPosTextLine1 = y + borderWidth + innerTextMargin + normalTextSize +textOffset;
@@ -61,6 +61,9 @@ public class InterfaceDialogue extends InterfaceElement{
 
         dialogue.resetDialogue();
         currentText = dialogue.getNextText();
+
+        backgroundImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_dialog_window);
+        backgroundImage = resizeImage(backgroundImage, InterfaceElement.dialogueWidth, InterfaceElement.dialogueHeight);
     }
 
     private void initializeReplyDialogue()
@@ -69,14 +72,6 @@ public class InterfaceDialogue extends InterfaceElement{
 
         if (numReplies != 0)
         {
-            //initialize reply window
-            selectionArrow = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_select);
-            selectionBackground = BitmapFactory.decodeResource(context.getResources(), dialogue.getReplyBackgroundId(context));
-            xPosReply = x + dialogueWidth - dialogueReplyWidth;
-            xPosReplyText = xPosReply + borderWidth + 2*innerTextMargin + selectionWidth;
-            xPosArrow = xPosReply + borderWidth + innerTextMargin;
-            replyText = dialogue.getReplyText();
-
             switch (numReplies) {
                 case 1:
                     dialogueReplyHeight = dialogueReply1Height;
@@ -91,6 +86,18 @@ public class InterfaceDialogue extends InterfaceElement{
                     dialogueReplyHeight = dialogueReply4Height;
                     break;
             }
+
+            //initialize reply window
+            selectionArrow = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_select);
+            selectionArrow = resizeImage(selectionArrow, InterfaceElement.selectionWidth, InterfaceElement.selectionHeight);
+
+            selectionBackground = BitmapFactory.decodeResource(context.getResources(), dialogue.getReplyBackgroundId(context));
+            selectionBackground = resizeImage(selectionBackground, InterfaceElement.dialogueReplyWidth, dialogueReplyHeight);
+
+            xPosReply = x + dialogueWidth - dialogueReplyWidth;
+            xPosReplyText = xPosReply + borderWidth + 2*innerTextMargin + selectionWidth;
+            xPosArrow = xPosReply + borderWidth + innerTextMargin;
+            replyText = dialogue.getReplyText();
 
             int tmpBorderWidth = 0;
             if (dialogue.getDialoguePosition() == DialoguePosition.BOTTOM) {

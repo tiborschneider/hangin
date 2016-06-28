@@ -19,6 +19,7 @@ public class Item {
         itemType = aType;
         context = aContext;
         image = BitmapFactory.decodeResource(context.getResources(), getItemId());
+        image = InterfaceElement.resizeImage(image, InterfaceElement.itemSize, InterfaceElement.itemSize);
         switch (itemType) {
             case ALCOHOL:
                 break;

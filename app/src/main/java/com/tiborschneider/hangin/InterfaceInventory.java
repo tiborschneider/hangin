@@ -29,7 +29,11 @@ public class InterfaceInventory extends InterfaceElement {
         context = aContext;
         inventory = aInventory;
         image = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_inventory_window);
+        image = resizeImage(image, InterfaceElement.inventoryWidth, InterfaceElement.inventoryHeight);
+
         selectionImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_inventory_select);
+        selectionImage = resizeImage(selectionImage, InterfaceElement.inventorySelectionWidth, InterfaceElement.inventorySelectionHeight);
+
         x = (GamePanel.screenWidth - inventoryWidth) / 2;
         y = x;
         xPosTitleText = x + borderWidth + innerTextMargin;

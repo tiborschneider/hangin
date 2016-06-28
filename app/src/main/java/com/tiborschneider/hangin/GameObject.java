@@ -50,19 +50,16 @@ public abstract class GameObject {
     {
         tmpX += dx;
         tmpY += dy;
-        if (tmpX == 0)
+        if ((dx > 0 && tmpX + speed > 0) || (dx < 0 && tmpX - speed < 0)) //(tmpX == 0)
         {
             dx = 0;
+            tmpX = 0;
         }
-        if (tmpY == 0)
+        if ((dy > 0 && tmpY + speed > 0) || (dy < 0 && tmpY - speed < 0)) //(tmpY == 0)
         {
             dy = 0;
+            tmpY = 0;
         }
-
-        if (tmpX == 0)
-            dx = 0;
-        if (tmpY == 0)
-            dy = 0;
 
     }
 
@@ -80,7 +77,7 @@ public abstract class GameObject {
     {
         if (dx == 0 && dy == 0 && tmpX == 0 && tmpY == 0) {
             direction = aDir;
-            image = BitmapFactory.decodeResource(context.getResources(), getImageId());
+            updateImage();
             switch (aDir) {
                 case UP:
                     if (gamePanel.isWalkable(x, y - 1) && gamePanel.canWalkUp(x, y) && gamePanel.canWalkDown(x, y-1)) {
@@ -122,11 +119,9 @@ public abstract class GameObject {
         }
     }
 
-    public int getImageId() { return 0; }
-
     public void updateImage()
     {
-        image = BitmapFactory.decodeResource(context.getResources(), getImageId());
+        //has to be overridden in sub Class!
     }
 
 }

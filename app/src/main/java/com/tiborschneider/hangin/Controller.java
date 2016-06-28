@@ -42,12 +42,19 @@ public class Controller {
         player  = aPlayer;
         interactionHandler  = aInteractionHandler;
         imageButtonUp        = BitmapFactory.decodeResource(context.getResources(), R.drawable.button_up);
+        imageButtonUp        = InterfaceElement.resizeImage(imageButtonUp, buttonArrowWidth, buttonArrowLength);
         imageButtonDown      = BitmapFactory.decodeResource(context.getResources(), R.drawable.button_down);
+        imageButtonDown      = InterfaceElement.resizeImage(imageButtonDown, buttonArrowWidth, buttonArrowLength);
         imageButtonLeft      = BitmapFactory.decodeResource(context.getResources(), R.drawable.button_left);
+        imageButtonLeft      = InterfaceElement.resizeImage(imageButtonLeft, buttonArrowLength, buttonArrowWidth);
         imageButtonRight     = BitmapFactory.decodeResource(context.getResources(), R.drawable.button_right);
+        imageButtonRight     = InterfaceElement.resizeImage(imageButtonRight, buttonArrowLength, buttonArrowWidth);
         imageButtonInteract  = BitmapFactory.decodeResource(context.getResources(), R.drawable.button_interact);
+        imageButtonInteract  = InterfaceElement.resizeImage(imageButtonInteract, actionButtonWidth, actionButtonWidth);
         imageButtonDrop      = BitmapFactory.decodeResource(context.getResources(), R.drawable.button_drop);
+        imageButtonDrop      = InterfaceElement.resizeImage(imageButtonDrop, actionButtonWidth, actionButtonWidth);
         imageButtonInventory = BitmapFactory.decodeResource(context.getResources(), R.drawable.button_inventory);
+        imageButtonInventory = InterfaceElement.resizeImage(imageButtonInventory, buttonInventoryWidth, buttonInventoryWidth);
     }
 
     public void draw(Canvas canvas)
@@ -154,5 +161,22 @@ public class Controller {
             return Button.INVENTORY;
 
         return Button.NDEF;
+    }
+
+    public static void initSizes(float aFactor)
+    {
+        borderSize = (int)(0.5+aFactor*borderSize);
+        baseSpace1 = (int)(0.5+aFactor*baseSpace1);
+        baseSpace2 = (int)(0.5+aFactor*baseSpace2);
+        spread = (int)(0.5+aFactor*spread);
+        buttonArrowLength = (int)(0.5+aFactor*buttonArrowLength);
+        buttonArrowWidth = (int)(0.5+aFactor*buttonArrowWidth);
+        arrowRadius = (int)(0.5+aFactor*arrowRadius);
+        actionRadius = (int)(0.5+aFactor*actionRadius);
+        actionButtonWidth = (int)(0.5+aFactor*actionButtonWidth);
+        actionButtonSpace = (int)(0.5+aFactor*actionButtonSpace);
+        buttonInventoryWidth = (int)(0.5+aFactor*buttonInventoryWidth);
+        inventoryRadius = (int)(0.5+aFactor*inventoryRadius);
+        equippedItemMargin = (int)(0.5+aFactor*equippedItemMargin);
     }
 }

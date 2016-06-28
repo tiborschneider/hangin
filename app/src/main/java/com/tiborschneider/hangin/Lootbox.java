@@ -27,6 +27,7 @@ public class Lootbox {
         posX = InterfaceElement.gameBorderSize + x* InterfaceElement.tileSize;
         posY = InterfaceElement.gameBorderSize + y* InterfaceElement.tileSize;
         image = BitmapFactory.decodeResource(context.getResources(), R.drawable.lootbox);
+        image = InterfaceElement.resizeImage(image, InterfaceElement.tileSize, InterfaceElement.tileSize);
     }
 
     public boolean addItem(Item aItem)

@@ -39,18 +39,23 @@ public class InterfaceLootbox extends InterfaceElement {
         switch (lootbox.getNumItems()) {
             case 1:
                 image = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_lootbox1);
+                image = resizeImage(image, lootboxWidth, lootboxHeight1);
                 break;
             case 2:
                 image = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_lootbox2);
+                image = resizeImage(image, lootboxWidth, lootboxHeight2);
                 break;
             case 3:
                 image = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_lootbox3);
+                image = resizeImage(image, lootboxWidth, lootboxHeight3);
                 break;
             case 4:
                 image = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_lootbox4);
+                image = resizeImage(image, lootboxWidth, lootboxHeight4);
                 break;
             case 5:
                 image = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_lootbox5);
+                image = resizeImage(image, lootboxWidth, lootboxHeight5);
                 break;
         }
     }

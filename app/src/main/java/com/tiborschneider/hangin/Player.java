@@ -3,11 +3,13 @@ package com.tiborschneider.hangin;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 
 /**
  * Created by Tibor Schneider on 19.06.2016.
  */
 public class Player extends GameObject {
+    public static int numImages = 8;
     private int motionCounter = 0;
     private int prevMotionCounter = 0;
     private int animationSpeed = 20;
@@ -15,13 +17,33 @@ public class Player extends GameObject {
     private Inventory inventory;
     private int munchiesMeter = 100;
     private int stonedMeter = 100;
+    private Bitmap[] imageArray = new Bitmap[numImages];
 
     public Player(GamePanel aGamePanel, Context aContext, int aX, int aY)
     {
         super(aGamePanel, aContext, Direction.DOWN, aX, aY, 4);
         context = aContext;
-        updateImage();
         inventory = new Inventory(context, gamePanel);
+
+        //get all Images
+        imageArray[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_up1);
+        imageArray[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_up2);
+        imageArray[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_down1);
+        imageArray[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_down2);
+        imageArray[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_left1);
+        imageArray[5] = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_left2);
+        imageArray[6] = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_right1);
+        imageArray[7] = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_right2);
+
+        //scale all Images
+        for (int i = 0; i < numImages; i++)
+        {
+            float scale = ((float) InterfaceElement.tileSize) / imageArray[i].getWidth();
+            Matrix matrix = new Matrix();
+            matrix.postScale(scale,scale);
+            imageArray[i] = Bitmap.createBitmap(imageArray[i], 0, 0, imageArray[i].getWidth(), imageArray[i].getHeight(), matrix, false);
+        }
+        updateImage();
     }
 
     @Override public void update()
@@ -45,35 +67,6 @@ public class Player extends GameObject {
             if (prevMotionCounter != 0)
                 updateImage();
         }
-    }
-
-
-    @Override public int getImageId()
-    {
-        String imageName;
-        int imageNr;
-        if (motionCounter < animationSpeed / 2 )
-            imageNr = 1;
-        else
-            imageNr = 2;
-        switch (direction)
-        {
-            case UP:
-                imageName = "player_up" + imageNr;
-                break;
-            case DOWN:
-                imageName = "player_down" + imageNr;
-                break;
-            case LEFT:
-                imageName = "player_left" + imageNr;
-                break;
-            case RIGHT:
-                imageName = "player_right" + imageNr;
-                break;
-            default:
-                imageName = "player_down" + imageNr;
-        }
-        return context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
     }
 
     public boolean hasItem(Item aItem)
@@ -170,7 +163,7 @@ public class Player extends GameObject {
     {
         if (dx == 0 && dy == 0 && tmpX == 0 && tmpY == 0) {
             direction = aDirection;
-            image = BitmapFactory.decodeResource(context.getResources(), getImageId());
+            updateImage();
             switch (aDirection) {
                 case UP:
                     if (gamePanel.isWalkable(x, y - 1) && gamePanel.canWalkUp(x, y) && gamePanel.canWalkDown(x, y-1)) {
@@ -210,6 +203,33 @@ public class Player extends GameObject {
                     break;
             }
             gamePanel.getStateHandler().savePlayerState();
+        }
+    }
+
+    @Override
+    public void updateImage()
+    {
+        int imageNr;
+        if (motionCounter < animationSpeed / 2 )
+            imageNr = 0;
+        else
+            imageNr = 1;
+        switch (direction)
+        {
+            case UP:
+                image = imageArray[imageNr];
+                break;
+            case DOWN:
+                image = imageArray[2+imageNr];
+                break;
+            case LEFT:
+                image = imageArray[4+imageNr];
+                break;
+            case RIGHT:
+                image = imageArray[6+imageNr];
+                break;
+            default:
+                image = imageArray[0];
         }
     }
 }
