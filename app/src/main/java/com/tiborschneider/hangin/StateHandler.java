@@ -51,7 +51,7 @@ public class StateHandler {
         if (!inventory.hasItem(aItem))
             databaseHelper.deleteInventoryItem(aItem.getItemType().name());
         else
-            databaseHelper.setInventoryItemCount(aItem.getItemType().name(), inventory.getItemCount(inventory.getItemIndex(aItem)));
+            databaseHelper.setInventoryItemCount(aItem.getItemType().name(), inventory.getItemCount(inventory.getItemIndex(aItem)), aItem.getNumUses());
     }
 
     public void addItemToInventory(Item aItem)
@@ -59,9 +59,21 @@ public class StateHandler {
         Inventory inventory = gamePanel.getPlayer().getInventory();
         int newItemCount = inventory.getItemCount(inventory.getItemIndex(aItem));
         if (newItemCount != 1)
-            databaseHelper.setInventoryItemCount(aItem.getItemType().name(), newItemCount);
+            databaseHelper.setInventoryItemCount(aItem.getItemType().name(), newItemCount, aItem.getNumUses());
         else
-            databaseHelper.addNewItemToInventory(aItem.getItemType().name(), 1);
+            databaseHelper.addNewItemToInventory(aItem.getItemType().name(), 1, aItem.getNumUses());
+    }
+
+    public void updateDatabaseInventory()
+    {
+        Inventory inventory = gamePanel.getPlayer().getInventory();
+        for (int i = 0; i < inventory.getNumEntries(); i++) {
+            Item item = inventory.getItem(i);
+            if (item.getItemType() == ItemType.WEED_BAG) {
+                databaseHelper.setInventoryItemCount(item.getItemType().name(), inventory.getItemCount(i), item.getNumUses());
+            }
+        }
+
     }
 
     public void savePlayerState()

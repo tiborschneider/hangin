@@ -26,7 +26,7 @@ public class Inventory {
         //TODO: Create this method
     }
 
-    public boolean addItem(Item aItem)
+    public boolean addItem(Item aItem, boolean addToinventory)
     {
         boolean itemFound = false;
         int index = 0;
@@ -44,7 +44,8 @@ public class Inventory {
                 return false;
             entries[numEntries++] = new InventoryEntry(aItem, 1);
         }
-        gamePanel.getStateHandler().addItemToInventory(aItem);
+        if (addToinventory)
+            gamePanel.getStateHandler().addItemToInventory(aItem);
         return true;
     }
 
@@ -55,6 +56,7 @@ public class Inventory {
                 return true;
         return false;
     }
+
 
     public boolean useItem(Item aItem)
     {
@@ -72,6 +74,7 @@ public class Inventory {
                 deleteEntry(index);
             else {
                 entries[index].count--;
+                entries[index].resetItem();
             }
             gamePanel.getStateHandler().deleteItemFromInventory(aItem);
             return true;
@@ -89,8 +92,21 @@ public class Inventory {
 
     public int getItemCount(int index)
     {
-        if (index < numEntries && index >= 0)
+        if (index < numEntries && index >= 0) {
             return entries[index].count;
+        }
+        return 0;
+    }
+
+    public int getItemUsages(int index)
+    {
+        if (index < numEntries && index >= 0) {
+            if (SpecialItem.isSpecialItem(entries[index].getItem().getItemType())) {
+                return (entries[index].count - 1) * entries[index].getItem().getMaxNumUses() + entries[index].getItem().getNumUses();
+            } else {
+                return entries[index].count;
+            }
+        }
         return 0;
     }
 

@@ -53,6 +53,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_DIAL_TEXT_COL_TEXT1 = "text1";
     public static final String TABLE_DIAL_TEXT_COL_TEXT2 = "text2";
     public static final String TABLE_DIAL_TEXT_COL_ORDER = "order_number";
+    public static final String TABLE_DIAL_TEXT_COL_ACTION = "action";
+    public static final String TABLE_DIAL_TEXT_COL_SET_VALUE = "set_value";
+    public static final String TABLE_DIAL_TEXT_COL_SET_STATE = "set_state";
 
     public static final String TABLE_DIAL_REPLY_NAME = "db_dialogue_reply";
     public static final String TABLE_DIAL_REPLY_COL_ID = "id";
@@ -113,6 +116,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_INVENTORY_COL_ID = "id";
     public static final String TABLE_INVENTORY_COL_ITEM = "item_name";
     public static final String TABLE_INVENTORY_COL_NUM = "quantity";
+    public static final String TABLE_INVENTORY_COL_USES = "special_item_uses";
 
     public DatabaseHelper(Context aContext, GamePanel aGamePanel)
     {
@@ -162,7 +166,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 TABLE_DIAL_TEXT_COL_DIALOGUE + " STRING, " +
                 TABLE_DIAL_TEXT_COL_TEXT1 + " STRING, " +
                 TABLE_DIAL_TEXT_COL_TEXT2 + " STRING, " +
-                TABLE_DIAL_TEXT_COL_ORDER + " INTEGER);";
+                TABLE_DIAL_TEXT_COL_ORDER + " INTEGER, " +
+                TABLE_DIAL_TEXT_COL_ACTION + " STRING, " +
+                TABLE_DIAL_TEXT_COL_SET_STATE + " STRING, " +
+                TABLE_DIAL_TEXT_COL_SET_VALUE + " INTEGER);";
         db.execSQL(sqlQuery);
 
         sqlQuery = "CREATE TABLE " + TABLE_DIAL_REPLY_NAME + " ( " +
@@ -228,8 +235,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         sqlQuery = "CREATE TABLE " + TABLE_INVENTORY_NAME + " ( " +
                 TABLE_INVENTORY_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                TABLE_INVENTORY_COL_ITEM + " INTEGER, " +
-                TABLE_INVENTORY_COL_NUM + " STRING);";
+                TABLE_INVENTORY_COL_ITEM + " STRING, " +
+                TABLE_INVENTORY_COL_NUM + " INTEGER, " +
+                TABLE_INVENTORY_COL_USES + " INTEGER);";
         db.execSQL(sqlQuery);
 
 
@@ -371,6 +379,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(TABLE_DIAL_TEXT_COL_TEXT1, row[1]);
             contentValues.put(TABLE_DIAL_TEXT_COL_TEXT2, row[2]);
             contentValues.put(TABLE_DIAL_TEXT_COL_ORDER, Integer.parseInt(row[3]));
+            contentValues.put(TABLE_DIAL_TEXT_COL_ACTION, row[4]);
+            contentValues.put(TABLE_DIAL_TEXT_COL_SET_STATE, row[5]);
+            contentValues.put(TABLE_DIAL_TEXT_COL_SET_VALUE, Integer.parseInt(row[6]));
             db.insert(TABLE_DIAL_TEXT_NAME, null, contentValues);
         }
 
@@ -570,7 +581,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (cursorDialogueText.getCount() != 0) {
                 //add Dialogue Text
                 while (cursorDialogueText.moveToNext())
-                    dialogue.addTextElement(cursorDialogueText.getString(2), cursorDialogueText.getString(3));
+                    dialogue.addTextElement(cursorDialogueText.getString(2), cursorDialogueText.getString(3), cursorDialogueText.getString(5), cursorDialogueText.getString(6), cursorDialogueText.getInt(7));
 
                 //add Dialogue Replies
                 Cursor cursorDialogueReply = getDialogueReplyCursor(aDialogue);
@@ -665,7 +676,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (savedInventory.getCount() > 0) {
             while (savedInventory.moveToNext()) {
                 for (int i = 0; i < savedInventory.getInt(2); i++) {
-                    inventory.addItem(new Item(context, ItemType.valueOf(savedInventory.getString(1))));
+                    Item newItem = Item.createNewItem(context, ItemType.valueOf(savedInventory.getString(1)));
+                    inventory.addItem(newItem, false);
+                    if (SpecialItem.isSpecialItem(newItem.getItemType())) {
+                        newItem.setCount(savedInventory.getInt(3));
+                    }
                 }
             }
         }
@@ -678,17 +693,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(deleteItemQuery);
     }
 
-    public void setInventoryItemCount(String aItem, int aCount)
+    public void setInventoryItemCount(String aItem, int aCount, int aNumUses)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         String updateItemQuery = "UPDATE " + TABLE_INVENTORY_NAME + " SET " + TABLE_INVENTORY_COL_NUM + " = " + aCount + " WHERE " + TABLE_INVENTORY_COL_ITEM + " = '" + aItem + "';";
-        db.rawQuery(updateItemQuery, null);
+        db.execSQL(updateItemQuery);
+        if (SpecialItem.isSpecialItem(ItemType.valueOf(aItem))) {
+            updateItemQuery = "UPDATE " + TABLE_INVENTORY_NAME + " SET " + TABLE_INVENTORY_COL_USES + " = " + aNumUses + " WHERE " + TABLE_INVENTORY_COL_ITEM + " = '" + aItem + "';";
+        }
+        db.execSQL(updateItemQuery);
     }
 
-    public void addNewItemToInventory(String aItem, int aCount)
+    public void addNewItemToInventory(String aItem, int aCount, int aNumUses)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        String insertItemQuery = "INSERT INTO " + TABLE_INVENTORY_NAME + " (" + TABLE_INVENTORY_COL_ITEM + ", " + TABLE_INVENTORY_COL_NUM + ") VALUES ('" + aItem + "', " + aCount + ");";
+        String insertItemQuery = "INSERT INTO " + TABLE_INVENTORY_NAME + " (" + TABLE_INVENTORY_COL_ITEM + ", " + TABLE_INVENTORY_COL_NUM + ", " + TABLE_INVENTORY_COL_USES + ") VALUES ('" + aItem + "', " + aCount + ", " + aNumUses + ");";
         db.execSQL(insertItemQuery);
     }
 

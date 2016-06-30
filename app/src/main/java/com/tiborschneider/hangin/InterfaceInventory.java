@@ -22,6 +22,7 @@ public class InterfaceInventory extends InterfaceElement {
     private Context context;
     private Bitmap image;
     private Bitmap selectionImage;
+    private Bitmap darkShadow;
     private int currentIndex = 0;
 
     public InterfaceInventory(Context aContext, Inventory aInventory)
@@ -34,27 +35,34 @@ public class InterfaceInventory extends InterfaceElement {
         selectionImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_inventory_select);
         selectionImage = resizeImage(selectionImage, InterfaceElement.inventorySelectionWidth, InterfaceElement.inventorySelectionHeight);
 
+        darkShadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_inventory_dark_shadow);
+        darkShadow = resizeImage(darkShadow, InterfaceElement.inventoryWidth, InterfaceElement.inventoryHeight);
+
         x = (GamePanel.screenWidth - inventoryWidth) / 2;
         y = x;
-        xPosTitleText = x + borderWidth + innerTextMargin;
-        yPosTitleText = y + borderWidth + innerTextMargin + bigTextSize + textOffset;
+        xPosTitleText = borderWidth + innerTextMargin; // +x
+        yPosTitleText = borderWidth + innerTextMargin + bigTextSize + textOffset; // +y
         for (int i = 0; i < numCols; i++)
-            xPosImage[i] = x + borderWidth + inventoryImageMargin + i*(itemSize + 2*inventoryImageMargin + borderSmallWidth);
+            xPosImage[i] = borderWidth + inventoryImageMargin + i*(itemSize + 2*inventoryImageMargin + borderSmallWidth); // +x
         for (int i = 0; i < numRows; i++)
-            yPosImage[i] = y + 2*borderWidth + 2*innerTextMargin + bigTextSize + inventoryImageMargin + i*(itemSize + 2*inventoryImageMargin + borderSmallWidth);
+            yPosImage[i] = 2*borderWidth + 2*innerTextMargin + bigTextSize + inventoryImageMargin + i*(itemSize + 2*inventoryImageMargin + borderSmallWidth); // +y
         currentIndex = inventory.getEquippedEntry();
     }
 
     public void draw(Canvas canvas)
     {
+        //create new temporary Canvas and Image
+        Bitmap tempImage = Bitmap.createBitmap(InterfaceElement.inventoryWidth, InterfaceElement.inventoryHeight, Bitmap.Config.ARGB_8888);
+        Canvas tempCanvas = new Canvas(tempImage);
+
         //Paint background and Title
-        canvas.drawBitmap(image, x, y, null);
+        tempCanvas.drawBitmap(image, 0, 0, null);
         TextPaint paint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.BLACK);
         int textColor = context.getResources().getColor(R.color.interfaceText);
         paint.setColor(textColor);
         paint.setTextSize(bigTextSize);
-        canvas.drawText(infoText, xPosTitleText, yPosTitleText, paint);
+        tempCanvas.drawText(infoText, xPosTitleText, yPosTitleText, paint);
 
         //paint Items and Text
         paint.setTextSize(normalTextSize);
@@ -65,16 +73,33 @@ public class InterfaceInventory extends InterfaceElement {
                 col = 0;
                 row++;
             }
-            canvas.drawBitmap(inventory.getImage(i),xPosImage[col], yPosImage[row], null);
+            tempCanvas.drawBitmap(inventory.getImage(i),xPosImage[col], yPosImage[row], null);
             int tmpX = xPosImage[col] - inventoryImageMargin + inventoryTextMargin;
             int tmpY = yPosImage[row] + inventoryImageMargin + itemSize - inventoryTextMargin + textOffset;
-            canvas.drawText("" + inventory.getItemCount(i), tmpX, tmpY, paint);
+            tempCanvas.drawText("" + inventory.getItemUsages(i), tmpX, tmpY, paint);
         }
 
         //paint selection
-        int tmpX = x + borderWidth - borderSmallWidth + getCurrentCol()*(borderSmallWidth + 2*inventoryImageMargin + itemSize);
-        int tmpY = y + 2*borderWidth + 2*innerTextMargin + bigTextSize - borderSmallWidth + getCurrentRow()*(borderSmallWidth + 2*inventoryImageMargin + itemSize);
-        canvas.drawBitmap(selectionImage, tmpX, tmpY, null);
+        int tmpX = borderWidth - borderSmallWidth + getCurrentCol()*(borderSmallWidth + 2*inventoryImageMargin + itemSize); // + x
+        int tmpY = 2*borderWidth + 2*innerTextMargin + bigTextSize - borderSmallWidth + getCurrentRow()*(borderSmallWidth + 2*inventoryImageMargin + itemSize); // + y
+        tempCanvas.drawBitmap(selectionImage, tmpX, tmpY, null);
+
+        //make darker if needed
+        if (InteractionHandler.multipleInterfacesActive) {
+            tempCanvas.drawBitmap(darkShadow, 0, 0, null);
+        }
+
+        //scale Bitmap
+        tmpX = x;
+        tmpY = y;
+        if (InteractionHandler.multipleInterfacesActive) {
+            tempImage = InterfaceElement.resizeImage(tempImage, inventoryWidth * 7 / 8, inventoryHeight * 7 / 8);
+            tmpX += inventoryWidth / 16;
+            tmpY += inventoryWidth / 16;
+        }
+
+        //draw Bitmap on Canvas
+        canvas.drawBitmap(tempImage, tmpX, tmpY, null);
 
     }
 

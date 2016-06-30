@@ -13,11 +13,13 @@ public class InteractionHandler {
     private Controller controller;
     public static boolean interfaceActive = false;
     public static boolean interfaceSelectionActive = false;
+    public static boolean multipleInterfacesActive = false;
     private InterfaceDialogue interfaceDialogue;
     private InterfaceLootbox interfaceLootbox;
     private InterfaceInventory interfaceInventory;
     private MainThread thread;
     private GamePanel gamePanel;
+    private DialogueQueue dialogueQueue;
 
     public InteractionHandler(Context aContext, Player aPlayer, MainThread aThread, GamePanel aGamePanel)
     {
@@ -26,6 +28,7 @@ public class InteractionHandler {
         context = aContext;
         player = aPlayer;
         thread = aThread;
+        dialogueQueue = new DialogueQueue();
     }
 
     public void onButtonPress(Button button)
@@ -59,6 +62,7 @@ public class InteractionHandler {
             }
         } else if (interfaceDialogue != null) {
             //currently displaying a dialogue
+            System.out.println("Button Pressed and Interface Dialogue active: " + button.name());
             if (interfaceSelectionActive) {
                 switch (button) {
                     case UP:
@@ -78,12 +82,6 @@ public class InteractionHandler {
                         break;
                 }
             }
-        } else if (interfaceLootbox != null) {
-            switch (button) {
-                case INTERACT:
-                    closeLootbox();
-                    break;
-            }
         } else if (interfaceInventory != null) {
             switch (button) {
                 case UP:
@@ -99,11 +97,22 @@ public class InteractionHandler {
                     interfaceInventory.moveSelectionRight();
                     break;
                 case DROP:
-                    closeInventory();
+                    interfaceInventory.selectItem();
+                    useEquippedItem();
                     break;
                 case INTERACT:
                     interfaceInventory.selectItem();
                     closeInventory();
+                    break;
+                case INVENTORY:
+                    closeInventory();
+                    break;
+            }
+
+        } else if (interfaceLootbox != null) {
+            switch (button) {
+                case INTERACT:
+                    closeLootbox();
                     break;
             }
         }
@@ -118,13 +127,12 @@ public class InteractionHandler {
     {
         if (interfaceActive)
         {
-            if (interfaceDialogue != null) {
-                interfaceDialogue.draw(canvas);
-            } else if (interfaceLootbox != null) {
-                interfaceLootbox.draw(canvas);
-            } else if (interfaceInventory != null) {
+            if (interfaceInventory != null)
                 interfaceInventory.draw(canvas);
-            }
+            if (interfaceDialogue != null)
+                interfaceDialogue.draw(canvas);
+            if (interfaceLootbox != null)
+                interfaceLootbox.draw(canvas);
 
         }
     }
@@ -170,7 +178,12 @@ public class InteractionHandler {
     {
         gamePanel.redrawScene();
         interfaceDialogue = new InterfaceDialogue(gamePanel, context, aDialogue);
-        interfaceActive = true;
+        if (interfaceActive) {
+            multipleInterfacesActive = true;
+            System.out.println("multiple interfaces active");
+        } else {
+            interfaceActive = true;
+        }
         if (interfaceDialogue.mustSelectOption()) {
             interfaceSelectionActive = true;
         }
@@ -180,9 +193,14 @@ public class InteractionHandler {
     {
         if(!interfaceDialogue.nextText()) {
             interfaceDialogue = null;
-            controller.setWaitForInteractionRelease(false);
-            interfaceActive = false;
+            controller.setWaitForPressRelease(false);
+            if (multipleInterfacesActive) {
+                multipleInterfacesActive = false;
+            } else {
+                interfaceActive = false;
+            }
             gamePanel.redrawScene();
+            checkQueue();
         } else if (interfaceDialogue.mustSelectOption()) {
             interfaceSelectionActive = true;
             gamePanel.redrawScene();
@@ -197,6 +215,7 @@ public class InteractionHandler {
             interfaceSelectionActive = true;
         }
         gamePanel.redrawScene();
+        gamePanel.getStateHandler().updateDatabaseInventory();
     }
 
     public Dialogue getDialogueFromDatabase(String dialogueName)
@@ -252,7 +271,7 @@ public class InteractionHandler {
             scene.deleteLootbox(tmpX, tmpY);
             gamePanel.getStateHandler().deleteLootbox(tmpX, tmpY);
             interfaceLootbox = null;
-            controller.setWaitForInteractionRelease(false);
+            controller.setWaitForPressRelease(false);
             interfaceActive = false;
             gamePanel.redrawScene();
         }
@@ -269,7 +288,7 @@ public class InteractionHandler {
     private void closeInventory()
     {
         interfaceInventory = null;
-        controller.setWaitForInteractionRelease(false);
+        controller.setWaitForPressRelease(false);
         interfaceActive = false;
         gamePanel.redrawScene();
     }
@@ -287,6 +306,27 @@ public class InteractionHandler {
         interfaceDialogue = null;
         interfaceActive = false;
         interfaceSelectionActive = false;
-        controller.setWaitForInteractionRelease(false);
+        dialogueQueue.clear();
+        controller.setWaitForPressRelease(false);
+    }
+
+    public void overrideDialogue(Dialogue dialogue)
+    {
+        if(!interfaceActive || interfaceDialogue == null)
+            return; //do not allow to override Dialogue when no dialogue is active
+        interfaceActive = false;
+        interfaceDialogue = null;
+        createDialogue(dialogue);
+    }
+
+    public void queueDialogue(Dialogue dialogue)
+    {
+        dialogueQueue.enqueue(dialogue);
+    }
+
+    private void checkQueue()
+    {
+        if (!dialogueQueue.isEmpty())
+            createDialogue(dialogueQueue.getNext());
     }
 }

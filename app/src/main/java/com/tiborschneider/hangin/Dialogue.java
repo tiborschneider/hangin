@@ -12,6 +12,9 @@ public class Dialogue {
     public static int maxNumText = 20;
     public static int maxNumReplies = 4;
     private String[][] text = new String[maxNumText][2];
+    private Action[] textAction = new Action[maxNumText];
+    private String[] textSetState = new String[maxNumText];
+    private int[] textSetValue = new int[maxNumText];
     private Dialogue[] followingDialogue = new Dialogue[maxNumReplies];
     private String[] replyText = new String[maxNumReplies];
     private Action[] replyAction = new Action[maxNumReplies];
@@ -25,11 +28,14 @@ public class Dialogue {
         gamePanel = aGamePanel;
     }
 
-    public boolean addTextElement(String line1, String line2)
+    public boolean addTextElement(String line1, String line2, String aTextAction, String aTextSetState, int aTextSetValue)
     {
         if (numText < maxNumText) {
             text[numText][0] = line1;
             text[numText][1] = line2;
+            textAction[numText] = new Action(gamePanel, aTextAction);
+            textSetState[numText] = aTextSetState;
+            textSetValue[numText] = aTextSetValue;
             numText++;
             return true;
         } else {
@@ -39,6 +45,10 @@ public class Dialogue {
 
     public String[] getNextText()
     {
+        //run Action
+        runTextAction(currentText);
+        //set State
+        gamePanel.getStateHandler().setState(new GameState(textSetState[currentText], textSetValue[currentText]));
         return text[currentText++];
     }
 
@@ -112,21 +122,23 @@ public class Dialogue {
         }
     }
 
-    public void runAction(int index)
+    public void runReplyAction(int index)
     {
         replyAction[index].run();
     }
+
+    public void runTextAction(int index) { textAction[index].run(); }
 
     public int getNumText()
     {
         return numText;
     }
 
-    public String getStateNameToChange(int index) {
+    public String getReplyStateNameToChange(int index) {
         return replySetState[index];
     }
 
-    public int getStateValueToChange(int index) {
+    public int getReplyStateValueToChange(int index) {
         return replySetValue[index];
     }
 }

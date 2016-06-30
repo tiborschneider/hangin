@@ -21,7 +21,8 @@ public class Controller {
     private Context context;
     private Player player;
     private InteractionHandler interactionHandler;
-    private boolean waitForInteractionRelease = false;
+    private boolean waitForPressRelease = false;
+    private boolean waitForInventoryRelease = false;
     private static int borderSize = 48;
     private static int baseSpace1 = 100;
     private static int baseSpace2 = 170;
@@ -87,17 +88,17 @@ public class Controller {
 
     public boolean onTouch(MotionEvent e)
     {
-        if (waitForInteractionRelease) {
+        if (waitForPressRelease) {
             if (e.getAction() == MotionEvent.ACTION_UP)
-                waitForInteractionRelease = false;
+                waitForPressRelease = false;
         } else {
             Button pressedButton = detectButton(e.getX(), e.getY());
             if (InteractionHandler.interfaceActive && e.getAction() == MotionEvent.ACTION_UP) {
-                waitForInteractionRelease = false;
+                waitForPressRelease = false;
                 interactionHandler.onButtonPress(pressedButton);
             } else if (!InteractionHandler.interfaceActive) {
-                if (pressedButton == Button.INTERACT)
-                    waitForInteractionRelease = true;
+                if (pressedButton == Button.INTERACT || pressedButton == Button.INVENTORY)
+                    waitForPressRelease = true;
                 interactionHandler.onButtonPress(pressedButton);
             }
         }
@@ -105,9 +106,9 @@ public class Controller {
         return true;
     }
 
-    public void setWaitForInteractionRelease(boolean b)
+    public void setWaitForPressRelease(boolean b)
     {
-        waitForInteractionRelease = b;
+        waitForPressRelease = b;
     }
 
     private Button detectButton(float aX, float aY)

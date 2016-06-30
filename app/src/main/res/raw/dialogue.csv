@@ -51,6 +51,12 @@ useVeganJuiceDrop;BOTTOM
 rollOne;BOTTOM
 rollOneYes;BOTTOM
 rollOneNo;BOTTOM
+useLighter;BOTTOM
+noLighter;BOTTOM
+lighterOff;BOTTOM
 npcDoesNotInteract;TOP
 greenGuyNormalDialogue1;TOP
 greenGuyNormalDialogue2;TOP
+greenGuyTeachesRolling;TOP
+greenGuyTeachesRollingNot;TOP
+greenGuyNormalDialogue3;TOP

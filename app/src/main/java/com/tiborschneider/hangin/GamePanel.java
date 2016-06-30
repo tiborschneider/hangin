@@ -21,6 +21,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     public static int screenHeight = 1920;
     public static int numScenes = 20;
     private static int numNpc = 30;
+    private static GamePanel theGamePanel;
     private MainThread thread;
     private GameScene[] scenes = new GameScene[numScenes];
     private NonPlayerCharacter[] npc = new NonPlayerCharacter[numNpc];
@@ -35,6 +36,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     public GamePanel(Context aContext, int sizeX, int sizeY)
     {
         super(aContext);
+        theGamePanel = this;
         context = aContext;
         //add the callback to surface holder to intercept events
         getHolder().addCallback(this);
@@ -242,5 +244,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     public int getCurrentScene()
     {
         return currentScene;
+    }
+
+    public static GamePanel getGamePanel()
+    {
+        return theGamePanel;
     }
 }

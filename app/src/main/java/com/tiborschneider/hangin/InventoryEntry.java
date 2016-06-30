@@ -29,4 +29,10 @@ public class InventoryEntry {
     {
         return item;
     }
+
+    public void resetItem()
+    {
+        if (SpecialItem.isSpecialItem(item.getItemType()))
+            item = Item.createNewItem(GamePanel.getGamePanel().getContext(), item.getItemType());
+    }
 }

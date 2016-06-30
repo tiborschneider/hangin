@@ -92,7 +92,7 @@ public class Lootbox {
     {
         boolean spaceLeft = true;
         for (int i = 0; i < numItems; i++) {
-            spaceLeft = inventory.addItem(items[i]);
+            spaceLeft = inventory.addItem(items[i], true);
         }
         return spaceLeft;
     }

@@ -14,6 +14,7 @@ public class Item {
     protected int munchiesChange = 0;
     protected int stonedChange = 0;
     protected boolean isSpecial = false;
+    protected boolean needsFire = false;
 
     public Item(Context aContext, ItemType aType)
     {
@@ -57,14 +58,17 @@ public class Item {
             case JOINT:
                 munchiesChange = -20;
                 stonedChange = 25;
+                needsFire = true;
                 break;
             case BIG_JOINT:
                 munchiesChange = -25;
                 stonedChange = 40;
+                needsFire = true;
                 break;
             case UGLY_JOINT:
                 munchiesChange = -15;
                 stonedChange = 10;
+                needsFire = true;
                 break;
         }
 
@@ -209,5 +213,20 @@ public class Item {
     public int getCount()
     {
         return 0;
+    }
+
+    public int getNumUses()
+    {
+        return 1;
+    }
+
+    public int getMaxNumUses()
+    {
+        return 1;
+    }
+
+    public boolean needsfire()
+    {
+        return needsFire;
     }
 }

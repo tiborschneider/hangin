@@ -86,13 +86,13 @@ public class Player extends GameObject {
     public boolean useItem(Item aItem)
     {
         if (!hasItem(aItem)) return false;
-        inventory.useItem(aItem);
+            inventory.useItem(aItem);
         return true;
     }
 
     public boolean addItem(Item aItem)
     {
-        return inventory.addItem(aItem);
+        return inventory.addItem(aItem, true);
     }
 
     public Inventory getInventory() {

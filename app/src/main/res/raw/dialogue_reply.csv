@@ -34,3 +34,5 @@ smokeUglyJoint;Smoke now;smokeUglyJointNow;CONSUME;NULL;0
 smokeUglyJoint;Smoke later;smokeUglyJointLater;NULL;NULL;0
 rollOne;Sure;rollOneYes;ROLL;NULL;0
 rollOne;Later;rollOneNo;NULL;NULL;0
+greenGuyNormalDialogue2;sure;greenGuyTeachesRolling;NULL;abilityRollJoints;2
+greenGuyNormalDialogue2;not now;greenGuyTeachesRollingNot;NULL;NULL;0

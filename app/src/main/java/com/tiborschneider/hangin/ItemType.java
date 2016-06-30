@@ -21,4 +21,5 @@ public enum ItemType {
     UGLY_JOINT,
     BIG_JOINT,
     WEED_BAG,
+    LIGHTER,
 }
