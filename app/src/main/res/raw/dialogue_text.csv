@@ -1,7 +1,7 @@
 signInfo1;Welcome to the adventure.;Do you like this so far?;0;NULL;NULL;0
 signInfo1;Which pill do you want to take?;The blue or the red?;1;NULL;NULL;0
-signInfo1Red;You have chosen the red pill!;Wise decision;0;NULL;NULL;0
 signInfo1Blue;You have chosen the blue pill!;You will wake up knowing nothing;0;NULL;NULL;0
+signInfo1Red;You have chosen the red pill!;Wise decision;0;NULL;NULL;0
 signInfo1RedYes;You have told yes without;knowing what the Question was;0;NULL;NULL;0
 signInfo1RedYes;You stupid little piece;of shit!!;1;NULL;NULL;0
 signInfo1RedNo;You have told no which;was correct!;0;NULL;NULL;0
@@ -39,9 +39,6 @@ useSeedsDrop;You cannot drop seeds.;They are very valuable;0;NULL;NULL;0
 useSteak;What do you want to do?;;0;NULL;NULL;0
 useSteakEat;Eating stake...;ah this feels soo good;0;NULL;NULL;0
 useSteakDrop;Dropping stake;;0;NULL;NULL;0
-useVeganJuice;What do you want to do?;;0;NULL;NULL;0
-useVeganJuiceDrink;no no no! i will not drink this!;;0;NULL;NULL;0
-useVeganJuiceDrop;Yes. i don't need this;stupid shit;0;NULL;NULL;0
 smokeJoint;Do you want to smoke the Joint;now?;0;NULL;NULL;0
 smokeJointNow;Ah this is perfect. Now,;let's chill!;0;NULL;NULL;0
 smokeJointLater;Ah come on! just a little;bit...;0;NULL;NULL;0
@@ -51,6 +48,9 @@ smokeBigJointLater;I can't wait to light that;motherfucker up!;0;NULL;NULL;0
 smokeUglyJoint;Do you want to smoke this ugly;Jointnow?;0;NULL;NULL;0
 smokeUglyJointNow;Well, this is not so pleasant,;but still better than nothing;0;NULL;NULL;0
 smokeUglyJointLater;Yes, probably a good idea.;I'll might find a better one;0;NULL;NULL;0
+useVeganJuice;What do you want to do?;;0;NULL;NULL;0
+useVeganJuiceDrink;no no no! i will not drink this!;;0;NULL;NULL;0
+useVeganJuiceDrop;Yes. i don't need this;stupid shit;0;NULL;NULL;0
 rollOne;Do you want to roll a joint?;;0;NULL;NULL;0
 rollOneYes;Sure, lets do this;;0;NULL;NULL;0
 rollOneNo;Well, an other time;;0;NULL;NULL;0
@@ -61,5 +61,7 @@ npcDoesNotInteract;He does not react;;0;NULL;NULL;0
 greenGuyNormalDialogue1;The Green Guy speaks;everything works!;0;NULL;NULL;0
 greenGuyNormalDialogue2;Would you like to learn how;to roll good joints?;0;NULL;NULL;0
 greenGuyTeachesRolling;You have learned to roll normal;Joints!;0;NULL;NULL;0
-greenGuyTeachesRollingTop;Ok, the next time!;;0;NULL;NULL;0
 greenGuyNormalDialogue3;You can already roll joints!;;0;NULL;NULL;0
+uselessDialogue;This is a Text;and more;0;NULL;NULL;0
+blueGirlTalks;She just talks without halt;this is kind of funny;0;NULL;blueGuyRelations;1
+blueGirlTalksMore;And it goes on. Will she ever;stop?;0;NULL;NULL;0

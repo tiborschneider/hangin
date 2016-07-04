@@ -1,3 +1,5 @@
 greenGuy;greenGuyNormalDialogue2;greenGuyRelations;1;abilityRollJoints;1;NULL;0
 greenGuy;greenGuyNormalDialogue1;greenGuyRelations;0;NULL;0;NULL;0
 greenGuy;greenGuyNormalDialogue3;greenGuyRelations;1;abilityRollJoints;2;NULL;0
+blueGuy;blueGirlTalks;blueGuyRelations;0;NULL;0;NULL;0
+blueGuy;blueGirlTalksMore;blueGuyRelations;1;NULL;0;NULL;0

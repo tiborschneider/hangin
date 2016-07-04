@@ -12,7 +12,7 @@ useAppleDrop;BOTTOM
 useBacon;BOTTOM
 useBaconEat;BOTTOM
 useBaconDrop;BOTTOM
-useBanana;Bottom
+useBanana;BOTTOM
 useBananaEat;BOTTOM
 useBananaDrop;BOTTOM
 useBeer;BOTTOM
@@ -60,3 +60,6 @@ greenGuyNormalDialogue2;TOP
 greenGuyTeachesRolling;TOP
 greenGuyTeachesRollingNot;TOP
 greenGuyNormalDialogue3;TOP
+uselessDialogue;TOP
+blueGirlTalks;TOP
+blueGirlTalksMore;TOP

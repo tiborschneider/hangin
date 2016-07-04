@@ -24,14 +24,14 @@ useSeeds;Plant seed;useSeedsPlant;PLANT_SEED;NULL;0
 useSeeds;Drop;useSeedsDrop;DROP;NULL;0
 useSteak;Eat;useSteakEat;CONSUME;NULL;0
 useSteak;Drop;useSteakDrop;DROP;NULL;0
-useVeganJuice;Drink;useVeganJuiceDrink;NULL;NULL;0
-useVeganJuice;Drop;useVeganJuiceDrop;DROP;NULL;0
 smokeJoint;Smoke now;smokeJointNow;CONSUME;NULL;0
 smokeJoint;Smoke later;smokeJointLater;NULL;NULL;0
 smokeBigJoint;Smoke now;smokeBigJointNow;CONSUME;NULL;0
 smokeBigJoint;Smoke later;smokeBigJointLater;NULL;NULL;0
 smokeUglyJoint;Smoke now;smokeUglyJointNow;CONSUME;NULL;0
 smokeUglyJoint;Smoke later;smokeUglyJointLater;NULL;NULL;0
+useVeganJuice;Drink;useVeganJuiceDrink;NULL;NULL;0
+useVeganJuice;Drop;useVeganJuiceDrop;DROP;NULL;0
 rollOne;Sure;rollOneYes;ROLL;NULL;0
 rollOne;Later;rollOneNo;NULL;NULL;0
 greenGuyNormalDialogue2;sure;greenGuyTeachesRolling;NULL;abilityRollJoints;2
