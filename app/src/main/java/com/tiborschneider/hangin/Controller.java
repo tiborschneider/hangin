@@ -62,7 +62,7 @@ public class Controller {
     {
         //arrow buttons
         int startX = InterfaceElement.gameBorderSize + borderSize;
-        int startY = InterfaceElement.numTiles * InterfaceElement.tileSize + 2 * InterfaceElement.gameBorderSize + borderSize;
+        int startY = InterfaceElement.numTiles * InterfaceElement.tileSize + InterfaceElement.gameBorderSize + 2*InterfaceElement.statusBarOuterMargin + InterfaceElement.statusBarHeight + borderSize;
         canvas.drawBitmap(imageButtonUp, startX + baseSpace1 + spread, startY, null);
         canvas.drawBitmap(imageButtonLeft, startX, startY + baseSpace1 + spread, null);
         canvas.drawBitmap(imageButtonDown, startX + baseSpace1 + spread, startY + baseSpace2 + 2*spread, null);

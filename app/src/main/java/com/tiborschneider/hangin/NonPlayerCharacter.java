@@ -31,25 +31,9 @@ public class NonPlayerCharacter extends GameObject{
         imageBaseName = aImageBaseName;
         currentScene = aGameScene;
 
-        imageArray[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.npc_green_up1);
-        imageArray[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.npc_green_up2);
-        imageArray[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.npc_green_down1);
-        imageArray[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.npc_green_down2);
-        imageArray[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.npc_green_left1);
-        imageArray[5] = BitmapFactory.decodeResource(context.getResources(), R.drawable.npc_green_left2);
-        imageArray[6] = BitmapFactory.decodeResource(context.getResources(), R.drawable.npc_green_right1);
-        imageArray[7] = BitmapFactory.decodeResource(context.getResources(), R.drawable.npc_green_right2);
-        //scale all Images
-        for (int i = 0; i < numImages; i++)
-        {
-            float scale = ((float) InterfaceElement.tileSize) / imageArray[i].getWidth();
-            Matrix matrix = new Matrix();
-            matrix.postScale(scale,scale);
-            imageArray[i] = Bitmap.createBitmap(imageArray[i], 0, 0, imageArray[i].getWidth(), imageArray[i].getHeight(), matrix, false);
-        }
-
-        updateImage();
+        loadImages();
     }
+
 
     @Override public void update()
     {
@@ -149,5 +133,44 @@ public class NonPlayerCharacter extends GameObject{
             default:
                 image = imageArray[0];
         }
+    }
+
+
+    public void loadImages() {
+        String imageName = imageBaseName + "_up1";
+        int imageId =  context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
+        imageArray[0] = BitmapFactory.decodeResource(context.getResources(), imageId);
+        imageName = imageBaseName + "_up2";
+        imageId =  context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
+        imageArray[1] = BitmapFactory.decodeResource(context.getResources(), imageId);
+        imageName = imageBaseName + "_down1";
+        imageId =  context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
+        imageArray[2] = BitmapFactory.decodeResource(context.getResources(), imageId);
+        imageName = imageBaseName + "_down2";
+        imageId =  context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
+        imageArray[3] = BitmapFactory.decodeResource(context.getResources(), imageId);
+        imageName = imageBaseName + "_left1";
+        imageId =  context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
+        imageArray[4] = BitmapFactory.decodeResource(context.getResources(), imageId);
+        imageName = imageBaseName + "_left2";
+        imageId =  context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
+        imageArray[5] = BitmapFactory.decodeResource(context.getResources(), imageId);
+        imageName = imageBaseName + "_right1";
+        imageId =  context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
+        imageArray[6] = BitmapFactory.decodeResource(context.getResources(), imageId);
+        imageName = imageBaseName + "_right2";
+        imageId =  context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
+        imageArray[7] = BitmapFactory.decodeResource(context.getResources(), imageId);
+
+        //scale all Images
+        for (int i = 0; i < numImages; i++)
+        {
+            float scale = ((float) InterfaceElement.tileSize) / imageArray[i].getWidth();
+            Matrix matrix = new Matrix();
+            matrix.postScale(scale,scale);
+            imageArray[i] = Bitmap.createBitmap(imageArray[i], 0, 0, imageArray[i].getWidth(), imageArray[i].getHeight(), matrix, false);
+        }
+
+        updateImage();
     }
 }

@@ -44,7 +44,15 @@ public abstract class InterfaceElement {
     public static int lootboxHeight5 = 682;
     public static int lootboxImageMargin = 10;
     public static int lootboxTextMargin = 25;
-
+    public static int statusBarWidth = 1000;
+    public static int statusBarHeight = 60;
+    public static int statusBarInnerMargin = 10;
+    public static int statusBarOuterMargin = 5;
+    public static int statusBarInnerTextMargin = 5;
+    public static int statusBarBorder = 10;
+    public static int statusBarMeterMaximumWidth = 284;
+    public static int statusBarMeterHeight = 24;
+    public static int statusBarTextLength = 70;
 
     protected int x;
     protected int y;
@@ -94,6 +102,16 @@ public abstract class InterfaceElement {
         gameBorderSize  = (int)(0.5+corrFactor*gameBorderSize);
         inventorySelectionHeight  = (int)(0.5+corrFactor*inventorySelectionHeight);
         inventorySelectionWidth  = (int)(0.5+corrFactor*inventorySelectionWidth);
+        statusBarWidth = (int)(0.5+corrFactor*statusBarWidth);
+        statusBarHeight = (int)(0.5+corrFactor*statusBarHeight);
+        statusBarInnerMargin = (int)(0.5+corrFactor*statusBarInnerMargin);
+        statusBarOuterMargin = (int)(0.5+corrFactor* statusBarOuterMargin);
+        statusBarInnerTextMargin = (int)(0.5+corrFactor*statusBarInnerTextMargin);
+        statusBarBorder = (int)(0.5+corrFactor*statusBarBorder);
+        statusBarMeterMaximumWidth = (int)(0.5+corrFactor*statusBarMeterMaximumWidth);
+        statusBarMeterHeight = (int)(0.5+corrFactor*statusBarMeterHeight);
+        statusBarTextLength = (int)(0.5+corrFactor*statusBarTextLength);
+
         InterfaceElement.gameBorderSize = (GamePanel.screenWidth - InterfaceElement.tileSize * InterfaceElement.numTiles)/2;
 
         Controller.initSizes(corrFactor);

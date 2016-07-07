@@ -1,5 +1,12 @@
 NULL;0
 greenGuyRelations;0
-abilityRollJoints;1
+abilityRollJoints;0
 abilityEatVegi;0
-blueGuyRelations;0
+katiaRelations;0
+smokeWithNpc;0
+playerHasWeed;0
+playerHasJoint;0
+smokeWithNpcUglyJoint;0
+smokeWithNpcJoint;0
+smokeWithNpcBigJoint;0
+smokeWithNpcWeed;0

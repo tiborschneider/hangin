@@ -48,7 +48,7 @@ public class GameScene {
 
     public void draw(Canvas canvas, Paint stonedPaint)
     {
-        canvas.drawBitmap(sceneImage, InterfaceElement.gameBorderSize, InterfaceElement.gameBorderSize, stonedPaint);
+        canvas.drawBitmap(sceneImage, InterfaceElement.gameBorderSize, InterfaceElement.statusBarHeight + 2*InterfaceElement.statusBarOuterMargin, stonedPaint);
     }
 
     public void drawOnScreenImage(Canvas canvas, Paint stonedPaint)

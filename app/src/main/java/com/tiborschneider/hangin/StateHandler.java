@@ -20,18 +20,36 @@ public class StateHandler {
 
     public GameState getState(String aState)
     {
-        return databaseHelper.getState(aState);
-    }
+        GameState state = databaseHelper.getState(aState);
+        if (state.isSpecial) {
+            switch (state.name) {
+                case "playerHasWeed":
+                    if (gamePanel.getPlayer().hasItem(new Item(gamePanel.getContext(), ItemType.WEED_BAG)))
+                        state.value = 1;
+                    else
+                        state.value = 0;
+                    break;
+                case "playerHasJoint":
+                    if (gamePanel.getPlayer().hasItem(new Item(gamePanel.getContext(), ItemType.BIG_JOINT)))
+                        state.value = 3;
+                    else if (gamePanel.getPlayer().hasItem(new Item(gamePanel.getContext(), ItemType.JOINT)))
+                        state.value = 2;
+                    else if (gamePanel.getPlayer().hasItem(new Item(gamePanel.getContext(), ItemType.UGLY_JOINT)))
+                        state.value = 1;
+                    else
+                        state.value = 0;
+                    break;
+            }
+        }
 
-    public int getStateValue(String aState)
-    {
-        return databaseHelper.getState(aState).value;
+        //¨System.out.println("get State: " + state.name + ", " + state.value);
+        return state;
     }
 
     public void setState(GameState aState)
     {
         if (aState.name != "NULL") {
-            System.out.println("Set State on Database: " + aState.name + ", value: " + aState.value);
+            //System.out.println("Set State on Database: " + aState.name + ", value: " + aState.value);
             databaseHelper.setState(aState);
         }
     }
@@ -80,4 +98,13 @@ public class StateHandler {
     {
         databaseHelper.savePlayerStatus();
     }
+
+    public static boolean isSpecialState(String stateName) {
+        if (stateName.equals("playerHasWeed"))
+            return true;
+        if (stateName.equals("playerHasJoint"))
+            return true;
+        return false;
+    }
 }
+

@@ -26,48 +26,45 @@ public class Item {
             case ALCOHOL:
                 break;
             case APPLE:
-                munchiesChange = 1;
+                munchiesChange = -5;
                 break;
             case BACON:
-                munchiesChange = 10;
+                munchiesChange = -20;
                 break;
             case BANANA:
-                munchiesChange = 1;
+                munchiesChange = -5;
                 break;
             case BEER:
                 break;
             case BURGER:
-                munchiesChange = 15;
+                munchiesChange = -40;
                 break;
             case CARROT:
-                munchiesChange = 1;
+                munchiesChange = -5;
                 break;
             case CHEESE:
-                munchiesChange = 5;
+                munchiesChange = -15;
                 break;
             case RIBS:
-                munchiesChange = 5;
+                munchiesChange = -15;
                 break;
             case SEED:
                 break;
             case STEAK:
-                munchiesChange = 15;
+                munchiesChange = -40;
                 break;
             case VEGAN_JUICE:
                 break;
             case JOINT:
-                munchiesChange = -20;
-                stonedChange = 25;
+                stonedChange = 30;
                 needsFire = true;
                 break;
             case BIG_JOINT:
-                munchiesChange = -25;
-                stonedChange = 40;
+                stonedChange = 60;
                 needsFire = true;
                 break;
             case UGLY_JOINT:
-                munchiesChange = -15;
-                stonedChange = 10;
+                stonedChange = 20;
                 needsFire = true;
                 break;
         }

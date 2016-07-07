@@ -42,13 +42,13 @@ public class InterfaceDialogue extends InterfaceElement{
         x = (GamePanel.screenWidth - dialogueWidth) / 2;
         switch (dialogue.getDialoguePosition()) {
             case TOP:
-                y = x;
+                y = 2*statusBarOuterMargin + statusBarHeight - gameBorderSize + x;
                 break;
             case BOTTOM:
-                y = 2* InterfaceElement.gameBorderSize + InterfaceElement.numTiles * InterfaceElement.tileSize - x - dialogueHeight;
+                y = 2*statusBarOuterMargin + statusBarHeight + gameBorderSize + numTiles * tileSize - x - dialogueHeight;
                 break;
             default:
-                y = x;
+                y = 2*statusBarOuterMargin + statusBarHeight - gameBorderSize + x;
         }
 
         xPosTextLine1 = x + borderWidth + innerTextMargin;
@@ -62,7 +62,7 @@ public class InterfaceDialogue extends InterfaceElement{
         currentText = dialogue.getNextText();
 
         backgroundImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_dialog_window);
-        backgroundImage = resizeImage(backgroundImage, InterfaceElement.dialogueWidth, InterfaceElement.dialogueHeight);
+        backgroundImage = resizeImage(backgroundImage, dialogueWidth, dialogueHeight);
     }
 
     private void initializeReplyDialogue()

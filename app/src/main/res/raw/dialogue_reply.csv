@@ -36,3 +36,12 @@ rollOne;Sure;rollOneYes;ROLL;NULL;0
 rollOne;Later;rollOneNo;NULL;NULL;0
 greenGuyNormalDialogue2;sure;greenGuyTeachesRolling;NULL;abilityRollJoints;2
 greenGuyNormalDialogue2;not now;greenGuyTeachesRollingNot;NULL;NULL;0
+initialDialogue;Why not!?;initialDialogue2;NULL;NULL;0
+katiaSmokeFirstWeed;yeah;katiaSmokeFirstWeedYes;NULL;katiaRelations;2
+katiaSmokeFirstWeed;[lie] No;katiaSmokeFirstWeedLie;NULL;NULL;0
+katiaSmokeFirstUglyJoint;Yeah!;katiaSmokeFirstUglyJointYes;NULL;katiaRelations;2
+katiaSmokeFirstUglyJoint; [lie] No;katiaSmokeFirstUglyJointLies;NULL;NULL;0
+katiaSmokeFirstJoint;Yeah;katiaSmokeFirstJointYes;NULL;katiaRelations;2
+katiaSmokeFirstJoint;[lie] No;katiaSmokeFirstJointLie;NULL;NULL;0
+katiaSmokeFirstBigJoint;Yeah;katiaSmokeFirstBigJointYes;NULL;katiaRelations;1
+katiaSmokeFirstBigJoint;[lie] No;katiaSmokeFirstBigJointLie;NULL;NULL;0

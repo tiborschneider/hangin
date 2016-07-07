@@ -61,7 +61,51 @@ npcDoesNotInteract;He does not react;;0;NULL;NULL;0
 greenGuyNormalDialogue1;The Green Guy speaks;everything works!;0;NULL;NULL;0
 greenGuyNormalDialogue2;Would you like to learn how;to roll good joints?;0;NULL;NULL;0
 greenGuyTeachesRolling;You have learned to roll normal;Joints!;0;NULL;NULL;0
+greenGuyTeachesRollingNot;Ok, another time!;;0;NULL;NULL;0
 greenGuyNormalDialogue3;You can already roll joints!;;0;NULL;NULL;0
-uselessDialogue;This is a Text;and more;0;NULL;NULL;0
-blueGirlTalks;She just talks without halt;this is kind of funny;0;NULL;blueGuyRelations;1
-blueGirlTalksMore;And it goes on. Will she ever;stop?;0;NULL;NULL;0
+initialDialogue;[Katia] Hi you, my name is Katia;I've never seen you around here.;0;NULL;NULL;0
+initialDialogue;Welcome to this remote Village.;Here, weed is totally leagl.;1;NULL;NULL;0
+initialDialogue;[You] Wait... What!?;;2;NULL;NULL;0
+initialDialogue;[Katia] Yeah, you heared right!;Do you want to smoke one?;3;NULL;NULL;0
+initialDialogue2;[You] I have never tried it, but;there is no reason not to!;0;NULL;NULL;0
+initialDialogue2;[Katia] Coll, i'll light it up;;1;CONSUME;smokeWithNpc;100
+initialDialogue2;[You] Woow this feels so good!;From now on, i want to be;2;NULL;smokeWithNpc;0
+initialDialogue2;stoned. Like forever.;;3;NULL;NULL;0
+initialDialogue2;[Katia] Yeah that's the spirit!;But i dont have more joints;4;NULL;NULL;0
+initialDialogue2;with me. Come back to me if ;you have another Joint!;5;NULL;katiaRelations;1
+katiaSmokeFirstWeed;[Katia] Hey yo, soo good to see;you again! Have you found;0;NULL;NULL;0
+katiaSmokeFirstWeed;something to smoke`;;1;NULL;NULL;0
+katiaSmokeFirstUglyJoint;[Katia] Hey man good to see;you! Have you found something?;0;NULL;NULL;0
+katiaSmokeFirstJoint;[Katia] Hey you, it's soo good ;to see you again. have you;0;NULL;NULL;0
+katiaSmokeFirstJoint;something funny for me?;;1;NULL;NULL;0
+katiaSmokeFirstBigJoint;[Katia] Hi you, so nice to see ;you again. Do you have ;0;NULL;NULL;0
+katiaSmokeFirstBigJoint;something funny for me?;;1;NULL;NULL;0
+katiaSmokeFirstNothing;[Katia] Hi you, nice to see you!;Have you found something to;0;NULL;NULL;0
+katiaSmokeFirstNothing;smoke?;;1;NULL;NULL;0
+katiaSmokeFirstNothing;[You] Not yet. I don't have any;idea where to search... Can you;2;NULL;NULL;0
+katiaSmokeFirstNothing;help me?;;3;NULL;NULL;0
+katiaSmokeFirstNothing;[Katia] Ah man. Well, just around;the Corner, there are folks ;4;NULL;NULL;0
+katiaSmokeFirstNothing;who always smoke. Maby they;have something!;5;NULL;NULL;0
+katiaSmokeFirstWeedLie;[You] No sorry, not yet!;;0;NULL;NULL;0
+katiaSmokeFirstWeedYes;[You] Yes, but i cannot roll one!;Can you roll one for us?;0;NULL;smokeWithNpcWeed;1
+katiaSmokeFirstWeedYes;[Katia] Shure, no problem.;;1;NULL;NULL;0
+katiaSmokeFirstWeedYes;[You] Wow this wa fast! and ;so beautiful!;2;NULL;NULL;0
+katiaSmokeFirstWeedYes;[Katia] Well, i smoke for too ;long now... Thank you for the;3;CONSUME;NULL;0
+katiaSmokeFirstWeedYes;Joint. Come again when ever ;you want!;4;NULL;NULL;0
+katiaSmokeFirstUglyJointLies;[You] No sorry, not yet!;;0;NULL;NULL;0
+katiaSmokeFirstUglyJointYes;[You] Yes, i have one here. ;But this is a very ugly one...;0;NULL;smokeWithNpcUglyJoint;0
+katiaSmokeFirstUglyJointYes;I don't have a better one sorry!;;1;NULL;NULL;0
+katiaSmokeFirstUglyJointYes;[Katiy]: No problem, let's light;it up!;2;CONSUME;NULL;0
+katiaSmokeFirstUglyJointYes;You realy have problems with;rolling! i'll teach you how to ;3;NULL;NULL;0
+katiaSmokeFirstUglyJointYes;roll right now. It is not hard,;you just need some training.;4;NULL;abilityRollJoints;1
+katiaSmokeFirstUglyJointYes;[You] Wow thank you. This is;soo cool man. ;5;NULL;NULL;0
+katiaSmokeFirstUglyJointYes;[Katia] You're welcome. See you;later!;6;NULL;NULL;0
+katiaSmokeFirstJointLie;[You]: No sorry not yet;;0;NULL;NULL;0
+katiaSmokeFirstJointLie;[Katia] No problem. maby you;find something later!;1;NULL;NULL;0
+katiaSmokeFirstJointYes;[You] Yes i have. Here, let's;smoke it!;0;NULL;smokeWithNpcJoint;1
+katiaSmokeFirstJointYes;[Katia] Thanks man, you are ;cool! We'll see us later!;1;CONSUME;NULL;0
+katiaSmokeFirstBigJointLie;[You]: No sorry not yet. But ;i'll continue searching!;0;NULL;NULL;0
+katiaSmokeFirstBigJointLie;[Katia] Good idea! I will wait;here!;1;NULL;NULL;0
+katiaSmokeFirstBigJointYes;[You] Yes, i have found a realy;big one. This will make us high!;0;NULL;smokeWithNpcBigJoint;1
+katiaSmokeFirstBigJointYes;[Katia] Wow this realy is a big;one! Thank you so much! you;1;CONSUME;NULL;0
+katiaSmokeFirstBigJointYes;are cool! See you later!;;2;NULL;NULL;0

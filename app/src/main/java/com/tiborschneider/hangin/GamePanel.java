@@ -31,6 +31,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     private InteractionHandler interactionHandler;
     private DatabaseHelper databaseHelper;
     private StateHandler stateHandler;
+    boolean startGame = false;
     Context context;
 
     public GamePanel(Context aContext, int sizeX, int sizeY)
@@ -62,11 +63,19 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         //create Player
         player = new Player(this, context, 5, 5);
 
-        //get Saved States of Player
-        databaseHelper.initSavedPlayer();
 
         //create Controller for Player
         interactionHandler = new InteractionHandler(context, player, thread, this);
+
+        //get Saved States of Player
+        if (!databaseHelper.initSavedPlayer()) {
+            startGame = true;
+        }
+
+    }
+
+    private void startNewGame() {
+        interactionHandler.createDialogue(interactionHandler.getDialogueFromDatabase("initialDialogue"));
     }
 
     @Override public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
@@ -104,6 +113,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     public void update()
     {
+        if (startGame) {
+            startGame = false;
+            startNewGame();
+        }
         player.update();
 
         //update npc on the same GameScene

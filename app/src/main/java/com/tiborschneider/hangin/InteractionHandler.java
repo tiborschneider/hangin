@@ -17,6 +17,7 @@ public class InteractionHandler {
     private InterfaceDialogue interfaceDialogue;
     private InterfaceLootbox interfaceLootbox;
     private InterfaceInventory interfaceInventory;
+    private InterfaceStatusBar interfaceStatusBar;
     private MainThread thread;
     private GamePanel gamePanel;
     private DialogueQueue dialogueQueue;
@@ -29,6 +30,7 @@ public class InteractionHandler {
         player = aPlayer;
         thread = aThread;
         dialogueQueue = new DialogueQueue();
+        interfaceStatusBar = new InterfaceStatusBar(context, player);
     }
 
     public void onButtonPress(Button button)
@@ -118,9 +120,10 @@ public class InteractionHandler {
         }
     }
 
-    public void drawController(Canvas aCanvas)
+    public void drawController(Canvas canvas)
     {
-        controller.draw(aCanvas);
+        interfaceStatusBar.draw(canvas);
+        controller.draw(canvas);
     }
 
     public void drawInterface(Canvas canvas)

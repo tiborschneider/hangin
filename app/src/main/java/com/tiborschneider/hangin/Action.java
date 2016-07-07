@@ -49,6 +49,67 @@ public class Action {
 
     private void consume()
     {
+        //check if smoking with an npc
+        GameState smokeWithNpc = gamePanel.getStateHandler().getState("smokeWithNpc");
+        if (smokeWithNpc.value != 0) {
+            //smoke with NPC
+            gamePanel.getPlayer().updateStonedMeter(smokeWithNpc.value);
+            smokeWithNpc.value = 0;
+            gamePanel.getStateHandler().setState(smokeWithNpc);
+            return;
+        }
+
+        //check if smoking with an npc
+        smokeWithNpc = gamePanel.getStateHandler().getState("smokeWithNpcUglyJoint");
+        if (smokeWithNpc.value == 1) {
+            //smoke with NPC
+            gamePanel.getPlayer().updateStonedMeter(10);
+            gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.UGLY_JOINT));
+            smokeWithNpc.value = 0;
+            gamePanel.getStateHandler().setState(smokeWithNpc);
+            return;
+        }
+
+        //check if smoking with an npc
+        smokeWithNpc = gamePanel.getStateHandler().getState("smokeWithNpcJoint");
+        if (smokeWithNpc.value == 1) {
+            //smoke with NPC
+            gamePanel.getPlayer().updateStonedMeter(15);
+            gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.JOINT));
+            smokeWithNpc.value = 0;
+            gamePanel.getStateHandler().setState(smokeWithNpc);
+            return;
+        }
+
+        //check if smoking with an npc
+        smokeWithNpc = gamePanel.getStateHandler().getState("smokeWithNpcBigJoint");
+        if (smokeWithNpc.value == 1) {
+            //smoke with NPC
+            gamePanel.getPlayer().updateStonedMeter(30);
+            gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.BIG_JOINT));
+            smokeWithNpc.value = 0;
+            gamePanel.getStateHandler().setState(smokeWithNpc);
+            return;
+        }
+
+
+        //check if smoking with an npc
+        smokeWithNpc = gamePanel.getStateHandler().getState("smokeWithNpcWeed");
+        if (smokeWithNpc.value == 1) {
+            //smoke with NPC
+            gamePanel.getPlayer().updateStonedMeter(30);
+            Item item = gamePanel.getPlayer().getInventory().getItem(gamePanel.getPlayer().getInventory().getItemIndex(ItemType.WEED_BAG));
+
+            //reduce Number of Item used
+            if (!item.useOnce())
+                gamePanel.getPlayer().getInventory().useItem(item);
+
+            smokeWithNpc.value = 0;
+            gamePanel.getStateHandler().setState(smokeWithNpc);
+            return;
+        }
+
+
         Player player = gamePanel.getPlayer();
         Item item = player.getEquippedItem();
         if (item.needsfire()) {

@@ -148,4 +148,13 @@ public class Inventory {
             return entries[index].getItem();
         return null;
     }
+
+    public int getItemIndex(ItemType itemType) {
+        for (int i = 0; i < numEntries; i++) {
+            if (entries[i].getItem().getItemType() == itemType) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }

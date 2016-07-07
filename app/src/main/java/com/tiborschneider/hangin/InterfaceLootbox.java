@@ -27,7 +27,7 @@ public class InterfaceLootbox extends InterfaceElement {
         lootbox = aLootbox;
         context = aContext;
         x = (GamePanel.screenWidth - lootboxWidth) / 2;
-        y = x;
+        y = 2*statusBarOuterMargin + statusBarHeight - gameBorderSize + x;
         xPosInfoText = x + borderWidth + innerTextMargin;
         yPosInfoText = y + borderWidth + innerTextMargin + normalTextSize + textOffset;
         xPosImage = x + borderWidth + lootboxImageMargin;

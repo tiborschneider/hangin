@@ -18,7 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private GamePanel gamePanel;
 
     public static final String DATABASE_NAME     = "game.db";
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 7;
 
     public static final String TABLE_SCENE_NAME  = "db_scene";
     public static final String TABLE_SCENE_COL_ID = "id";
@@ -81,6 +81,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_STATE_COL_ID = "id";
     public static final String TABLE_STATE_COL_NAME = "name";
     public static final String TABLE_STATE_COL_VALUE = "value";
+    public static final String TABLE_STATE_COL_SPECIAL = "special_state";
 
     public static final String TABLE_NPC_NAME = "db_npc";
     public static final String TABLE_NPC_COL_ID = "id";
@@ -197,7 +198,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqlQuery = "CREATE TABLE " + TABLE_STATE_NAME + " ( " +
                 TABLE_STATE_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 TABLE_STATE_COL_NAME + " STRING, " +
-                TABLE_STATE_COL_VALUE + " INTEGER);";
+                TABLE_STATE_COL_VALUE + " INTEGER, " +
+                TABLE_STATE_COL_SPECIAL + " INTEGER);";
+
         db.execSQL(sqlQuery);
 
         sqlQuery = "CREATE TABLE " + TABLE_NPC_NAME + " ( " +
@@ -451,6 +454,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues = new ContentValues();
             contentValues.put(TABLE_STATE_COL_NAME, row[0]);
             contentValues.put(TABLE_STATE_COL_VALUE, Integer.parseInt(row[1]));
+            int isSpecial = 0;
+            if (StateHandler.isSpecialState(row[0]))
+                isSpecial = 1;
+            contentValues.put(TABLE_STATE_COL_SPECIAL, isSpecial);
             db.insert(TABLE_STATE_NAME, null, contentValues);
         }
     }
@@ -608,7 +615,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursorState.getCount() == 1)
         {
             cursorState.moveToFirst();
-            return new GameState(cursorState.getString(1), cursorState.getInt(2));
+            return new GameState(cursorState.getString(1), cursorState.getInt(2), (cursorState.getInt(3) == 1));
         }
         return new GameState("NULL", 0);
     }
@@ -625,14 +632,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = getNpcDialogueCursor(aNpc);
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()){
-                if (getState(cursor.getString(3)).value == cursor.getInt(4) && getState(cursor.getString(5)).value == cursor.getInt(6) && getState(cursor.getString(7)).value == cursor.getInt(8))
+                if (gamePanel.getStateHandler().getState(cursor.getString(3)).value == cursor.getInt(4) && gamePanel.getStateHandler().getState(cursor.getString(5)).value == cursor.getInt(6) && gamePanel.getStateHandler().getState(cursor.getString(7)).value == cursor.getInt(8))
                     return cursor.getString(2);
             }
         }
         return "npcDoesNotInteract";
     }
 
-    public void initSavedPlayer()
+    public boolean initSavedPlayer()
     {
         Player player = gamePanel.getPlayer();
         Cursor playerSave = getPlayerSaveCursor();
@@ -644,7 +651,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             player.setStonedMeter(playerSave.getInt(6));
             gamePanel.setCurrentScene(playerSave.getInt(1));
             initInventory();
+            return true;
         }
+        return false;
     }
 
     public void savePlayerStatus()

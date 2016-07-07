@@ -45,10 +45,13 @@ public class Dialogue {
 
     public String[] getNextText()
     {
+        //set State
+        GameState state = new GameState(textSetState[currentText], textSetValue[currentText]);
+        gamePanel.getStateHandler().setState(state);
+
         //run Action
         runTextAction(currentText);
-        //set State
-        gamePanel.getStateHandler().setState(new GameState(textSetState[currentText], textSetValue[currentText]));
+
         return text[currentText++];
     }
 

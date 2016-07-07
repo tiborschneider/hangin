@@ -39,7 +39,7 @@ public class InterfaceInventory extends InterfaceElement {
         darkShadow = resizeImage(darkShadow, InterfaceElement.inventoryWidth, InterfaceElement.inventoryHeight);
 
         x = (GamePanel.screenWidth - inventoryWidth) / 2;
-        y = x;
+        y = 2*statusBarOuterMargin + statusBarHeight - gameBorderSize + x;
         xPosTitleText = borderWidth + innerTextMargin; // +x
         yPosTitleText = borderWidth + innerTextMargin + bigTextSize + textOffset; // +y
         for (int i = 0; i < numCols; i++)

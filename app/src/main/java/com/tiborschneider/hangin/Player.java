@@ -15,15 +15,21 @@ public class Player extends GameObject {
     private int animationSpeed = 20;
     private static int meterMaximum = 100;
     private Inventory inventory;
-    private int munchiesMeter = 100;
+    private int munchiesMeter = 0;
     private int stonedMeter = 0;
-    private int nextMunchiesMeter = 100;
+    private int nextMunchiesMeter = 0;
     private int nextStonedMeter = 0;
+    private int stonedMeterCounter = 0;
+    private int munchiesMeterCounter = 0;
+    private static int maxTimeToDecayStoned = 80;
+    private static int minTimeToDecayStoned = 40;
+    private static int maxTimeToDecayMunchies = 200;
+    private static int minTimeToDecayMunchies = 40;
     private Bitmap[] imageArray = new Bitmap[numImages];
 
     public Player(GamePanel aGamePanel, Context aContext, int aX, int aY)
     {
-        super(aGamePanel, aContext, Direction.DOWN, aX, aY, 4);
+        super(aGamePanel, aContext, Direction.RIGHT, aX, aY, 4);
         context = aContext;
         inventory = new Inventory(context, gamePanel);
 
@@ -53,6 +59,22 @@ public class Player extends GameObject {
         updateMovement();
         if (!GameJumpHandler.jumpsAllowed && (tmpX != 0 || tmpY != 0))
             GameJumpHandler.jumpsAllowed = true;
+
+        //update Stoned meter
+        stonedMeterCounter++;
+        int currentDecayTime = maxTimeToDecayStoned - stonedMeter*(maxTimeToDecayStoned - minTimeToDecayStoned)/100;
+        if (stonedMeterCounter >= currentDecayTime) {
+            stonedMeterCounter = 0;
+            updateStonedMeter(-1);
+        }
+
+        //update Munchies meter
+        munchiesMeterCounter++;
+        currentDecayTime = maxTimeToDecayMunchies - munchiesMeter*(maxTimeToDecayMunchies - minTimeToDecayMunchies)/100;
+        if (munchiesMeterCounter >= currentDecayTime) {
+            munchiesMeterCounter = 0;
+            updateMunchiesMeter(1);
+        }
 
         //update StepCounter
         prevMotionCounter = motionCounter;
