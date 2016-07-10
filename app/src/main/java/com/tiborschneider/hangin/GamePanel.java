@@ -119,6 +119,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         }
         player.update();
 
+        //update animation tiles
+        scenes[currentScene].update();
+
         //update npc on the same GameScene
         for (int i = 0; i < numNpc; i++)
             if (npc[i] != null && npc[i].isOnScene(scenes[currentScene]))
@@ -140,7 +143,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         if (canvas != null)
         {
             //get player's stoned level
-            float stonedLevel = ((float)player.getStonedMeter())/100;
+            float stonedLevel = ((float)(player.getStonedMeter()))/100;
             Paint stonedPaint = new Paint();
             ColorMatrix cm = new ColorMatrix();
             cm.setSaturation(stonedLevel);
@@ -154,7 +157,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
                 scenes[currentScene].createSceneImage(stonedPaint);
             }
 
-            scenes[currentScene].draw(canvas, null);
+            scenes[currentScene].draw(canvas, stonedPaint);
             player.draw(canvas, stonedPaint);
 
             //npc npc on the same GameScene
@@ -198,6 +201,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     public boolean canWalkRight(int aX, int aY) {return scenes[currentScene].canWalkRight(aX, aY);}
 
     public GameScene getScene() { return scenes[currentScene]; }
+
+    public GameScene getScene(int index) {
+        if (index >= 0 && index < numScenes) {
+            return scenes[index];
+        }
+        return null;
+    }
 
     public MainThread getThread()
     {
@@ -248,6 +258,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         return null;
     }
 
+    public NonPlayerCharacter getNpc(String name) {
+        for (int i = 0; i < GamePanel.numNpc; i++) {
+            if (npc[i] != null && npc[i].getName().equals(name)) {
+                return npc[i];
+            }
+        }
+        return null;
+    }
+
     public void setCurrentScene(int index)
     {
         //this method should not be called while the game is running!!
@@ -262,5 +281,21 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     public static GamePanel getGamePanel()
     {
         return theGamePanel;
+    }
+
+    public int getSceneId(GameScene scene) {
+        for (int i = 0; i < numScenes; i++) {
+            if (scenes[i] == scene) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public boolean isPlayerOn(int x, int y) {
+        if (player.getX() == x && player.getY() == y) {
+            return true;
+        }
+        return false;
     }
 }

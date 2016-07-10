@@ -25,6 +25,11 @@ public class InventoryEntry {
         return ret;
     }
 
+    public boolean checkItem(ItemType type)
+    {
+        return (item.getItemType() == type);
+    }
+
     public Item getItem()
     {
         return item;

@@ -161,13 +161,14 @@ public class InterfaceDialogue extends InterfaceElement{
 
     public void selectReply()
     {
-        //run Action
-        dialogue.runReplyAction(currentSelectionIndex);
-
         //set State
         GameState state = new GameState(dialogue.getReplyStateNameToChange(currentSelectionIndex), dialogue.getReplyStateValueToChange(currentSelectionIndex));
         if (state.name != "NULL")
             gamePanel.getStateHandler().setState(state);
+
+        //run Action
+        dialogue.runReplyAction(currentSelectionIndex);
+
 
         Dialogue nextDialogue = dialogue.getNextDialogue(currentSelectionIndex);
         dialogue = nextDialogue;

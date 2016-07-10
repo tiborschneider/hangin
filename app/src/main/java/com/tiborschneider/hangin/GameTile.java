@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+
 import java.util.Random;
 
 
@@ -20,6 +22,7 @@ public abstract class GameTile {
     protected boolean canGoLeft = true;
     protected boolean canGoRight = true;
     protected boolean isInteractive = false;
+    protected boolean isAnimation = false;
     protected Bitmap image;
     protected TileType type;
 
@@ -33,7 +36,6 @@ public abstract class GameTile {
         //set Image for all and let dem override if necessary
         String imageName = type.name().toLowerCase();
         if (!imageName.equals("grass") && !imageName.matches("sign(.*)")) {
-            //System.out.println(imageName);
             int imageId = context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
             image = BitmapFactory.decodeResource(context.getResources(), imageId);
         }
@@ -43,13 +45,8 @@ public abstract class GameTile {
             case GRASS:
                 setRandomGrassImage(context);
                 //randomize accent
-                if (randInt(1,6) == 1)
-                {
-                    String accentName = "grass_accent" + randInt(1, 6);
-                    int accentId = context.getResources().getIdentifier(accentName, "drawable", context.getPackageName());
-                    accent = BitmapFactory.decodeResource(context.getResources(), accentId);
-                    image = overlay(image, accent);
-                }
+                image = drawAccent(image);
+
                 break;
             case GRASS_RISE_T:
                 canGoUp = false;
@@ -136,6 +133,30 @@ public abstract class GameTile {
                 image = overlay(image, accent);
                 walkable = false;
                 break;
+            case FENCE_CORNER_TOP_LEFT:
+                setRandomGrassImage(context);
+                accent = BitmapFactory.decodeResource(context.getResources(), R.drawable.fence_corner_top_left);
+                image = overlay(image, accent);
+                walkable = false;
+                break;
+            case FENCE_CORNER_TOP_RIGHT:
+                setRandomGrassImage(context);
+                accent = BitmapFactory.decodeResource(context.getResources(), R.drawable.fence_corner_top_right);
+                image = overlay(image, accent);
+                walkable = false;
+                break;
+            case FENCE_CORNER_BOTTOM_LEFT:
+                setRandomGrassImage(context);
+                accent = BitmapFactory.decodeResource(context.getResources(), R.drawable.fence_corner_bottom_left);
+                image = overlay(image, accent);
+                walkable = false;
+                break;
+            case FENCE_CORNER_BOTTOM_RIGHT:
+                setRandomGrassImage(context);
+                accent = BitmapFactory.decodeResource(context.getResources(), R.drawable.fence_corner_bottom_right);
+                image = overlay(image, accent);
+                walkable = false;
+                break;
             case TREE_1_TL:
                 walkable = false;
                 break;
@@ -190,8 +211,45 @@ public abstract class GameTile {
                 image = overlay(image, accent);
                 isInteractive = true;
                 break;
-
+            case CAMPFIRE_GRASS:
+                walkable = false;
+                isInteractive = true;
+                isAnimation = true;
+                break;
+            case GRASS_WATER_T:
+                canGoUp = false;
+                break;
+            case GRASS_WATER_B:
+                canGoDown = false;
+                break;
+            case GRASS_WATER_L:
+                canGoLeft = false;
+                break;
+            case GRASS_WATER_R:
+                canGoRight = false;
+                break;
+            case GRASS_WATER_TL:
+                canGoUp = false;
+                canGoLeft = false;
+                break;
+            case GRASS_WATER_TR:
+                canGoUp = false;
+                canGoRight = false;
+                break;
+            case GRASS_WATER_BL:
+                canGoDown = false;
+                canGoLeft = false;
+                break;
+            case GRASS_WATER_BR:
+                canGoDown = false;
+                canGoRight = false;
+                break;
             default:
+        }
+
+        //mark not walkable if tile starts with water:
+        if (type.name().matches("WATER(.*)")) {
+            walkable = false;
         }
 
         //resize Image
@@ -207,6 +265,23 @@ public abstract class GameTile {
         canvas.drawBitmap(bmp1, new Matrix(), null);
         canvas.drawBitmap(bmp2, new Matrix(), null);
         return bmOverlay;
+    }
+
+    private Bitmap drawAccent(Bitmap image) {
+        Bitmap bmOverlay = Bitmap.createBitmap(image.getWidth(), image.getHeight(), image.getConfig());
+        Canvas canvas = new Canvas(bmOverlay);
+        canvas.drawBitmap(image, 0, 0, null);
+        if (randInt(1,4
+        ) == 1)
+        {
+            String accentName = "grass_accent" + randInt(1, 6);
+            int accentId = GamePanel.getGamePanel().getContext().getResources().getIdentifier(accentName, "drawable", GamePanel.getGamePanel().getContext().getPackageName());
+            Bitmap accent = BitmapFactory.decodeResource(GamePanel.getGamePanel().getContext().getResources(), accentId);
+            accent = InterfaceElement.resizeImage(accent, accent.getWidth()/2, accent.getHeight()/2);
+            canvas.drawBitmap(accent, randInt(-10,10+(InterfaceElement.tileSize/2)), randInt(-10,10+(InterfaceElement.tileSize/2)), null);
+        }
+        return bmOverlay;
+
     }
 
     public Bitmap getBitmap()
@@ -233,7 +308,7 @@ public abstract class GameTile {
         return rand.nextInt((max - min) + 1) + min;
     }
 
-    public boolean setDialogue(Dialogue aDialogue)
+    public boolean setDialogue(String aDialogue)
     {
         return false;
     }
@@ -253,5 +328,29 @@ public abstract class GameTile {
         String imageName = "grass" + randInt(1, 10);
         int imageId = context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
         image = BitmapFactory.decodeResource(context.getResources(), imageId);
+    }
+
+    public boolean update() {
+        return false;
+    }
+
+    public Bitmap getAnimationImage() {
+        return null;
+    }
+
+    public void drawAnimation(Canvas canvas, Paint stonedPaint) {
+        return;
+    }
+
+    public boolean isAnimationTile() {
+        return isAnimation;
+    }
+
+    public int getOffsetX() {
+        return 0;
+    }
+
+    public int getOffsetY() {
+        return 0;
     }
 }

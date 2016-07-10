@@ -5,4 +5,4 @@ katia;katiaSmokeFirstWeed;katiaRelations;1;playerHasWeed;1;NULL;0
 katia;katiaSmokeFirstBigJoint;katiaRelations;1;playerHasJoint;3;playerHasWeed;0
 katia;katiaSmokeFirstJoint;katiaRelations;1;playerHasJoint;2;playerHasWeed;0
 katia;katiaSmokeFirstUglyJoint;katiaRelations;1;playerHasJoint;1;playerHasWeed;0
-katia;katiaSmokeFirstNothing;katiaRelations;0;playerHasJoint;0;playerHasWeed;0
+katia;katiaSmokeFirstNothing;katiaRelations;1;playerHasJoint;0;playerHasWeed;0

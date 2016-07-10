@@ -154,6 +154,9 @@ public class InteractionHandler {
         if (scene.isLootboxInView(player.getX(), player.getY(), player.getDirection())) {
             openLootbox(scene);
         }
+        if (scene.isInteractiveInView(player.getX(), player.getY(), player.getDirection())) {
+            createDialogue(scene.getDialogueFromTileInView(player.getX(), player.getY(), player.getDirection()));
+        }
         if(scene.isNpcInView(player.getX(), player.getY(), player.getDirection())) {
             NonPlayerCharacter npc = scene.getNpc(player.getX(), player.getY(), player.getDirection());
             Direction newNpcDirection = Direction.NDEF;
@@ -179,6 +182,7 @@ public class InteractionHandler {
 
     public void createDialogue(Dialogue aDialogue)
     {
+        System.out.println("Dialogue: Replies: " + aDialogue.getNumReplies());
         gamePanel.redrawScene();
         interfaceDialogue = new InterfaceDialogue(gamePanel, context, aDialogue);
         if (interfaceActive) {

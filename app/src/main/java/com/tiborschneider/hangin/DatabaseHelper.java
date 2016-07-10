@@ -65,6 +65,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_DIAL_REPLY_COL_ACTION = "action";
     public static final String TABLE_DIAL_REPLY_COL_SET_STATE = "set_state";
     public static final String TABLE_DIAL_REPLY_COL_SET_VALUE = "set_value";
+    public static final String TABLE_DIAL_REPLY_COL_CONDITION_STATE = "condition_state";
+    public static final String TABLE_DIAL_REPLY_COL_CONDITION_VALUE = "condition_value";
 
     public static final String TABLE_LOOTBOX_NAME = "db_lootbox";
     public static final String TABLE_LOOTBOX_COL_ID = "id";
@@ -118,6 +120,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_INVENTORY_COL_ITEM = "item_name";
     public static final String TABLE_INVENTORY_COL_NUM = "quantity";
     public static final String TABLE_INVENTORY_COL_USES = "special_item_uses";
+
+    public static final String TABLE_NPC_MOVE_NAME = "db_npc_move";
+    public static final String TABLE_NPC_MOVE_COL_ID = "id";
+    public static final String TABLE_NPC_MOVE_COL_NPC_NAME = "fs_npc_name";
+    public static final String TABLE_NPC_MOVE_COL_ON_SCENE = "on_scene";
+    public static final String TABLE_NPC_MOVE_COL_ON_X = "on_x";
+    public static final String TABLE_NPC_MOVE_COL_ON_Y = "on_y";
+    public static final String TABLE_NPC_MOVE_COL_START_DIRECTION = "direction";
+    public static final String TABLE_NPC_MOVE_COL_CONDITION_STATE = "condition_state";
+    public static final String TABLE_NPC_MOVE_COL_CONDITION_VALUE = "condition_value";
+    public static final String TABLE_NPC_MOVE_COL_COMMAND = "command";
 
     public DatabaseHelper(Context aContext, GamePanel aGamePanel)
     {
@@ -180,7 +193,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 TABLE_DIAL_REPLY_COL_NEXT_DIALOGUE + " STRING, " +
                 TABLE_DIAL_REPLY_COL_ACTION + " STRING, " +
                 TABLE_DIAL_REPLY_COL_SET_STATE + " STRING, " +
-                TABLE_DIAL_REPLY_COL_SET_VALUE + " INTEGER);";
+                TABLE_DIAL_REPLY_COL_SET_VALUE + " INTEGER, " +
+                TABLE_DIAL_REPLY_COL_CONDITION_STATE + " STRING, " +
+                TABLE_DIAL_REPLY_COL_CONDITION_VALUE + " INTEGER);";
         db.execSQL(sqlQuery);
 
         sqlQuery = "CREATE TABLE " + TABLE_LOOTBOX_NAME + " ( " +
@@ -243,6 +258,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 TABLE_INVENTORY_COL_USES + " INTEGER);";
         db.execSQL(sqlQuery);
 
+        sqlQuery = "CREATE TABLE " + TABLE_NPC_MOVE_NAME + " ( " +
+                TABLE_NPC_MOVE_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                TABLE_NPC_MOVE_COL_NPC_NAME + " STRING, " +
+                TABLE_NPC_MOVE_COL_ON_SCENE + " INTEGER, " +
+                TABLE_NPC_MOVE_COL_ON_X + " INTEGER, " +
+                TABLE_NPC_MOVE_COL_ON_Y + " INTEGER, " +
+                TABLE_NPC_MOVE_COL_START_DIRECTION + " STRING, " +
+                TABLE_NPC_MOVE_COL_CONDITION_STATE + " STRING, " +
+                TABLE_NPC_MOVE_COL_CONDITION_VALUE + " INTEGER, " +
+                TABLE_NPC_MOVE_COL_COMMAND + " STRING);";
+        db.execSQL(sqlQuery);
 
         System.out.println("Initialize all Tables with data from CSV files.");
         readScenesFromCSV(db);
@@ -253,7 +279,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         readStateFromCSV(db);
         readNpcDialogueFromCSV(db);
         readNpcFromCSV(db);
+        readNpcMoveFromCSV(db);
     }
+
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
@@ -270,6 +298,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STATE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYER_SAVE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_INVENTORY_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NPC_MOVE_NAME);
         onCreate(db);
     }
 
@@ -400,6 +429,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(TABLE_DIAL_REPLY_COL_ACTION, row[3]);
             contentValues.put(TABLE_DIAL_REPLY_COL_SET_STATE, row[4]);
             contentValues.put(TABLE_DIAL_REPLY_COL_SET_VALUE, Integer.parseInt(row[5]));
+            contentValues.put(TABLE_DIAL_REPLY_COL_CONDITION_STATE, row[6]);
+            contentValues.put(TABLE_DIAL_REPLY_COL_CONDITION_VALUE, Integer.parseInt(row[7]));
             db.insert(TABLE_DIAL_REPLY_NAME, null, contentValues);
         }
     }
@@ -511,6 +542,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+
+    private void readNpcMoveFromCSV(SQLiteDatabase db) {
+        db.execSQL("DELETE FROM " + TABLE_NPC_MOVE_NAME);
+
+        InputStream inputStream = context.getResources().openRawResource(R.raw.npc_command);
+        CSVReader csv = new CSVReader(inputStream);
+        List<String[]> npcMoveList = csv.read();
+
+        ContentValues contentValues;
+
+        for (String[] row : npcMoveList) {
+            contentValues = new ContentValues();
+            contentValues.put(TABLE_NPC_MOVE_COL_NPC_NAME, row[0]);
+            contentValues.put(TABLE_NPC_MOVE_COL_ON_SCENE, Integer.parseInt(row[1]));
+            contentValues.put(TABLE_NPC_MOVE_COL_ON_X, Integer.parseInt(row[2]));
+            contentValues.put(TABLE_NPC_MOVE_COL_ON_Y, Integer.parseInt(row[3]));
+            contentValues.put(TABLE_NPC_MOVE_COL_START_DIRECTION, row[4]);
+            contentValues.put(TABLE_NPC_MOVE_COL_CONDITION_STATE, row[5]);
+            contentValues.put(TABLE_NPC_MOVE_COL_CONDITION_VALUE, Integer.parseInt(row[6]));
+            contentValues.put(TABLE_NPC_MOVE_COL_COMMAND, row[7]);
+            db.insert(TABLE_NPC_MOVE_NAME, null, contentValues);
+        }
+    }
+
     public GameScene[] getGameScenes()
     {
         Cursor allScenes = getAllScenesCursor();
@@ -532,7 +587,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         boolean isInteractive = (!allTiles.getString(5).equals("null"));
                         gameScene[sceneIndex].createNewTile(allTiles.getInt(3), allTiles.getInt(4), TileType.valueOf(allTiles.getString(2)), isInteractive);
                         if (isInteractive) {
-                            gameScene[sceneIndex].addDialogueToTile(allTiles.getInt(3), allTiles.getInt(4), getDialogueFromDB(allTiles.getString(5)));
+                            gameScene[sceneIndex].addDialogueToTile(allTiles.getInt(3), allTiles.getInt(4), allTiles.getString(5));
 
                         }
                     }
@@ -594,8 +649,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 Cursor cursorDialogueReply = getDialogueReplyCursor(aDialogue);
                 if (cursorDialogueReply.getCount() != 0) {
                     while (cursorDialogueReply.moveToNext()) {
-                        Dialogue followingDialogue = getDialogueFromDB(cursorDialogueReply.getString(3));
-                        dialogue.addReply(cursorDialogueReply.getString(2), followingDialogue, cursorDialogueReply.getString(4), cursorDialogueReply.getString(5), cursorDialogueReply.getInt(6));
+                        GameState state = gamePanel.getStateHandler().getState(cursorDialogueReply.getString(7));
+                        System.out.println("Create Reply: " + cursorDialogueReply.getString(2) + " Check state: " + state.name + " should be: " + cursorDialogueReply.getInt(8) + " and is: " + state.value);
+                        if (gamePanel.getStateHandler().getState(cursorDialogueReply.getString(7)).value == cursorDialogueReply.getInt(8)) {
+                            System.out.println("True");
+                            Dialogue followingDialogue = getDialogueFromDB(cursorDialogueReply.getString(3));
+                            dialogue.addReply(cursorDialogueReply.getString(2), followingDialogue, cursorDialogueReply.getString(4), cursorDialogueReply.getString(5), cursorDialogueReply.getInt(6));
+                        }
                     }
                 }
                 return dialogue;
@@ -730,6 +790,65 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(deleteLootboxQuery);
     }
 
+    public boolean getCommandFromDatabase(NonPlayerCharacter npc) {
+        Cursor command = getCommandCursor(npc.getName(), npc.getSceneIndex(), npc.getX(), npc.getY());
+        if (command.getCount() > 0) {
+            while (command.moveToNext()) {
+                System.out.println("Found Command!");
+                //check State
+                if (gamePanel.getStateHandler().getState(command.getString(6)).value == command.getInt(7)) {
+
+                    //ensure that the player is looking in the correct direction
+                    if (npc.getDirection() != Direction.valueOf(command.getString(5))) {
+                        npc.queueMovement(new MoveCommand(Direction.valueOf(command.getString(5))));
+                    }
+
+                    String[] commandString = command.getString(8).split(",");
+                    for (int i = 0; i < commandString.length; i++) {
+                        if (commandString[i].equals("J")) {
+                            npc.queueMovement(new MoveCommand(Integer.parseInt(commandString[++i]), Integer.parseInt(commandString[++i]), Integer.parseInt(commandString[++i])));
+                        } else {
+                            switch (commandString[i]) {
+                                case "U":
+                                    npc.queueMovement(new MoveCommand(Direction.UP));
+                                    break;
+                                case "D":
+                                    npc.queueMovement(new MoveCommand(Direction.DOWN));
+                                    break;
+                                case "L":
+                                    npc.queueMovement(new MoveCommand(Direction.LEFT));
+                                    break;
+                                case "R":
+                                    npc.queueMovement(new MoveCommand(Direction.RIGHT));
+                                    break;
+                            }
+                        }
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public void updateNpcPosition(NonPlayerCharacter npc, int scene, int x, int y, Direction direction) {
+        Cursor cursor = getNpcCursor(npc.getName());
+        if (cursor.getCount() == 1) {
+            cursor.moveToFirst();
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(TABLE_NPC_COL_NAME, cursor.getString(1));
+            contentValues.put(TABLE_NPC_COL_IMAGE_NAME, cursor.getString(2));
+            contentValues.put(TABLE_NPC_COL_SCENE_INDEX, scene);
+            contentValues.put(TABLE_NPC_COL_INIT_X, x);
+            contentValues.put(TABLE_NPC_COL_INIT_Y, y);
+            contentValues.put(TABLE_NPC_COL_INIT_DIRECTION, direction.name());
+            contentValues.put(TABLE_NPC_COL_SPEED, cursor.getInt(7));
+            db.insert(TABLE_NPC_NAME, null, contentValues);
+            db.execSQL("DELETE FROM " + TABLE_NPC_NAME + " WHERE " + TABLE_NPC_COL_ID + " = " + cursor.getInt(0) + ";");
+        }
+    }
     //Cursors:
 
     private Cursor getAllScenesCursor()
@@ -807,6 +926,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.rawQuery(selectNpcQuery, null);
     }
 
+    private Cursor getNpcCursor(String npcName) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectNpcQuery = "SELECT * FROM " + TABLE_NPC_NAME + " WHERE " + TABLE_NPC_COL_NAME + " = '" + npcName + "';";
+        return db.rawQuery(selectNpcQuery, null);
+    }
+
     private Cursor getPlayerSaveCursor()
     {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -821,6 +946,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.rawQuery(selectInventoryQuery, null);
     }
 
+    private Cursor getCommandCursor(String aNpc, int startScene, int startX, int startY) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectCommandQuery = "SELECT * FROM " + TABLE_NPC_MOVE_NAME + " WHERE ( " +
+                TABLE_NPC_MOVE_COL_ON_SCENE + " = " + startScene + " AND " +
+                TABLE_NPC_MOVE_COL_ON_X + " = " + startX + " AND " +
+                TABLE_NPC_MOVE_COL_ON_Y + " = " + startY + " );";
+        return db.rawQuery(selectCommandQuery, null);
+    }
+
     private int getIntFromString(String aString)
     {
         if (aString == null || aString == "")
@@ -828,5 +962,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         else
             return Integer.parseInt(aString);
     }
+
 
 }

@@ -1,47 +1,55 @@
-signInfo1;Blue pill;signInfo1Blue;NULL;NULL;0
-signInfo1;Red pill;signInfo1Red;NULL;greenGuyRelations;1
-signInfo1Red;Yes;signInfo1RedYes;NULL;NULL;0
-signInfo1Red;No;signInfo1RedNo;NULL;NULL;0
-useAlcohol;Drink;useAlcoholDrink;NULL;NULL;0
-useAlcohol;Drop;useAlcoholDrop;DROP;NULL;0
-useApple;Eat;useAppleEat;CONSUME;NULL;0
-useApple;Drop;useAppleDrop;DROP;NULL;0
-useBacon;Eat;useBaconEat;CONSUME;NULL;0
-useBacon;Drop;useBaconDrop;DROP;NULL;0
-useBanana;Est;useBananaEat;CONSUME;NULL;0
-useBanana;Drop;useBananaDrop;DROP;NULL;0
-useBeer;Drink;useBeerDrink;CONSUME;NULL;0
-useBeer;Drop;useBeerDrop;DROP;NULL;0
-useBurger;Eat;useBurgerEat;CONSUME;NULL;0
-useBurger;Drop;useBurgerDrop;DROP;NULL;0
-useCarrot;Eat;useCarrotEat;CONSUME;NULL;0
-useCarrot;Drop;useCarrotDrop;DROP;NULL;0
-useCheese;Eat;useCheeseEat;CONSUME;NULL;0
-useCheese;Drop;useCheeseDrop;DROP;NULL;0
-useRibs;Eat;useRibsEat;CONSUME;NULL;0
-useRibs;Drop;useRibsDrop;DROP;NULL;0
-useSeeds;Plant seed;useSeedsPlant;PLANT_SEED;NULL;0
-useSeeds;Drop;useSeedsDrop;DROP;NULL;0
-useSteak;Eat;useSteakEat;CONSUME;NULL;0
-useSteak;Drop;useSteakDrop;DROP;NULL;0
-smokeJoint;Smoke now;smokeJointNow;CONSUME;NULL;0
-smokeJoint;Smoke later;smokeJointLater;NULL;NULL;0
-smokeBigJoint;Smoke now;smokeBigJointNow;CONSUME;NULL;0
-smokeBigJoint;Smoke later;smokeBigJointLater;NULL;NULL;0
-smokeUglyJoint;Smoke now;smokeUglyJointNow;CONSUME;NULL;0
-smokeUglyJoint;Smoke later;smokeUglyJointLater;NULL;NULL;0
-useVeganJuice;Drink;useVeganJuiceDrink;NULL;NULL;0
-useVeganJuice;Drop;useVeganJuiceDrop;DROP;NULL;0
-rollOne;Sure;rollOneYes;ROLL;NULL;0
-rollOne;Later;rollOneNo;NULL;NULL;0
-greenGuyNormalDialogue2;sure;greenGuyTeachesRolling;NULL;abilityRollJoints;2
-greenGuyNormalDialogue2;not now;greenGuyTeachesRollingNot;NULL;NULL;0
-initialDialogue;Why not!?;initialDialogue2;NULL;NULL;0
-katiaSmokeFirstWeed;yeah;katiaSmokeFirstWeedYes;NULL;katiaRelations;2
-katiaSmokeFirstWeed;[lie] No;katiaSmokeFirstWeedLie;NULL;NULL;0
-katiaSmokeFirstUglyJoint;Yeah!;katiaSmokeFirstUglyJointYes;NULL;katiaRelations;2
-katiaSmokeFirstUglyJoint; [lie] No;katiaSmokeFirstUglyJointLies;NULL;NULL;0
-katiaSmokeFirstJoint;Yeah;katiaSmokeFirstJointYes;NULL;katiaRelations;2
-katiaSmokeFirstJoint;[lie] No;katiaSmokeFirstJointLie;NULL;NULL;0
-katiaSmokeFirstBigJoint;Yeah;katiaSmokeFirstBigJointYes;NULL;katiaRelations;1
-katiaSmokeFirstBigJoint;[lie] No;katiaSmokeFirstBigJointLie;NULL;NULL;0
+signInfo1;Blue pill;signInfo1Blue;NULL;NULL;0;NULL;0
+signInfo1;Red pill;signInfo1Red;NULL;greenGuyRelations;1;NULL;0
+signInfo1Red;Yes;signInfo1RedYes;NULL;NULL;0;NULL;0
+signInfo1Red;No;signInfo1RedNo;NULL;NULL;0;NULL;0
+useAlcohol;Drink;useAlcoholDrink;NULL;NULL;0;NULL;0
+useAlcohol;Drop;useAlcoholDrop;DROP;NULL;0;NULL;0
+useApple;Eat;useAppleEat;CONSUME;NULL;0;NULL;0
+useApple;Drop;useAppleDrop;DROP;NULL;0;NULL;0
+useBacon;Eat;useBaconEat;CONSUME;NULL;0;NULL;0
+useBacon;Drop;useBaconDrop;DROP;NULL;0;NULL;0
+useBanana;Est;useBananaEat;CONSUME;NULL;0;NULL;0
+useBanana;Drop;useBananaDrop;DROP;NULL;0;NULL;0
+useBeer;Drink;useBeerDrink;CONSUME;NULL;0;NULL;0
+useBeer;Drop;useBeerDrop;DROP;NULL;0;NULL;0
+useBurger;Eat;useBurgerEat;CONSUME;NULL;0;NULL;0
+useBurger;Drop;useBurgerDrop;DROP;NULL;0;NULL;0
+useCarrot;Eat;useCarrotEat;CONSUME;NULL;0;NULL;0
+useCarrot;Drop;useCarrotDrop;DROP;NULL;0;NULL;0
+useCheese;Eat;useCheeseEat;CONSUME;NULL;0;NULL;0
+useCheese;Drop;useCheeseDrop;DROP;NULL;0;NULL;0
+useRibs;Eat;useRibsEat;CONSUME;NULL;0;NULL;0
+useRibs;Drop;useRibsDrop;DROP;NULL;0;NULL;0
+useSeeds;Plant seed;useSeedsPlant;PLANT_SEED;NULL;0;NULL;0
+useSeeds;Drop;useSeedsDrop;DROP;NULL;0;NULL;0
+useSteak;Eat;useSteakEat;CONSUME;NULL;0;NULL;0
+useSteak;Drop;useSteakDrop;DROP;NULL;0;NULL;0
+smokeJoint;Smoke now;smokeJointNow;CONSUME;NULL;0;NULL;0
+smokeJoint;Smoke later;smokeJointLater;NULL;NULL;0;NULL;0
+smokeBigJoint;Smoke now;smokeBigJointNow;CONSUME;NULL;0;NULL;0
+smokeBigJoint;Smoke later;smokeBigJointLater;NULL;NULL;0;NULL;0
+smokeUglyJoint;Smoke now;smokeUglyJointNow;CONSUME;NULL;0;NULL;0
+smokeUglyJoint;Smoke later;smokeUglyJointLater;NULL;NULL;0;NULL;0
+useVeganJuice;Drink;useVeganJuiceDrink;NULL;NULL;0;NULL;0
+useVeganJuice;Drop;useVeganJuiceDrop;DROP;NULL;0;NULL;0
+rollOne;Sure;rollOneYes;ROLL;NULL;0;NULL;0
+rollOne;Later;rollOneNo;NULL;NULL;0;NULL;0
+greenGuyNormalDialogue2;sure;greenGuyTeachesRolling;NULL;abilityRollJoints;2;NULL;0
+greenGuyNormalDialogue2;not now;greenGuyTeachesRollingNot;NULL;NULL;0;NULL;0
+initialDialogue;Why not!?;initialDialogue2;NULL;NULL;0;NULL;0
+katiaSmokeFirstWeed;yeah;katiaSmokeFirstWeedYes;NULL;katiaRelations;2;NULL;0
+katiaSmokeFirstWeed;[lie] No;katiaSmokeFirstWeedLie;NULL;NULL;0;NULL;0
+katiaSmokeFirstUglyJoint;Yeah!;katiaSmokeFirstUglyJointYes;NULL;katiaRelations;2;NULL;0
+katiaSmokeFirstUglyJoint; [lie] No;katiaSmokeFirstUglyJointLies;NULL;NULL;0;NULL;0
+katiaSmokeFirstJoint;Yeah;katiaSmokeFirstJointYes;NULL;katiaRelations;2;NULL;0
+katiaSmokeFirstJoint;[lie] No;katiaSmokeFirstJointLie;NULL;NULL;0;NULL;0
+katiaSmokeFirstBigJoint;Yeah;katiaSmokeFirstBigJointYes;NULL;katiaRelations;1;NULL;0
+katiaSmokeFirstBigJoint;[lie] No;katiaSmokeFirstBigJointLie;NULL;NULL;0;NULL;0
+fireDialogue;Chill for a bit;fireDialogueChill;NULL;NULL;0;NULL;0
+fireDialogue;light it up;fireDialogueUse;NULL;NULL;0;NULL;0
+fireDialogue;Roll one;fireDialogueRoll;ROLL;smokeAtCampfire;4;playerHasWeed;1
+fireDialogueUse;Ugly Joint;fireDialogueSmoke;CONSUME;smokeAtCampfire;1;playerHasJoint;1
+fireDialogueUse;Joint;fireDialogueSmoke;CONSUME;smokeAtCampfire;2;playerHasJoint;2
+fireDialogueUse;Big joint;fireDialogueSmoke;CONSUME;smokeAtCampfire;3;playerHasJoint;3
+fireDialogueRoll;us Lighter;fireDialogueSmokeLighter;NULL;smokeAtCampfireRolledJoint;1;playerHasLighter;1
+fireDialogueRoll;use Fire;fireDialogueSmoke;CONSUME;smokeAtCampfireRolledJoint;2;playerHasLighter;0

@@ -34,6 +34,9 @@ public class Action {
             case ROLL:
                 roll();
                 break;
+            case MOVE_NPC:
+                moveNpc();
+                break;
             case NULL:
                 //do nothing
                 break;
@@ -109,6 +112,56 @@ public class Action {
             return;
         }
 
+        //check if smoke on Campfire
+        GameState smokeAtCampfire = gamePanel.getStateHandler().getState("smokeAtCampfire");
+        if (smokeAtCampfire.value != 0) {
+            switch(smokeAtCampfire.value) {
+                case 1:
+                    //smoke Ugly Joint
+                    gamePanel.getPlayer().updateStonedMeter(10);
+                    gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.UGLY_JOINT));
+                    break;
+                case 2:
+                    //smoke  Joint
+                    gamePanel.getPlayer().updateStonedMeter(20);
+                    gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.JOINT));
+                    break;
+                case 3:
+                    //smoke Big Joint
+                    gamePanel.getPlayer().updateStonedMeter(50);
+                    gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.BIG_JOINT));
+                    break;
+            }
+            smokeAtCampfire.value = 0;
+            gamePanel.getStateHandler().setState(smokeAtCampfire);
+        }
+
+        //Check if smoke on Campfire a Joint rolled before:
+        smokeAtCampfire = gamePanel.getStateHandler().getState("smokeAtCampfireRolledJoint");
+        if (smokeAtCampfire.value != 0) {
+            GameState abilityRollJoints = gamePanel.getStateHandler().getState("abilityRollJoints");
+            int stonedOffset = (smokeAtCampfire.value - 1) * 10;
+            switch (abilityRollJoints.value) {
+                case 1:
+                    //smoke Ugly Joint
+                    gamePanel.getPlayer().updateStonedMeter(20-stonedOffset);
+                    gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.UGLY_JOINT));
+                    break;
+                case 2:
+                    //smoke  Joint
+                    gamePanel.getPlayer().updateStonedMeter(30-stonedOffset);
+                    gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.JOINT));
+                    break;
+                case 3:
+                    //smoke Big Joint
+                    gamePanel.getPlayer().updateStonedMeter(60-stonedOffset);
+                    gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.BIG_JOINT));
+                    break;
+            }
+
+            smokeAtCampfire.value = 0;
+            gamePanel.getStateHandler().setState(smokeAtCampfire);
+        }
 
         Player player = gamePanel.getPlayer();
         Item item = player.getEquippedItem();
@@ -139,11 +192,15 @@ public class Action {
 
     private void roll()
     {
-        Item item = gamePanel.getPlayer().getEquippedItem();
 
-        //get Type of Joint you can create
         GameState abilityRollJoints = gamePanel.getStateHandler().getState("abilityRollJoints");
-
+        Item item = null;
+        GameState smokeAtCampfire = gamePanel.getStateHandler().getState("smokeAtCampfire");
+        if (smokeAtCampfire.value == 4) {
+            item = gamePanel.getPlayer().getInventory().getItem(gamePanel.getPlayer().getInventory().getItemIndex(ItemType.WEED_BAG));
+        } else {
+            item = gamePanel.getPlayer().getEquippedItem();
+        }
 
         if (SpecialItem.isSpecialItem(item.getItemType()) && item.getNumUses() > 0 && abilityRollJoints.value > 0) {
             //add a Joint to Inventory
@@ -167,5 +224,22 @@ public class Action {
             }
             gamePanel.getStateHandler().deleteItemFromInventory(item);
         }
+    }
+
+    private void moveNpc()
+    {
+        //check which NPC to move
+        GameState moveNpc = gamePanel.getStateHandler().getState("moveKatia");
+        if (moveNpc.value == 1) {
+            moveNpc.value = 0;
+            gamePanel.getStateHandler().setState(moveNpc);
+            NonPlayerCharacter npc = gamePanel.getNpc("katia");
+            gamePanel.getStateHandler().commandNpc(npc);
+        } else {
+            return;
+        }
+
+        //get NPC movement from Database
+
     }
 }

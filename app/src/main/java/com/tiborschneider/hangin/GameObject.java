@@ -77,45 +77,48 @@ public abstract class GameObject {
     public void walk(Direction aDir)
     {
         if (dx == 0 && dy == 0 && tmpX == 0 && tmpY == 0) {
+            Direction oldDirection = direction;
             direction = aDir;
             updateImage();
-            switch (aDir) {
-                case UP:
-                    if (gamePanel.isWalkable(x, y - 1) && gamePanel.canWalkUp(x, y) && gamePanel.canWalkDown(x, y-1)) {
-                        dx = 0;
-                        dy = -speed;
-                        tmpX = 0;
-                        tmpY = InterfaceElement.tileSize;
-                        y -= 1;
-                    }
-                    break;
-                case DOWN:
-                    if (gamePanel.isWalkable(x, y + 1) && gamePanel.canWalkDown(x, y) && gamePanel.canWalkUp(x, y+1)) {
-                        dx = 0;
-                        dy = speed;
-                        tmpX = 0;
-                        tmpY = -InterfaceElement.tileSize;
-                        y += 1;
-                    }
-                    break;
-                case LEFT:
-                    if (gamePanel.isWalkable(x - 1, y) && gamePanel.canWalkLeft(x, y) && gamePanel.canWalkRight(x-1, y)) {
-                        dx = -speed;
-                        dy = 0;
-                        tmpX = InterfaceElement.tileSize;
-                        tmpY = 0;
-                        x -= 1;
-                    }
-                    break;
-                case RIGHT:
-                    if (gamePanel.isWalkable(x + 1, y) && gamePanel.canWalkRight(x, y) && gamePanel.canWalkLeft(x+1, y)) {
-                        dx = speed;
-                        dy = 0;
-                        tmpX = -InterfaceElement.tileSize;
-                        tmpY = 0;
-                        x += 1;
-                    }
-                    break;
+            if (oldDirection == direction) {
+                switch (aDir) {
+                    case UP:
+                        if (gamePanel.isWalkable(x, y - 1) && gamePanel.canWalkUp(x, y) && gamePanel.canWalkDown(x, y - 1) && !gamePanel.isPlayerOn(x, y-1)) {
+                            dx = 0;
+                            dy = -speed;
+                            tmpX = 0;
+                            tmpY = InterfaceElement.tileSize;
+                            y -= 1;
+                        }
+                        break;
+                    case DOWN:
+                        if (gamePanel.isWalkable(x, y + 1) && gamePanel.canWalkDown(x, y) && gamePanel.canWalkUp(x, y + 1) && !gamePanel.isPlayerOn(x, y+1)) {
+                            dx = 0;
+                            dy = speed;
+                            tmpX = 0;
+                            tmpY = -InterfaceElement.tileSize;
+                            y += 1;
+                        }
+                        break;
+                    case LEFT:
+                        if (gamePanel.isWalkable(x - 1, y) && gamePanel.canWalkLeft(x, y) && gamePanel.canWalkRight(x - 1, y) && !gamePanel.isPlayerOn(x-1, y)) {
+                            dx = -speed;
+                            dy = 0;
+                            tmpX = InterfaceElement.tileSize;
+                            tmpY = 0;
+                            x -= 1;
+                        }
+                        break;
+                    case RIGHT:
+                        if (gamePanel.isWalkable(x + 1, y) && gamePanel.canWalkRight(x, y) && gamePanel.canWalkLeft(x + 1, y) && !gamePanel.isPlayerOn(x+1, y)) {
+                            dx = speed;
+                            dy = 0;
+                            tmpX = -InterfaceElement.tileSize;
+                            tmpY = 0;
+                            x += 1;
+                        }
+                        break;
+                }
             }
         }
     }

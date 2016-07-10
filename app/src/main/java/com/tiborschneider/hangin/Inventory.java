@@ -57,6 +57,13 @@ public class Inventory {
         return false;
     }
 
+    public boolean hasItem(ItemType type) {
+        for (int i = 0; i < numEntries; i++)
+            if (entries[i].checkItem(type))
+                return true;
+        return false;
+    }
+
 
     public boolean useItem(Item aItem)
     {

@@ -9,5 +9,6 @@ public enum ActionType
     CONSUME,
     PLANT_SEED,
     ROLL,
+    MOVE_NPC,
     NULL,
 }

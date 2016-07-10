@@ -8,5 +8,6 @@ package com.tiborschneider.hangin;
     DOWN,
     LEFT,
     RIGHT,
+    ANY,
     NDEF
  }

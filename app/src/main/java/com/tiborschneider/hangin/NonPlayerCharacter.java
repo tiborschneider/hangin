@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 /**
@@ -23,6 +25,7 @@ public class NonPlayerCharacter extends GameObject{
     private static int changeOfNotMovingRandom = 8;
     private GameScene currentScene;
     private Bitmap[] imageArray = new Bitmap[numImages];
+    private Queue<MoveCommand> queue;
 
     public NonPlayerCharacter(GamePanel aGamePanel, Context aContext, String aName, String aImageBaseName, Direction aDirection, int aX, int aY, GameScene aGameScene, int aSpeed)
     {
@@ -30,14 +33,56 @@ public class NonPlayerCharacter extends GameObject{
         name = aName;
         imageBaseName = aImageBaseName;
         currentScene = aGameScene;
-
+        queue = new LinkedList<>();
         loadImages();
     }
 
+    public void queueMovement(MoveCommand command) {
+        queue.offer(command);
+    }
 
     @Override public void update()
     {
-        if (randomMovement && (dx != 0 || dy != 0)) walk(randomDirection());
+        Direction prevDirection = Direction.NDEF;
+        if (randomMovement && (dx == 0 && dy == 0)) walk(randomDirection());
+        if (dx == 0 && dy == 0 && !InteractionHandler.interfaceActive) {
+            MoveCommand command = queue.peek();
+            if (command != null) {
+                if (command.isJump()) {
+                    queue.poll();
+                    teleport(gamePanel.getScene(command.getJumpToScene()), command.getJumpToX(), command.getJumpToY(), prevDirection);
+                    Direction newDirection = queue.poll().getDirection();
+                    if (newDirection != prevDirection)
+                        walk(newDirection);
+                } else {
+                    boolean doMovement = true;
+                    switch (command.getDirection()) {
+                        case UP:
+                            doMovement = !gamePanel.isPlayerOn(x, y-1);
+                            break;
+                        case DOWN:
+                            doMovement = !gamePanel.isPlayerOn(x, y+1);
+                            break;
+                        case LEFT:
+                            doMovement = !gamePanel.isPlayerOn(x-1, y);
+                            break;
+                        case RIGHT:
+                            doMovement = !gamePanel.isPlayerOn(x+1, y);
+                            break;
+                        default:
+                            doMovement = false;
+                    }
+                    if (doMovement) {
+                        walk(command.getDirection());
+                        prevDirection = command.getDirection();
+                        queue.poll();
+                    }
+                }
+
+                //save new Position
+                gamePanel.getDatabaseHelper().updateNpcPosition(this, gamePanel.getSceneId(currentScene), x, y, direction);
+            }
+        }
         updateMovement();
 
         //update StepCounter
@@ -107,6 +152,9 @@ public class NonPlayerCharacter extends GameObject{
         updateImage();
     }
 
+    public String getName() {
+        return name;
+    }
 
     @Override
     public void updateImage()
@@ -172,5 +220,9 @@ public class NonPlayerCharacter extends GameObject{
         }
 
         updateImage();
+    }
+
+    public int getSceneIndex() {
+        return gamePanel.getSceneId(currentScene);
     }
 }

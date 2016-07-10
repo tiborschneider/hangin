@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import java.io.ByteArrayOutputStream;
+
 /**
  * Created by Tibor Schneider on 19.06.2016.
  */
@@ -33,7 +35,9 @@ public class GameScene {
 
     public void createNewTile(int x, int y, TileType setType, boolean isInteractive)
     {
-        if (isInteractive) {
+        if (AnimatedTile.isAnimatedTile(setType)) {
+            tiles[x][y] = new AnimatedTile(context, setType);
+        } else if (isInteractive) {
             tiles[x][y] = new InteractiveTile(context, setType);
         }
         else {
@@ -48,14 +52,23 @@ public class GameScene {
 
     public void draw(Canvas canvas, Paint stonedPaint)
     {
-        canvas.drawBitmap(sceneImage, InterfaceElement.gameBorderSize, InterfaceElement.statusBarHeight + 2*InterfaceElement.statusBarOuterMargin, stonedPaint);
+        canvas.drawBitmap(sceneImage, InterfaceElement.gameBorderSize, InterfaceElement.statusBarHeight + 2*InterfaceElement.statusBarOuterMargin, null);
+
+        //draw animated Tiles
+        for (int x = 0; x < InterfaceElement.numTiles; x++) {
+            for (int y = 0; y < InterfaceElement.numTiles; y++) {
+                if (tiles[x][y].isAnimationTile()) {
+                    canvas.drawBitmap(tiles[x][y].getAnimationImage(), x* InterfaceElement.tileSize + InterfaceElement.gameBorderSize + tiles[x][y].getOffsetX(), y* InterfaceElement.tileSize + 2*InterfaceElement.statusBarOuterMargin + InterfaceElement.statusBarHeight + tiles[x][y].getOffsetY(), stonedPaint);
+                }
+            }
+        }
     }
 
     public void drawOnScreenImage(Canvas canvas, Paint stonedPaint)
     {
-        for (int ix = 0; ix < 16; ix++)
+        for (int ix = 0; ix < InterfaceElement.numTiles; ix++)
         {
-            for (int iy = 0; iy < 16; iy++)
+            for (int iy = 0; iy < InterfaceElement.numTiles; iy++)
             {
                 canvas.drawBitmap(tiles[ix][iy].getBitmap(), ix* InterfaceElement.tileSize, iy* InterfaceElement.tileSize, stonedPaint);
                 if (isJumpTile(ix, iy))
@@ -154,7 +167,7 @@ public class GameScene {
         return gameJumpHandler.getYTarget(aX, aY);
     }
 
-    public boolean addDialogueToTile(int aX, int aY, Dialogue aDialogue)
+    public boolean addDialogueToTile(int aX, int aY, String aDialogue)
     {
         return tiles[aX][aY].setDialogue(aDialogue);
     }
@@ -265,7 +278,7 @@ public class GameScene {
             case RIGHT:
                 aX++;
                 break;
-            case NDEF:
+            default:
                 return false;
         }
         return checkNpc(aX, aY);
@@ -291,14 +304,62 @@ public class GameScene {
             case RIGHT:
                 aX++;
                 break;
-            case NDEF:
+            default:
                 return null;
         }
         return getNpc(aX, aY);
     }
 
+    public void update() {
+        for (int x = 0; x < InterfaceElement.numTiles; x++) {
+            for (int y = 0; y < InterfaceElement.numTiles; y++) {
+                tiles[x][y].update();
+            }
+        }
+    }
+
     public NonPlayerCharacter getNpc(int aX, int aY)
     {
         return gamePanel.getNpc(this, aX, aY);
+    }
+
+    public boolean isInteractiveInView(int x, int y, Direction direction) {
+        switch (direction) {
+            case UP:
+                y--;
+                break;
+            case DOWN:
+                y++;
+                break;
+            case LEFT:
+                x--;
+                break;
+            case RIGHT:
+                x++;
+                break;
+            default:
+                return false;
+        }
+        return isInteractive(x, y);
+    }
+
+    public Dialogue getDialogueFromTileInView(int x, int y, Direction direction) {
+        switch (direction) {
+            case UP:
+                y--;
+                break;
+            case DOWN:
+                y++;
+                break;
+            case LEFT:
+                x--;
+                break;
+            case RIGHT:
+                x++;
+                break;
+            default:
+                return null;
+        }
+        return getDialogueFromTile(x, y);
     }
 }

@@ -39,6 +39,13 @@ public class StateHandler {
                     else
                         state.value = 0;
                     break;
+                case "playerHasLighter":
+                    System.out.println("Check lighter");
+                    if (gamePanel.getPlayer().hasItem(ItemType.LIGHTER))
+                        state.value = 1;
+                    else
+                        state.value = 0;
+                    break;
             }
         }
 
@@ -104,7 +111,13 @@ public class StateHandler {
             return true;
         if (stateName.equals("playerHasJoint"))
             return true;
+        if (stateName.equals("playerHasLighter"))
+            return true;
         return false;
+    }
+
+    public boolean commandNpc(NonPlayerCharacter npc) {
+        return databaseHelper.getCommandFromDatabase(npc);
     }
 }
 

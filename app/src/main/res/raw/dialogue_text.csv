@@ -57,7 +57,7 @@ rollOneNo;Well, an other time;;0;NULL;NULL;0
 useLighter;I can use this to light;a joint up;0;NULL;NULL;0
 noLighter;Fuck! I don't have a lighter;How can i get fire?;0;NULL;NULL;0
 lighterOff;Fuck! the Lighter went off;I have to find a new one!;0;NULL;abilityRollJoints;3
-npcDoesNotInteract;He does not react;;0;NULL;NULL;0
+npcDoesNotInteract;Maan he's so stoned! he has;not noticed me!;0;NULL;NULL;0
 greenGuyNormalDialogue1;The Green Guy speaks;everything works!;0;NULL;NULL;0
 greenGuyNormalDialogue2;Would you like to learn how;to roll good joints?;0;NULL;NULL;0
 greenGuyTeachesRolling;You have learned to roll normal;Joints!;0;NULL;NULL;0
@@ -90,22 +90,44 @@ katiaSmokeFirstWeedLie;[You] No sorry, not yet!;;0;NULL;NULL;0
 katiaSmokeFirstWeedYes;[You] Yes, but i cannot roll one!;Can you roll one for us?;0;NULL;smokeWithNpcWeed;1
 katiaSmokeFirstWeedYes;[Katia] Shure, no problem.;;1;NULL;NULL;0
 katiaSmokeFirstWeedYes;[You] Wow this wa fast! and ;so beautiful!;2;NULL;NULL;0
-katiaSmokeFirstWeedYes;[Katia] Well, i smoke for too ;long now... Thank you for the;3;CONSUME;NULL;0
-katiaSmokeFirstWeedYes;Joint. Come again when ever ;you want!;4;NULL;NULL;0
+katiaSmokeFirstWeedYes;[Katia] Well, i smoke for too ;long now... Well i will show you;3;CONSUME;moveKatia;1
+katiaSmokeFirstWeedYes;how to roll joints. But you will;need some practice to master;4;MOVE_NPC;NULL;0
+katiaSmokeFirstWeedYes;rolling. But this should be enough;to get yourself started.;5;NULL;abilityRollJoints;1
+katiaSmokeFirstWeedYes;[You] Woow thank you so much!;finally, i can smoke when ever;6;NULL;NULL;0
+katiaSmokeFirstWeedYes;i want! I'll see you around!;;7;NULL;NULL;0
 katiaSmokeFirstUglyJointLies;[You] No sorry, not yet!;;0;NULL;NULL;0
 katiaSmokeFirstUglyJointYes;[You] Yes, i have one here. ;But this is a very ugly one...;0;NULL;smokeWithNpcUglyJoint;0
-katiaSmokeFirstUglyJointYes;I don't have a better one sorry!;;1;NULL;NULL;0
+katiaSmokeFirstUglyJointYes;I don't have a better one sorry!;;1;NULL;moveKatia;1
 katiaSmokeFirstUglyJointYes;[Katiy]: No problem, let's light;it up!;2;CONSUME;NULL;0
 katiaSmokeFirstUglyJointYes;You realy have problems with;rolling! i'll teach you how to ;3;NULL;NULL;0
 katiaSmokeFirstUglyJointYes;roll right now. It is not hard,;you just need some training.;4;NULL;abilityRollJoints;1
 katiaSmokeFirstUglyJointYes;[You] Wow thank you. This is;soo cool man. ;5;NULL;NULL;0
-katiaSmokeFirstUglyJointYes;[Katia] You're welcome. See you;later!;6;NULL;NULL;0
+katiaSmokeFirstUglyJointYes;[Katia] You're welcome. See you;later!;6;MOVE_NPC;NULL;0
 katiaSmokeFirstJointLie;[You]: No sorry not yet;;0;NULL;NULL;0
 katiaSmokeFirstJointLie;[Katia] No problem. maby you;find something later!;1;NULL;NULL;0
 katiaSmokeFirstJointYes;[You] Yes i have. Here, let's;smoke it!;0;NULL;smokeWithNpcJoint;1
-katiaSmokeFirstJointYes;[Katia] Thanks man, you are ;cool! We'll see us later!;1;CONSUME;NULL;0
+katiaSmokeFirstJointYes;[Katia] Thanks man, you are ;cool! Have you rolled that one?;1;CONSUME;moveKatia;1
+katiaSmokeFirstJointYes;[You] no, i can still not roll Joints.;;2;NULL;NULL;0
+katiaSmokeFirstJointYes;[Katia] Ok! so I will teach you,;how to do this. But you have to;3;NULL;NULL;0
+katiaSmokeFirstJointYes;know, that this is not easy. You;will need some Practice to master;4;NULL;NULL;0
+katiaSmokeFirstJointYes;rolling!;;5;NULL;NULL;0
+katiaSmokeFirstJointYes;[You]Yeah man thank you. finally,;I can smoke when ever i want!;6;MOVE_NPC;abilityRollJoints;1
 katiaSmokeFirstBigJointLie;[You]: No sorry not yet. But ;i'll continue searching!;0;NULL;NULL;0
 katiaSmokeFirstBigJointLie;[Katia] Good idea! I will wait;here!;1;NULL;NULL;0
 katiaSmokeFirstBigJointYes;[You] Yes, i have found a realy;big one. This will make us high!;0;NULL;smokeWithNpcBigJoint;1
 katiaSmokeFirstBigJointYes;[Katia] Wow this realy is a big;one! Thank you so much! you;1;CONSUME;NULL;0
-katiaSmokeFirstBigJointYes;are cool! See you later!;;2;NULL;NULL;0
+katiaSmokeFirstBigJointYes;are cool! You did not roll this one,;or did you?;2;NULL;moveKatia;1
+katiaSmokeFirstBigJointYes;[You] No, i still cannot roll Joints.;how to do this. But you have to;3;NULL;NULL;0
+katiaSmokeFirstBigJointYes;[Katia] Ok! so I will teach you,;how to do this, but it is not easy.;4;NULL;abilityRollJoints;1
+katiaSmokeFirstBigJointYes;You will need some practice to;master rolling. But here you go!;5;NULL;NULL;0
+katiaSmokeFirstBigJointYes;[You] Yeah man, thank you. Finally,;i can roll my own Joints! I'll see;6;MOVE_NPC;NULL;0
+katiaSmokeFirstBigJointYes;you around!;;7;NULL;NULL;0
+fireDialogue;Hey, look at this campfire. Isn't;that nice. ;0;NULL;NULL;0
+fireDialogueChill;This is realy warm. yeah I love ;campfires;0;NULL;NULL;0
+fireDialogueUse;Let's see what i can Smoke:;;0;NULL;NULL;0
+fireDialogueSmoke;Let's smoke it!;;0;NULL;NULL;0
+fireDialogueSmoke;Well it isn't the best Idea to;use a fucking fire to light a ;1;NULL;NULL;0
+fireDialogueSmoke;Joint up. Such a waste of this;wonderful herb;2;NULL;NULL;0
+fireDialogueRoll;Yeah! perfect Place to roll one.;Let's smoke it!;0;NULL;NULL;0
+fireDialogueSmokeLighter;Yeah this is nice. Watching in;the flame and thinking about ;0;CONSUME;NULL;0
+fireDialogueSmokeLighter;Life.;;1;NULL;NULL;0

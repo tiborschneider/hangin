@@ -105,6 +105,10 @@ public class Player extends GameObject {
         return inventory.hasItem(aItem);
     }
 
+    public boolean hasItem(ItemType type) {
+        return inventory.hasItem(type);
+    }
+
     public boolean useItem(Item aItem)
     {
         if (!hasItem(aItem)) return false;
