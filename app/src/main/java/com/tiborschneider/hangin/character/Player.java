@@ -16,10 +16,9 @@ import com.tiborschneider.hangin.R;
  * Created by Tibor Schneider on 19.06.2016.
  */
 public class Player extends GameObject {
-    public static int numImages = 8;
     private int motionCounter = 0;
     private int prevMotionCounter = 0;
-    private int animationSpeed = 20;
+    private int animationSpeed = 32;
     private static int meterMaximum = 100;
     private Inventory inventory;
     private int munchiesMeter = 0;
@@ -28,35 +27,29 @@ public class Player extends GameObject {
     private int nextStonedMeter = 0;
     private int stonedMeterCounter = 0;
     private int munchiesMeterCounter = 0;
-    private static int maxTimeToDecayStoned = 80;
-    private static int minTimeToDecayStoned = 40;
-    private static int maxTimeToDecayMunchies = 200;
-    private static int minTimeToDecayMunchies = 40;
-    private Bitmap[] imageArray = new Bitmap[numImages];
+    private static int maxTimeToDecayStoned = 160;
+    private static int minTimeToDecayStoned = 80;
+    private static int maxTimeToDecayMunchies = 320;
+    private static int minTimeToDecayMunchies = 80;
+    private Bitmap[][] imageArray = new Bitmap[4][9];
 
     public Player(GamePanel aGamePanel, Context aContext, int aX, int aY)
     {
-        super(aGamePanel, aContext, Direction.RIGHT, aX, aY, 6);
+        super(aGamePanel, aContext, Direction.RIGHT, aX, aY, 4);
         context = aContext;
         inventory = new Inventory(context, gamePanel);
 
         //get all Images
-        imageArray[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_up1);
-        imageArray[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_up2);
-        imageArray[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_down1);
-        imageArray[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_down2);
-        imageArray[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_left1);
-        imageArray[5] = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_left2);
-        imageArray[6] = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_right1);
-        imageArray[7] = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_right2);
+        imageArray = GameObject.cutCharacterAnimation("player", 9);
 
         //scale all Images
-        for (int i = 0; i < numImages; i++)
-        {
-            float scale = ((float) InterfaceElement.tileSize) / imageArray[i].getWidth();
-            Matrix matrix = new Matrix();
-            matrix.postScale(scale,scale);
-            imageArray[i] = Bitmap.createBitmap(imageArray[i], 0, 0, imageArray[i].getWidth(), imageArray[i].getHeight(), matrix, false);
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 9; j++) {
+                float scale = ((float) InterfaceElement.tileSize) / imageArray[i][j].getWidth();
+                Matrix matrix = new Matrix();
+                matrix.postScale(scale, scale);
+                imageArray[i][j] = Bitmap.createBitmap(imageArray[i][j], 0, 0, imageArray[i][j].getWidth(), imageArray[i][j].getHeight(), matrix, false);
+            }
         }
         updateImage();
     }
@@ -89,20 +82,18 @@ public class Player extends GameObject {
             motionCounter++;
             if (motionCounter == animationSpeed) {
                 motionCounter = 0;
-                updateImage();
-            } else if (motionCounter == animationSpeed / 2) {
-                updateImage();
             }
+            updateImage();
         } else {
             motionCounter = 0;
             if (prevMotionCounter != 0)
                 updateImage();
         }
         if (nextStonedMeter > stonedMeter) {
-            gamePanel.redrawScene();
+            //gamePanel.redrawScene();
             stonedMeter++;
         } else if (nextStonedMeter < stonedMeter) {
-            gamePanel.redrawScene();
+            //gamePanel.redrawScene();
             stonedMeter--;
         }
     }
@@ -251,27 +242,26 @@ public class Player extends GameObject {
     @Override
     public void updateImage()
     {
-        int imageNr;
-        if (motionCounter < animationSpeed / 2 )
-            imageNr = 0;
-        else
-            imageNr = 1;
+        int imageNr = 0;
+        if (tmpX != 0 || tmpY != 0) {
+            imageNr = (motionCounter/4) + 1;
+        }
         switch (direction)
         {
             case UP:
-                image = imageArray[imageNr];
+                image = imageArray[0][imageNr];
                 break;
             case DOWN:
-                image = imageArray[2+imageNr];
+                image = imageArray[2][imageNr];
                 break;
             case LEFT:
-                image = imageArray[4+imageNr];
+                image = imageArray[1][imageNr];
                 break;
             case RIGHT:
-                image = imageArray[6+imageNr];
+                image = imageArray[3][imageNr];
                 break;
             default:
-                image = imageArray[0];
+                image = imageArray[0][0];
         }
     }
 

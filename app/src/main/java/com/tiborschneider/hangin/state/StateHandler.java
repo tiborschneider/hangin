@@ -46,8 +46,18 @@ public class StateHandler {
                         state.value = 0;
                     break;
                 case "playerHasLighter":
-                    System.out.println("Check lighter");
                     if (gamePanel.getPlayer().hasItem(ItemType.LIGHTER))
+                        state.value = 1;
+                    else
+                        state.value = 0;
+                    break;
+                case "playerHasSomethingToSmoke":
+                    System.out.println("check Something to smoke");
+                    if (gamePanel.getPlayer().hasItem(new Item(gamePanel.getContext(), ItemType.BIG_JOINT)))
+                        state.value = 1;
+                    else if (gamePanel.getPlayer().hasItem(new Item(gamePanel.getContext(), ItemType.JOINT)))
+                        state.value = 1;
+                    else if (gamePanel.getPlayer().hasItem(new Item(gamePanel.getContext(), ItemType.UGLY_JOINT)))
                         state.value = 1;
                     else
                         state.value = 0;
@@ -113,17 +123,35 @@ public class StateHandler {
     }
 
     public static boolean isSpecialState(String stateName) {
-        if (stateName.equals("playerHasWeed"))
-            return true;
-        if (stateName.equals("playerHasJoint"))
-            return true;
-        if (stateName.equals("playerHasLighter"))
-            return true;
-        return false;
+        switch (stateName) {
+            case "playerHasWeed":
+            case "playerHasJoint":
+            case "playerHasLighter":
+            case "playerHasSomethingToSmoke":
+                return true;
+            default:
+                return false;
+        }
     }
 
     public boolean commandNpc(NonPlayerCharacter npc) {
         return databaseHelper.getCommandFromDatabase(npc);
+    }
+
+    public void updateTimeToPass() {
+        int numTTP = 1;
+        String[] stateName = new String[numTTP];
+
+        stateName[0] = "strangeGuyTTP";
+
+        for (int i = 0; i < numTTP; i++) {
+            GameState state = getState(stateName[i]);
+            state.value--;
+            if (state.value < 0)
+                state.value = 0;
+            else
+                setState(state);
+        }
     }
 }
 

@@ -58,11 +58,20 @@ useLighter;I can use this to light;a joint up;0;NULL;NULL;0
 noLighter;Fuck! I don't have a lighter;How can i get fire?;0;NULL;NULL;0
 lighterOff;Fuck! the Lighter went off;I have to find a new one!;0;NULL;abilityRollJoints;3
 npcDoesNotInteract;Maan he's so stoned! he has;not noticed me!;0;NULL;NULL;0
-greenGuyNormalDialogue1;The Green Guy speaks;everything works!;0;NULL;NULL;0
-greenGuyNormalDialogue2;Would you like to learn how;to roll good joints?;0;NULL;NULL;0
-greenGuyTeachesRolling;You have learned to roll normal;Joints!;0;NULL;NULL;0
-greenGuyTeachesRollingNot;Ok, another time!;;0;NULL;NULL;0
-greenGuyNormalDialogue3;You can already roll joints!;;0;NULL;NULL;0
+strangeGuyInitialDialogue;[Strange Guy] ...;;0;NULL;NULL;0
+strangeGuyInitialDialogue;[You] Hey You!;;1;NULL;NULL;0
+strangeGuyInitialDialogue;[Strange Guy] ...;;2;NULL;NULL;0
+strangeGuyInitialDialogue;[You] Such a bizarre person.;;3;NULL;NULL;0
+strangeGuyInitialDialogueSmoke;[Strange Guy] ...;;0;NULL;NULL;0
+strangeGuyInitialDialogueSmoke;[You] Hey you!;;1;NULL;NULL;0
+strangeGuyInitialDialogueSmoke;[Strange Guy] ...;;2;NULL;NULL;0
+strangeGuyInitialDialogueSmoke;Do you want to offer this strange;Guy a joint?;3;NULL;NULL;0
+strangeGuyInitialDialogueSmokeYes;[You] Do you want a joint?;;0;NULL;smokeWithNpcAuto;1
+strangeGuyInitialDialogueSmokeYes;[Strange Guy] ...;ooh hey. ;1;NULL;strangeGuyTTP;5
+strangeGuyInitialDialogueSmokeYes;Yes p... please;;2;CONSUME;NULL;0
+strangeGuyInitialDialogueSmokeYes;[Strange Guy] aah...;;3;NULL;NULL;0
+strangeGuyInitialDialogueSmokeYes;T... thank you. ;;4;NULL;NULL;0
+strangeGuyInitialDialogueSmokeNot;[you walk away];;0;NULL;NULL;0
 initialDialogue;[Katia] Hi you, my name is Katia;I've never seen you around here.;0;NULL;NULL;0
 initialDialogue;Welcome to this remote Village.;Here, weed is totally leagl.;1;NULL;NULL;0
 initialDialogue;[You] Wait... What!?;;2;NULL;NULL;0
@@ -72,7 +81,8 @@ initialDialogue2;[Katia] Coll, i'll light it up;;1;CONSUME;smokeWithNpc;100
 initialDialogue2;[You] Woow this feels so good!;From now on, i want to be;2;NULL;smokeWithNpc;0
 initialDialogue2;stoned. Like forever.;;3;NULL;NULL;0
 initialDialogue2;[Katia] Yeah that's the spirit!;But i dont have more joints;4;NULL;NULL;0
-initialDialogue2;with me. Come back to me if ;you have another Joint!;5;NULL;katiaRelations;1
+initialDialogue2;with me. Come back to me if ;you have another Joint! I will ;5;NULL;katiaRelations;1
+initialDialogue2;wait in the red house.;;6;NULL;NULL;0
 katiaSmokeFirstWeed;[Katia] Hey yo, soo good to see;you again! Have you found;0;NULL;NULL;0
 katiaSmokeFirstWeed;something to smoke`;;1;NULL;NULL;0
 katiaSmokeFirstUglyJoint;[Katia] Hey man good to see;you! Have you found something?;0;NULL;NULL;0
@@ -131,3 +141,12 @@ fireDialogueSmoke;Joint up. Such a waste of this;wonderful herb;2;NULL;NULL;0
 fireDialogueRoll;Yeah! perfect Place to roll one.;Let's smoke it!;0;NULL;NULL;0
 fireDialogueSmokeLighter;Yeah this is nice. Watching in;the flame and thinking about ;0;CONSUME;NULL;0
 fireDialogueSmokeLighter;Life.;;1;NULL;NULL;0
+rollOneNotLearned;How do i roll Joints? I've never;done that before. Maby someone;0;NULL;NULL;0
+rollOneNotLearned;can teach me how,,,;;1;NULL;NULL;0
+hiddenLootboxFound;Woow look maaan. There is ;something here!;0;NULL;NULL;0
+strangeGuyDialogueWait;[Strange Guy] ...;;0;NULL;NULL;0
+strangeGuyDialogue1;[Strange Guy] H... hey! it is g...;good t... to see you.;0;NULL;NULL;0
+signInfo2;Be Aware: Sometimes, the police;rushes in! In such cases, stay;0;NULL;NULL;0
+signInfo2;calm and throw your weed in ;the next bush. But don't forget;1;NULL;NULL;0
+signInfo2;it there!;;2;NULL;NULL;0
+hallo;ddds;;0;NULL;NULL;0

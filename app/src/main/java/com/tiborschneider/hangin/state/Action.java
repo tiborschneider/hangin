@@ -73,8 +73,7 @@ public class Action {
         smokeWithNpc = gamePanel.getStateHandler().getState("smokeWithNpcUglyJoint");
         if (smokeWithNpc.value == 1) {
             //smoke with NPC
-            gamePanel.getPlayer().updateStonedMeter(10);
-            gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.UGLY_JOINT));
+            smokeWeedWithNpc(10, ItemType.UGLY_JOINT);
             smokeWithNpc.value = 0;
             gamePanel.getStateHandler().setState(smokeWithNpc);
             return;
@@ -84,8 +83,7 @@ public class Action {
         smokeWithNpc = gamePanel.getStateHandler().getState("smokeWithNpcJoint");
         if (smokeWithNpc.value == 1) {
             //smoke with NPC
-            gamePanel.getPlayer().updateStonedMeter(15);
-            gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.JOINT));
+            smokeWeedWithNpc(15, ItemType.JOINT);
             smokeWithNpc.value = 0;
             gamePanel.getStateHandler().setState(smokeWithNpc);
             return;
@@ -95,8 +93,7 @@ public class Action {
         smokeWithNpc = gamePanel.getStateHandler().getState("smokeWithNpcBigJoint");
         if (smokeWithNpc.value == 1) {
             //smoke with NPC
-            gamePanel.getPlayer().updateStonedMeter(30);
-            gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.BIG_JOINT));
+            smokeWeedWithNpc(30, ItemType.BIG_JOINT);
             smokeWithNpc.value = 0;
             gamePanel.getStateHandler().setState(smokeWithNpc);
             return;
@@ -107,16 +104,28 @@ public class Action {
         smokeWithNpc = gamePanel.getStateHandler().getState("smokeWithNpcWeed");
         if (smokeWithNpc.value == 1) {
             //smoke with NPC
-            gamePanel.getPlayer().updateStonedMeter(30);
-            Item item = gamePanel.getPlayer().getInventory().getItem(gamePanel.getPlayer().getInventory().getItemIndex(ItemType.WEED_BAG));
-
-            //reduce Number of Item used
-            if (!item.useOnce())
-                gamePanel.getPlayer().getInventory().useItem(item);
-
+            smokeWeedWithNpc(30, ItemType.WEED_BAG);
             smokeWithNpc.value = 0;
             gamePanel.getStateHandler().setState(smokeWithNpc);
             return;
+        }
+
+        smokeWithNpc = gamePanel.getStateHandler().getState("smokeWithNpcAuto");
+        if (smokeWithNpc.value == 1) {
+            GameState playerHasJoint = gamePanel.getStateHandler().getState("playerHasJoint");
+            switch (playerHasJoint.value) {
+                case 1:
+                    smokeWeedWithNpc(10, ItemType.UGLY_JOINT);
+                    break;
+                case 2:
+                    smokeWeedWithNpc(15, ItemType.JOINT);
+                    break;
+                case 3:
+                    smokeWeedWithNpc(30, ItemType.BIG_JOINT);
+                    break;
+            }
+            smokeWithNpc.value = 0;
+            gamePanel.getStateHandler().setState(smokeWithNpc);
         }
 
         //check if smoke on Campfire
@@ -192,6 +201,17 @@ public class Action {
         }
     }
 
+    private void smokeWeedWithNpc(int stonedModifier, ItemType aType) {
+        gamePanel.getPlayer().updateStonedMeter(stonedModifier);
+        if (aType != ItemType.WEED_BAG) {
+            gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), aType));
+        } else {
+            Item item = gamePanel.getPlayer().getInventory().getItem(gamePanel.getPlayer().getInventory().getItemIndex(ItemType.WEED_BAG));
+            if (!item.useOnce())
+                gamePanel.getPlayer().getInventory().useItem(item);
+        }
+    }
+
     private void plantSeed()
     {
         //TODO: plant seed
@@ -235,6 +255,7 @@ public class Action {
 
     private void moveNpc()
     {
+        //System.out.println("Move Npc");
         //check which NPC to move
         GameState moveNpc = gamePanel.getStateHandler().getState("moveKatia");
         if (moveNpc.value == 1) {

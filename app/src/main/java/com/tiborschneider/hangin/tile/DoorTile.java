@@ -70,7 +70,6 @@ public class DoorTile extends InteractiveTile {
     @Override
     public Bitmap getDoorImage() {
         if (animationImages == null) {
-            System.out.println("Error");
             return null;
         }
         return animationImages[currentImage];

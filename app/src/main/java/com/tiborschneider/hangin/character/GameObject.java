@@ -2,6 +2,7 @@ package com.tiborschneider.hangin.character;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
@@ -12,6 +13,7 @@ import com.tiborschneider.hangin.userInteraction.InterfaceElement;
  * Created by Tibor Schneider on 20.06.2016.
  */
 public abstract class GameObject {
+    public static final int playerDisplayOffset = -8;
     protected Direction direction;
     protected int x;
     protected int y;
@@ -73,7 +75,7 @@ public abstract class GameObject {
 
     public void draw(Canvas canvas, Paint stonedPaint)
     {
-        canvas.drawBitmap(image, x* InterfaceElement.tileSize + tmpX + InterfaceElement.gameBorderSize, y* InterfaceElement.tileSize + tmpY + 2*InterfaceElement.statusBarOuterMargin + InterfaceElement.statusBarHeight, stonedPaint);
+        canvas.drawBitmap(image, x* InterfaceElement.tileSize + tmpX + InterfaceElement.gameBorderSize, y* InterfaceElement.tileSize + tmpY + 2*InterfaceElement.statusBarOuterMargin + InterfaceElement.statusBarHeight + playerDisplayOffset, stonedPaint);
     }
 
     public void walk(Direction aDir)
@@ -128,6 +130,18 @@ public abstract class GameObject {
     public void updateImage()
     {
         //has to be overridden in sub Class!
+    }
+
+    public static Bitmap[][] cutCharacterAnimation(String name, int numAnimations) {
+        Bitmap[][] image = new Bitmap[4][numAnimations];
+        int resID = GamePanel.getGamePanel().getContext().getResources().getIdentifier(name, "drawable", GamePanel.getGamePanel().getContext().getPackageName());
+        Bitmap sprite = BitmapFactory.decodeResource(GamePanel.getGamePanel().getContext().getResources(), resID);
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < numAnimations; j++) {
+                image[i][j] = Bitmap.createBitmap(sprite, j * InterfaceElement.tileSize, i * InterfaceElement.tileSize, InterfaceElement.tileSize, InterfaceElement.tileSize);
+            }
+        }
+        return image;
     }
 
 }

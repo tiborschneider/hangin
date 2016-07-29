@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
+import com.tiborschneider.hangin.item.Lootbox;
 import com.tiborschneider.hangin.mainGame.GamePanel;
 import com.tiborschneider.hangin.scene.GameScene;
 import com.tiborschneider.hangin.mainGame.MainThread;
@@ -12,6 +13,7 @@ import com.tiborschneider.hangin.character.NonPlayerCharacter;
 import com.tiborschneider.hangin.character.Player;
 import com.tiborschneider.hangin.dialogue.Dialogue;
 import com.tiborschneider.hangin.dialogue.DialogueQueue;
+import com.tiborschneider.hangin.state.QuestHandler;
 
 /**
  * Created by Tibor Schneider on 22.06.2016.
@@ -27,11 +29,15 @@ public class InteractionHandler {
     private InterfaceLootbox interfaceLootbox;
     private InterfaceInventory interfaceInventory;
     private InterfaceStatusBar interfaceStatusBar;
+    private InterfaceQuestSelection interfaceQuestSelection;
+    private InterfaceQuestInfo interfaceQuestInfo;
     private MainThread thread;
     private GamePanel gamePanel;
     private DialogueQueue dialogueQueue;
+    private Lootbox queueLootbox = null;
+    private QuestHandler questHandler;
 
-    public InteractionHandler(Context aContext, Player aPlayer, MainThread aThread, GamePanel aGamePanel)
+    public InteractionHandler(Context aContext, Player aPlayer, MainThread aThread, GamePanel aGamePanel, QuestHandler questHandler)
     {
         gamePanel = aGamePanel;
         controller = new Controller(aContext, aPlayer, this);
@@ -40,6 +46,7 @@ public class InteractionHandler {
         thread = aThread;
         dialogueQueue = new DialogueQueue();
         interfaceStatusBar = new InterfaceStatusBar(context, player);
+        this.questHandler = questHandler;
     }
 
     public void onButtonPress(Button button)
@@ -69,6 +76,10 @@ public class InteractionHandler {
                     break;
                 case DROP:
                     useEquippedItem();
+                    break;
+                case QUESTS:
+                    System.out.println("Open Quest UI");
+                    openQuestSelection();
                     break;
             }
         } else if (interfaceDialogue != null) {
@@ -126,7 +137,65 @@ public class InteractionHandler {
                     closeLootbox();
                     break;
             }
+        } else if (interfaceQuestInfo != null) {
+            switch(button) {
+                case UP:
+                    interfaceQuestInfo.moveSelectionUp();
+                    break;
+                case DOWN:
+                    interfaceQuestInfo.moveSelectionDown();
+                    break;
+                case DROP:
+                case INVENTORY:
+                case QUESTS:
+                    closeQuestInfo();
+                    break;
+            }
+        } else if (interfaceQuestSelection != null) {
+            switch (button) {
+                case UP:
+                    interfaceQuestSelection.moveSelectionUp();
+                    break;
+                case DOWN:
+                    interfaceQuestSelection.moveSelectionDown();
+                    break;
+                case INTERACT:
+                    selectQuest();
+                    break;
+                case DROP:
+                case INVENTORY:
+                case QUESTS:
+                    closeQuest();
+                    break;
+            }
         }
+    }
+
+    private void closeQuestInfo() {
+        interfaceQuestInfo = null;
+        //gamePanel.redrawScene();
+    }
+
+    private void openQuestSelection() {
+        if (!interfaceActive) {
+            questHandler.sortAll();
+            interfaceQuestSelection = new InterfaceQuestSelection(context);
+            interfaceActive = true;
+        }
+    }
+
+    private void selectQuest() {
+        interfaceQuestSelection.getSelectedQuest().setNormal();
+        interfaceQuestInfo = new InterfaceQuestInfo(context, interfaceQuestSelection.getSelectedQuest());
+        controller.setWaitForPressRelease(false);
+        //gamePanel.redrawScene();
+    }
+
+    private void closeQuest() {
+        interfaceQuestSelection = null;
+        controller.setWaitForPressRelease(false);
+        interfaceActive = false;
+        gamePanel.redrawScene();
     }
 
     public void drawController(Canvas canvas)
@@ -145,6 +214,10 @@ public class InteractionHandler {
                 interfaceDialogue.draw(canvas);
             if (interfaceLootbox != null)
                 interfaceLootbox.draw(canvas);
+            if (interfaceQuestSelection != null && interfaceQuestInfo == null)
+                interfaceQuestSelection.draw(canvas);
+            else if (interfaceQuestInfo != null)
+                interfaceQuestInfo.draw(canvas);
 
         }
     }
@@ -191,12 +264,12 @@ public class InteractionHandler {
 
     public void createDialogue(Dialogue aDialogue)
     {
-        System.out.println("Dialogue: Replies: " + aDialogue.getNumReplies());
+        //System.out.println("Dialogue: Replies: " + aDialogue.getNumReplies());
         gamePanel.redrawScene();
         interfaceDialogue = new InterfaceDialogue(gamePanel, context, aDialogue);
         if (interfaceActive) {
             multipleInterfacesActive = true;
-            System.out.println("multiple interfaces active");
+            //System.out.println("multiple interfaces active");
         } else {
             interfaceActive = true;
         }
@@ -215,8 +288,11 @@ public class InteractionHandler {
             } else {
                 interfaceActive = false;
             }
+
+            if (!checkQueue() && queueLootbox != null)
+                dequeueLootbox();
+
             gamePanel.redrawScene();
-            checkQueue();
         } else if (interfaceDialogue.mustSelectOption()) {
             interfaceSelectionActive = true;
             gamePanel.redrawScene();
@@ -258,7 +334,25 @@ public class InteractionHandler {
                 break;
         }
         if (scene.checkLootbox(tmpX, tmpY)) {
-            interfaceLootbox = new InterfaceLootbox(context, scene.getLootbox(tmpX, tmpY));
+            Lootbox lootbox = scene.getLootbox(tmpX, tmpY);
+            if (!lootbox.isVisible()) {
+                createDialogue(gamePanel.getDatabaseHelper().getDialogueFromDB("hiddenLootboxFound"));
+                queueLootbox(lootbox);
+            } else {
+                interfaceLootbox = new InterfaceLootbox(context, lootbox);
+                interfaceActive = true;
+            }
+        }
+    }
+
+    private void queueLootbox(Lootbox lootbox) {
+        queueLootbox = lootbox;
+    }
+
+    private void dequeueLootbox() {
+        if (queueLootbox != null) {
+            interfaceLootbox = new InterfaceLootbox(context, queueLootbox);
+            queueLootbox = null;
             interfaceActive = true;
         }
     }
@@ -291,6 +385,7 @@ public class InteractionHandler {
             interfaceActive = false;
             gamePanel.redrawScene();
         }
+        interfaceLootbox = null;
     }
 
     private void startInventory()
@@ -340,9 +435,23 @@ public class InteractionHandler {
         dialogueQueue.enqueue(dialogue);
     }
 
-    private void checkQueue()
+    private boolean checkQueue()
     {
-        if (!dialogueQueue.isEmpty())
+        if (!dialogueQueue.isEmpty()) {
             createDialogue(dialogueQueue.getNext());
+            return true;
+        }
+        return false;
+    }
+
+    public void saveDialogue() {
+        if (interfaceDialogue != null) {
+            gamePanel.getDatabaseHelper().saveDialogue(interfaceDialogue.getDialogue());
+        }
+    }
+
+    public void restoreSavedDialogue() {
+        if (gamePanel.getDatabaseHelper().isDialogueSaved())
+            this.createDialogue(gamePanel.getDatabaseHelper().getSavedDialogue());
     }
 }

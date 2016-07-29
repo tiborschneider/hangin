@@ -23,6 +23,7 @@ public class Lootbox {
     private int y;
     private int posX;
     private int posY;
+    private boolean visible = true;
 
     public Lootbox(Context aContext, int aX, int aY)
     {
@@ -75,7 +76,8 @@ public class Lootbox {
 
     public void draw(Canvas canvas, Paint stonedPaint)
     {
-        canvas.drawBitmap(image, posX, posY, stonedPaint);
+        if (visible)
+            canvas.drawBitmap(image, posX, posY, stonedPaint);
     }
 
     public Bitmap getImageOfItem(int index)
@@ -99,5 +101,13 @@ public class Lootbox {
             spaceLeft = inventory.addItem(items[i], true);
         }
         return spaceLeft;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

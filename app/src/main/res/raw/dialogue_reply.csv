@@ -1,5 +1,5 @@
 signInfo1;Blue pill;signInfo1Blue;NULL;NULL;0;NULL;0
-signInfo1;Red pill;signInfo1Red;NULL;greenGuyRelations;1;NULL;0
+signInfo1;Red pill;signInfo1Red;NULL;strangeGuyRelations;1;NULL;0
 signInfo1Red;Yes;signInfo1RedYes;NULL;NULL;0;NULL;0
 signInfo1Red;No;signInfo1RedNo;NULL;NULL;0;NULL;0
 useAlcohol;Drink;useAlcoholDrink;NULL;NULL;0;NULL;0
@@ -32,10 +32,11 @@ smokeUglyJoint;Smoke now;smokeUglyJointNow;CONSUME;NULL;0;NULL;0
 smokeUglyJoint;Smoke later;smokeUglyJointLater;NULL;NULL;0;NULL;0
 useVeganJuice;Drink;useVeganJuiceDrink;NULL;NULL;0;NULL;0
 useVeganJuice;Drop;useVeganJuiceDrop;DROP;NULL;0;NULL;0
-rollOne;Sure;rollOneYes;ROLL;NULL;0;NULL;0
-rollOne;Later;rollOneNo;NULL;NULL;0;NULL;0
-greenGuyNormalDialogue2;sure;greenGuyTeachesRolling;NULL;abilityRollJoints;2;NULL;0
-greenGuyNormalDialogue2;not now;greenGuyTeachesRollingNot;NULL;NULL;0;NULL;0
+rollOne;Sure;rollOneYes;ROLL;NULL;0;abilityRollJoints;1
+rollOne;Sure;rollOneYes;ROLL;NULL;0;abilityRollJoints;2
+rollOne;Sure;rollOneYes;ROLL;NULL;0;abilityRollJoints;3
+strangeGuyInitialDialogueSmoke;of course;strangeGuyInitialDialogueSmokeYes;NULL;strangeGuyRelations;1;NULL;0
+strangeGuyInitialDialogueSmoke;no;strangeGuyInitialDialogueSmokeNot;NULL;NULL;0;NULL;0
 initialDialogue;Why not!?;initialDialogue2;NULL;NULL;0;NULL;0
 katiaSmokeFirstWeed;yeah;katiaSmokeFirstWeedYes;NULL;katiaRelations;2;NULL;0
 katiaSmokeFirstWeed;[lie] No;katiaSmokeFirstWeedLie;NULL;NULL;0;NULL;0

@@ -54,6 +54,8 @@ public abstract class GameTile {
                 image = drawAccent(image);
 
                 break;
+            case STONE:
+                setRandomStoneImage(context);
             case GRASS_RISE_T:
                 canGoUp = false;
                 break;
@@ -156,6 +158,15 @@ public abstract class GameTile {
             walkable = false;
         }
 
+        //mark all stones with walkable
+        if (type.name().matches("STONE(.*)")) {
+            walkable = true;
+            canGoUp = true;
+            canGoDown = true;
+            canGoRight = true;
+            canGoLeft = true;
+        }
+
         //add ForegroundTile
         if (foregroundType != TileForegroundType.NULL && !foregroundType.name().matches("HOUSE_OUTSIDE_DECO_DOOR(.*)")) {
             imageName = foregroundType.name().toLowerCase();
@@ -215,6 +226,20 @@ public abstract class GameTile {
                 case HOUSE_OUTSIDE_DECO_DOOR_B:
                     walkable = true;
                     break;
+                case BRIDGE_HORIZONTAL_C:
+                case BRIDGE_HORIZONTAL_LC:
+                case BRIDGE_HORIZONTAL_RC:
+                    walkable = true;
+                    canGoLeft = true;
+                    canGoRight = true;
+                    break;
+                case BRIDGE_VERTICAL_C:
+                case BRIDGE_VERTICAL_TC:
+                case BRIDGE_VERTICAL_BC:
+                    walkable = true;
+                    canGoUp = true;
+                    canGoDown = true;
+
             }
         }
 
@@ -224,6 +249,7 @@ public abstract class GameTile {
         matrix.postScale(scale,scale);
         image = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, false);
     }
+
 
     private Bitmap overlay(Bitmap bmp1, Bitmap bmp2) {
         Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
@@ -296,6 +322,13 @@ public abstract class GameTile {
         image = BitmapFactory.decodeResource(context.getResources(), imageId);
     }
 
+    private void setRandomStoneImage(Context context)
+    {
+        String imageName = "stone" + randInt(1, 6);
+        int imageId = context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
+        image = BitmapFactory.decodeResource(context.getResources(), imageId);
+    }
+
     public boolean update() {
         return false;
     }
@@ -330,5 +363,13 @@ public abstract class GameTile {
 
     public TileForegroundType getForegroundType() {
         return foregroundType;
+    }
+
+    public TileType getType() {
+        return type;
+    }
+
+    public boolean isHouseOutside() {
+        return type.name().matches("HOUSE_OUTSIDE(.*)");
     }
 }

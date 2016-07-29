@@ -14,7 +14,7 @@ public class SpecialItem extends Item {
     private int count = 0;
     private int currentUsedJointUnit = 0;
     private static int maxNumJointsFirstStage = 6;
-    private static int maxLighterUsages = 3; // 20
+    private static int maxLighterUsages = 20; // 20
 
     public SpecialItem(Context aContext, ItemType aType)
     {
@@ -51,7 +51,10 @@ public class SpecialItem extends Item {
         String dialogueName;
         switch (itemType) {
             case WEED_BAG:
-                dialogueName = "rollOne";
+                if (GamePanel.getGamePanel().getStateHandler().getState("abilityRollJoints").value == 0)
+                    dialogueName = "rollOneNotLearned";
+                else
+                    dialogueName = "rollOne";
                 break;
             case LIGHTER:
                 dialogueName = "useLighter";

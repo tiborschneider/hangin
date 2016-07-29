@@ -64,7 +64,7 @@ public class InterfaceDialogue extends InterfaceElement {
 
         initializeReplyDialogue();
 
-        dialogue.resetDialogue();
+        //dialogue.resetDialogue();
         currentText = dialogue.getNextText();
 
         backgroundImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_dialog_window);
@@ -184,5 +184,9 @@ public class InterfaceDialogue extends InterfaceElement {
 
         dialogue.resetDialogue();
         currentText = dialogue.getNextText();
+    }
+
+    public Dialogue getDialogue() {
+        return dialogue;
     }
 }

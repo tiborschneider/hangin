@@ -1,5 +1,5 @@
 NULL;0
-greenGuyRelations;0
+strangeGuyRelations;0
 abilityRollJoints;0
 abilityEatVegi;0
 katiaRelations;0
@@ -14,3 +14,6 @@ moveKatia;0
 smokeAtCampfire;0
 playerHasLighter;0
 smokeAtCampfireRolledJoint;0
+playerHasSomethingToSmoke;0
+smokeWithNpcAuto;0
+strangeGuyTTP;0

@@ -8,12 +8,14 @@ import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import com.tiborschneider.hangin.character.Direction;
 import com.tiborschneider.hangin.character.NonPlayerCharacter;
 import com.tiborschneider.hangin.character.Player;
 import com.tiborschneider.hangin.scene.GameJumpHandler;
 import com.tiborschneider.hangin.scene.GameScene;
+import com.tiborschneider.hangin.state.QuestHandler;
 import com.tiborschneider.hangin.state.StateHandler;
 import com.tiborschneider.hangin.userInteraction.InteractionHandler;
 import com.tiborschneider.hangin.userInteraction.InterfaceElement;
@@ -41,6 +43,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     private DatabaseHelper databaseHelper;
     private StateHandler stateHandler;
     boolean startGame = false;
+    float lastPaintValue = 0.0f;
+    private QuestHandler questHandler;
     Context context;
 
     public GamePanel(Context aContext, int sizeX, int sizeY)
@@ -60,28 +64,30 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         screenHeight = sizeY;
         InterfaceElement.initSizes();
 
+        //create Quest Handler
+        questHandler = new QuestHandler();
 
         //create Database
         databaseHelper = new DatabaseHelper(context, this);
         stateHandler = new StateHandler(this, databaseHelper);
 
-        //load Scenes and NPC's from Database;
+        //load Scenes, NPC's and Quests from Database;
         scenes = databaseHelper.getGameScenes();
         databaseHelper.getAllNpc();
+        databaseHelper.getAllQuestsFromDB();
 
         //create Player
         player = new Player(this, context, 5, 5);
 
-
         //create Controller for Player
-        interactionHandler = new InteractionHandler(context, player, thread, this);
+        interactionHandler = new InteractionHandler(context, player, thread, this, questHandler);
 
         //get Saved States of Player
         if (!databaseHelper.initSavedPlayer()) {
             startGame = true;
         }
-
     }
+
 
     private void startNewGame() {
         interactionHandler.createDialogue(interactionHandler.getDialogueFromDatabase("initialDialogue"));
@@ -91,6 +97,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     @Override public void surfaceDestroyed(SurfaceHolder holder)
     {
+        System.out.println("GamePanel.surfaceDestroyed()");
         boolean retry = true;
         while(retry)
         {
@@ -106,6 +113,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     @Override public void surfaceCreated(SurfaceHolder holder)
     {
+        System.out.println("GamePanel.surfaceCreated()");
         //we can safely start the game loop
         if (thread.getState()==Thread.State.TERMINATED) {
             thread = new MainThread(getHolder(),this);
@@ -114,7 +122,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             thread.setRunning(true);
             thread.start();
         } else {
-            System.out.println("try to restart thread");
+            System.out.println("GamePanel.surfaceCreated(): try to restart thread");
             thread.setRunning(true);
             thread.start();
         }
@@ -132,6 +140,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         scenes[currentScene].update();
 
         //update npc on the same GameScene
+        player.update();
+
+        //update animation tiles
         for (int i = 0; i < numNpc; i++)
             if (npc[i] != null && npc[i].isOnScene(scenes[currentScene]))
                 npc[i].update();
@@ -139,6 +150,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         //check game Jumps
         if (GameJumpHandler.jumpsAllowed && player.getTmpX() == 0 && player.getTmpY() == 0 && scenes[currentScene].isJumpTile(player.getX(), player.getY()))
         {
+            stateHandler.updateTimeToPass();
             int nextScene = scenes[currentScene].getTargetScene(player.getX(), player.getY());
             player.teleport(scenes[currentScene].getXTarget(player.getX(), player.getY()), scenes[currentScene].getYTarget(player.getX(), player.getY()));
             currentScene = nextScene;
@@ -152,7 +164,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         if (canvas != null)
         {
             //get player's stoned level
-            float stonedLevel = ((float)(player.getStonedMeter()))/100;
+            float stonedLevel = (((float)((int)(player.getStonedMeter()/4))/25)*4/5)+0.2f;
             Paint stonedPaint = new Paint();
             ColorMatrix cm = new ColorMatrix();
             cm.setSaturation(stonedLevel);
@@ -160,7 +172,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             stonedPaint.setColorFilter(filter);
 
             //draw scene if scene has changed
-            if (sceneHasChanged()) {
+            if (sceneHasChanged() || lastPaintValue != stonedLevel) {
+                lastPaintValue = stonedLevel;
                 lastScene = currentScene;
                 //create Scene image
                 scenes[currentScene].createSceneImage(stonedPaint);
@@ -307,4 +320,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         }
         return false;
     }
+
+    public QuestHandler getQuestHandler() {
+        return questHandler;
+    }
+
 }

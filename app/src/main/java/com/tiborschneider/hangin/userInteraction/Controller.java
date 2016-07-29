@@ -23,6 +23,7 @@ public class Controller {
     private Bitmap imageButtonInteract;
     private Bitmap imageButtonDrop;
     private Bitmap imageButtonInventory;
+    private Bitmap imageButtonQuests;
     private Context context;
     private Player player;
     private InteractionHandler interactionHandler;
@@ -39,8 +40,9 @@ public class Controller {
     private static int actionButtonWidth = 160;
     private static int actionButtonSpace = 160;
     private static int buttonInventoryWidth = 96;
-    private static int inventoryRadius = buttonInventoryWidth;
-    private static int equippedItemMargin = 20;
+    private static int buttonQuestsWidth = 96;
+    private static int smallButtonRadius = buttonInventoryWidth;
+    private static int smallButtonMargin = 20;
 
     public Controller(Context aContext, Player aPlayer, InteractionHandler aInteractionHandler)
     {
@@ -61,6 +63,8 @@ public class Controller {
         imageButtonDrop      = InterfaceElement.resizeImage(imageButtonDrop, actionButtonWidth, actionButtonWidth);
         imageButtonInventory = BitmapFactory.decodeResource(context.getResources(), R.drawable.button_inventory);
         imageButtonInventory = InterfaceElement.resizeImage(imageButtonInventory, buttonInventoryWidth, buttonInventoryWidth);
+        imageButtonQuests = BitmapFactory.decodeResource(context.getResources(), R.drawable.button_quests);
+        imageButtonQuests = InterfaceElement.resizeImage(imageButtonQuests, buttonQuestsWidth, buttonQuestsWidth);
     }
 
     public void draw(Canvas canvas)
@@ -80,15 +84,19 @@ public class Controller {
 
         //inventory buttons
         startX = (GamePanel.screenWidth - buttonInventoryWidth)/2;
-        startY += baseSpace2 + 2*spread + buttonArrowLength;
+        startY += baseSpace2 + 3*spread + buttonArrowLength;
         canvas.drawBitmap(imageButtonInventory, startX, startY, null);
 
         //Equipped Item
         if (player.hasEquippedItem()) {
-            startX += buttonInventoryWidth + equippedItemMargin;
-            startY += (buttonInventoryWidth - InterfaceElement.itemSize)/2;
-            canvas.drawBitmap(player.getEquippedItemImage(), startX, startY, null);
+            int equippedX = startX + buttonInventoryWidth + smallButtonMargin;
+            int equippedY = startY + (buttonInventoryWidth - InterfaceElement.itemSize)/2;
+            canvas.drawBitmap(player.getEquippedItemImage(), equippedX, equippedY, null);
         }
+
+        //quests
+        startX += (-1) * (smallButtonMargin + buttonQuestsWidth);
+        canvas.drawBitmap(imageButtonQuests, startX, startY, null);
     }
 
     public boolean onTouch(MotionEvent e)
@@ -102,7 +110,7 @@ public class Controller {
                 waitForPressRelease = false;
                 interactionHandler.onButtonPress(pressedButton);
             } else if (!InteractionHandler.interfaceActive) {
-                if (pressedButton == Button.INTERACT || pressedButton == Button.INVENTORY)
+                if (pressedButton == Button.INTERACT || pressedButton == Button.INVENTORY || pressedButton == Button.QUESTS)
                     waitForPressRelease = true;
                 interactionHandler.onButtonPress(pressedButton);
             }
@@ -159,12 +167,21 @@ public class Controller {
 
         //check InventoryButton
         centerX = GamePanel.screenWidth / 2;
-        centerY = InterfaceElement.numTiles * InterfaceElement.tileSize + 2 * InterfaceElement.gameBorderSize + borderSize + baseSpace2 + 2*spread + buttonArrowLength + buttonInventoryWidth/2;
+        centerY = InterfaceElement.numTiles * InterfaceElement.tileSize + 2 * InterfaceElement.gameBorderSize + borderSize + baseSpace2 + 3*spread + buttonArrowLength + buttonInventoryWidth/2;
         xPrim = aX - centerX;
         yPrim = aY - centerY;
 
-        if (Math.abs(xPrim*xPrim + yPrim*yPrim) < inventoryRadius * inventoryRadius)
+        if (Math.abs(xPrim*xPrim + yPrim*yPrim) < smallButtonRadius * smallButtonRadius)
             return Button.INVENTORY;
+
+        //check QuestButton
+        centerX += (-1) * (smallButtonMargin + buttonQuestsWidth);
+        xPrim = aX - centerX;
+        yPrim = aY - centerY;
+
+        if (Math.abs(xPrim*xPrim+yPrim*yPrim) < smallButtonRadius * smallButtonRadius) {
+            return Button.QUESTS;
+        }
 
         return Button.NDEF;
     }
@@ -182,7 +199,7 @@ public class Controller {
         actionButtonWidth = (int)(0.5+aFactor*actionButtonWidth);
         actionButtonSpace = (int)(0.5+aFactor*actionButtonSpace);
         buttonInventoryWidth = (int)(0.5+aFactor*buttonInventoryWidth);
-        inventoryRadius = (int)(0.5+aFactor*inventoryRadius);
-        equippedItemMargin = (int)(0.5+aFactor*equippedItemMargin);
+        smallButtonRadius = (int)(0.5+aFactor* smallButtonRadius);
+        smallButtonMargin = (int)(0.5+aFactor* smallButtonMargin);
     }
 }

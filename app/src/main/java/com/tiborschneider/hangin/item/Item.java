@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.tiborschneider.hangin.mainGame.GamePanel;
 import com.tiborschneider.hangin.userInteraction.InteractionHandler;
 import com.tiborschneider.hangin.userInteraction.InterfaceElement;
 

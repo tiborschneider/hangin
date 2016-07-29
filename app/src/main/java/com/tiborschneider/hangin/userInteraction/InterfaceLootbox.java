@@ -16,7 +16,7 @@ import com.tiborschneider.hangin.item.Lootbox;
  */
 public class InterfaceLootbox extends InterfaceElement {
     public static String infoText = "You have found a Lootbox!";
-    private int xPosInfoText;
+        private int xPosInfoText;
     private int yPosInfoText;
     private int xPosImage;
     private int[] yPosImage = new int[5];

@@ -19,11 +19,13 @@ import com.tiborschneider.hangin.item.ItemType;
 import com.tiborschneider.hangin.item.Lootbox;
 import com.tiborschneider.hangin.item.SpecialItem;
 import com.tiborschneider.hangin.scene.GameScene;
+import com.tiborschneider.hangin.state.Quest;
+import com.tiborschneider.hangin.state.QuestEntry;
+import com.tiborschneider.hangin.state.QuestHandler;
 import com.tiborschneider.hangin.state.StateHandler;
 import com.tiborschneider.hangin.tile.TileForegroundType;
 import com.tiborschneider.hangin.tile.TileType;
 import com.tiborschneider.hangin.state.GameState;
-import com.tiborschneider.hangin.mainGame.CSVReader;
 
 import java.io.InputStream;
 import java.util.List;
@@ -93,6 +95,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_LOOTBOX_COL_SCENE = "fs_scene";
     public static final String TABLE_LOOTBOX_COL_X = "x";
     public static final String TABLE_LOOTBOX_COL_Y = "y";
+    public static final String TABLE_LOOTBOX_COL_VISIBLE = "visible";
     public static final String TABLE_LOOTBOX_COL_ITEM1 = "item1";
     public static final String TABLE_LOOTBOX_COL_ITEM2 = "item2";
     public static final String TABLE_LOOTBOX_COL_ITEM3 = "item3";
@@ -151,6 +154,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_NPC_MOVE_COL_CONDITION_STATE = "condition_state";
     public static final String TABLE_NPC_MOVE_COL_CONDITION_VALUE = "condition_value";
     public static final String TABLE_NPC_MOVE_COL_COMMAND = "command";
+
+    public static final String TABLE_DIALOGUE_SAVE_NAME = "db_dialogue_save";
+    public static final String TABLE_DIALOGUE_SAVE_COL_ID = "id";
+    public static final String TABLE_DIALOGUE_SAVE_COL_DIALOGUE_NAME = "fs_dialogue_name";
+    public static final String TABLE_DIALOGUE_SAVE_COL_CURRENT_TEXT = "current_text";
+
+    public static final String TABLE_QUEST_NAME = "db_quest";
+    public static final String TABLE_QUEST_COL_ID = "id";
+    public static final String TABLE_QUEST_COL_NAME = "name";
+    public static final String TABLE_QUEST_COL_FINAL_CONDITION_STATE = "final_condition_state";
+    public static final String TABLE_QUEST_COL_FINAL_CONDITION_VALUE = "final_condition_value";
+
+    public static final String TABLE_QUEST_ENTRY_NAME = "db_quest_entry";
+    public static final String TABLE_QUEST_ENTRY_COL_ID = "id";
+    public static final String TABLE_QUEST_ENTRY_COL_QUEST_NAME = "fs_quest_name";
+    public static final String TABLE_QUEST_ENTRY_COL_TEXT = "text";
+    public static final String TABLE_QUEST_ENTRY_COL_ORDER = "text_order";
+    public static final String TABLE_QUEST_ENTRY_COL_CONDITION_STATE_1 = "condition_state1";
+    public static final String TABLE_QUEST_ENTRY_COL_CONDITION_VALUE_1 = "condition_value1";
+    public static final String TABLE_QUEST_ENTRY_COL_CONDITION_STATE_2 = "condition_state2";
+    public static final String TABLE_QUEST_ENTRY_COL_CONDITION_VALUE_2 = "condition_value2";
+    public static final String TABLE_QUEST_ENTRY_COL_CONDITION_STATE_3 = "condition_state3";
+    public static final String TABLE_QUEST_ENTRY_COL_CONDITION_VALUE_3 = "condition_value3";
 
     public DatabaseHelper(Context aContext, GamePanel aGamePanel)
     {
@@ -224,6 +250,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 TABLE_LOOTBOX_COL_SCENE + " INTEGER, " +
                 TABLE_LOOTBOX_COL_X + " INTEGER, " +
                 TABLE_LOOTBOX_COL_Y + " INTEGER, " +
+                TABLE_LOOTBOX_COL_VISIBLE + " INTEGER," +
                 TABLE_LOOTBOX_COL_ITEM1 + " STRING, " +
                 TABLE_LOOTBOX_COL_ITEM2 + " STRING, " +
                 TABLE_LOOTBOX_COL_ITEM3 + " STRING, " +
@@ -291,6 +318,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 TABLE_NPC_MOVE_COL_COMMAND + " STRING);";
         db.execSQL(sqlQuery);
 
+        sqlQuery = "CREATE TABLE " + TABLE_DIALOGUE_SAVE_NAME + " ( " +
+                TABLE_DIALOGUE_SAVE_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                TABLE_DIALOGUE_SAVE_COL_DIALOGUE_NAME + " String, " +
+                TABLE_DIALOGUE_SAVE_COL_CURRENT_TEXT + " INTEGER);";
+        db.execSQL(sqlQuery);
+
+        sqlQuery = "CREATE TABLE " + TABLE_QUEST_NAME + " ( " +
+                TABLE_QUEST_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                TABLE_QUEST_COL_NAME + " STRING, " +
+                TABLE_QUEST_COL_FINAL_CONDITION_STATE + " STRING, " +
+                TABLE_QUEST_COL_FINAL_CONDITION_VALUE + " INTEGER);";
+        db.execSQL(sqlQuery);
+
+        sqlQuery = "CREATE TABLE " + TABLE_QUEST_ENTRY_NAME + " ( " +
+                TABLE_QUEST_ENTRY_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                TABLE_QUEST_ENTRY_COL_QUEST_NAME + " STRING, " +
+                TABLE_QUEST_ENTRY_COL_TEXT + " STRING, " +
+                TABLE_QUEST_ENTRY_COL_ORDER + " INTEGER, " +
+                TABLE_QUEST_ENTRY_COL_CONDITION_STATE_1 + " STRING, " +
+                TABLE_QUEST_ENTRY_COL_CONDITION_VALUE_1 + " INTEGER, " +
+                TABLE_QUEST_ENTRY_COL_CONDITION_STATE_2 + " STRING, " +
+                TABLE_QUEST_ENTRY_COL_CONDITION_VALUE_2 + " INTEGER, " +
+                TABLE_QUEST_ENTRY_COL_CONDITION_STATE_3 + " STRING, " +
+                TABLE_QUEST_ENTRY_COL_CONDITION_VALUE_3 + " INTEGER);";
+        db.execSQL(sqlQuery);
+
         System.out.println("Initialize all Tables with data from CSV files.");
         readScenesFromCSV(db);
         readTilesFromCSV(db);
@@ -301,6 +354,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         readNpcDialogueFromCSV(db);
         readNpcFromCSV(db);
         readNpcMoveFromCSV(db);
+        readQuestsFromCSV(db);
     }
 
 
@@ -320,6 +374,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYER_SAVE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_INVENTORY_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NPC_MOVE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DIALOGUE_SAVE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUEST_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUEST_ENTRY_NAME);
         onCreate(db);
     }
 
@@ -477,20 +534,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(TABLE_LOOTBOX_COL_SCENE, Integer.parseInt(row[0]));
             contentValues.put(TABLE_LOOTBOX_COL_X, Integer.parseInt(row[1]));
             contentValues.put(TABLE_LOOTBOX_COL_Y, Integer.parseInt(row[2]));
+
+            int visible = 0;
+            if (row[3].equals("TRUE")) visible = 1;
+            contentValues.put(TABLE_LOOTBOX_COL_VISIBLE, visible);
+
             String item = "";
-            if (!row[3].equals("null")) item = row[3];
+            if (!row[3].equals("null")) item = row[4];
             contentValues.put(TABLE_LOOTBOX_COL_ITEM1, item);
             item = "";
-            if (!row[4].equals("null")) item = row[4];
+            if (!row[4].equals("null")) item = row[5];
             contentValues.put(TABLE_LOOTBOX_COL_ITEM2, item);
             item = "";
-            if (!row[5].equals("null")) item = row[5];
+            if (!row[5].equals("null")) item = row[6];
             contentValues.put(TABLE_LOOTBOX_COL_ITEM3, item);
             item = "";
-            if (!row[6].equals("null")) item = row[6];
+            if (!row[6].equals("null")) item = row[7];
             contentValues.put(TABLE_LOOTBOX_COL_ITEM4, item);
             item = "";
-            if (!row[7].equals("null")) item = row[7];
+            if (!row[7].equals("null")) item = row[8];
             contentValues.put(TABLE_LOOTBOX_COL_ITEM5, item);
             db.insert(TABLE_LOOTBOX_NAME, null, contentValues);
         }
@@ -592,6 +654,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+
+    public void readQuestsFromCSV(SQLiteDatabase db) {
+        db.execSQL("DELETE FROM " + TABLE_QUEST_NAME);
+        db.execSQL("DELETE FROM " + TABLE_QUEST_ENTRY_NAME);
+
+        InputStream inputStream = context.getResources().openRawResource(R.raw.quests);
+        CSVReader csv = new CSVReader(inputStream);
+        List<String[]> questList = csv.read();
+
+        ContentValues contentValues;
+
+        for (String[] row : questList) {
+            System.out.println("Insert Data");
+            contentValues = new ContentValues();
+            contentValues.put(TABLE_QUEST_COL_NAME, row[0]);
+            contentValues.put(TABLE_QUEST_COL_FINAL_CONDITION_STATE, row[1]);
+            contentValues.put(TABLE_QUEST_COL_FINAL_CONDITION_VALUE, Integer.parseInt(row[2]));
+            db.insert(TABLE_QUEST_NAME, null, contentValues);
+        }
+
+        inputStream = context.getResources().openRawResource(R.raw.quest_entries);
+        csv = new CSVReader(inputStream);
+        List<String[]> questEntryList = csv.read();
+
+        for (String[] row : questEntryList) {
+            System.out.println("insert Data 2");
+            contentValues = new ContentValues();
+            contentValues.put(TABLE_QUEST_ENTRY_COL_QUEST_NAME, row[0]);
+            contentValues.put(TABLE_QUEST_ENTRY_COL_TEXT, row[1]);
+            contentValues.put(TABLE_QUEST_ENTRY_COL_ORDER, Integer.parseInt(row[2]));
+            contentValues.put(TABLE_QUEST_ENTRY_COL_CONDITION_STATE_1, row[3]);
+            contentValues.put(TABLE_QUEST_ENTRY_COL_CONDITION_VALUE_1, Integer.parseInt(row[4]));
+            contentValues.put(TABLE_QUEST_ENTRY_COL_CONDITION_STATE_2, row[5]);
+            contentValues.put(TABLE_QUEST_ENTRY_COL_CONDITION_VALUE_2, Integer.parseInt(row[6]));
+            contentValues.put(TABLE_QUEST_ENTRY_COL_CONDITION_STATE_3, row[7]);
+            contentValues.put(TABLE_QUEST_ENTRY_COL_CONDITION_VALUE_3, Integer.parseInt(row[8]));
+            db.insert(TABLE_QUEST_ENTRY_NAME, null, contentValues);
+        }
+    }
+
+
     public GameScene[] getGameScenes()
     {
         Cursor allScenes = getAllScenesCursor();
@@ -634,15 +737,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 if (allLootboxes.getCount() != 0) {
                     while (allLootboxes.moveToNext()) {
                         Lootbox lootbox = new Lootbox(context, allLootboxes.getInt(2), allLootboxes.getInt(3));
-                        for (int i = 4; i < 9; i++)
-                            if (!allLootboxes.getString(i).equals(""))
+                        lootbox.setVisible(allLootboxes.getInt(4) != 0);
+                        for (int i = 5; i < 10; i++) {
+                            if (!allLootboxes.getString(i).equals("") && !allLootboxes.getString(i).equals("null"))
                                 lootbox.addItem(ItemType.valueOf(allLootboxes.getString(i)));
+                        }
                         gameScene[sceneIndex].addLootbox(lootbox);
                     }
                 }
 
             }
         } else {
+
             System.out.println("Error while getting Scenes from db");
         }
         return gameScene;
@@ -658,12 +764,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void getAllQuestsFromDB() {
+        QuestHandler questHandler = gamePanel.getQuestHandler();
+        Cursor cursorQuests = getQuestCursor();
+        if (cursorQuests.getCount() > 0) {
+            while (cursorQuests.moveToNext()) {
+                GameState finalCondition = gamePanel.getStateHandler().getState(cursorQuests.getString(2));
+                finalCondition.value = cursorQuests.getInt(3);
+                Quest quest = new Quest(gamePanel.getStateHandler(), cursorQuests.getString(1), finalCondition);
+                Cursor cursorQuestEntry = getQuestEntryCursor(cursorQuests.getString(1));
+                if (cursorQuestEntry.getCount() > 0) {
+                    while (cursorQuestEntry.moveToNext()) {
+                        QuestEntry questEntry = new QuestEntry(gamePanel.getStateHandler(), cursorQuestEntry.getString(2), cursorQuestEntry.getInt(3), cursorQuestEntry.getString(4), cursorQuestEntry.getInt(5));
+                        questEntry.addCondition(cursorQuestEntry.getString(6), cursorQuestEntry.getInt(7));
+                        questEntry.addCondition(cursorQuestEntry.getString(8), cursorQuestEntry.getInt(9));
+                        quest.addQuestEntry(questEntry);
+                    }
+                }
+                questHandler.addQuest(quest);
+
+                //add special State for Quest
+                addState(quest.getQuestStateName(), 0);
+                addState(quest.getLastShownStateName(), 0);
+            }
+        }
+    }
+
     public Dialogue getDialogueFromDB(String aDialogue)
     {
         Cursor cursorDialogue = getDialogueCursor(aDialogue);
         if (cursorDialogue.getCount() == 1) {
             cursorDialogue.moveToFirst();
-            Dialogue dialogue = new Dialogue(gamePanel, DialoguePosition.valueOf(cursorDialogue.getString(2)));
+            Dialogue dialogue = new Dialogue(gamePanel, DialoguePosition.valueOf(cursorDialogue.getString(2)), aDialogue);
 
             Cursor cursorDialogueText = getDialogueTextCursor(aDialogue);
             if (cursorDialogueText.getCount() != 0) {
@@ -676,9 +808,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 if (cursorDialogueReply.getCount() != 0) {
                     while (cursorDialogueReply.moveToNext()) {
                         GameState state = gamePanel.getStateHandler().getState(cursorDialogueReply.getString(7));
-                        System.out.println("Create Reply: " + cursorDialogueReply.getString(2) + " Check state: " + state.name + " should be: " + cursorDialogueReply.getInt(8) + " and is: " + state.value);
+                        //System.out.println("Create Reply: " + cursorDialogueReply.getString(2) + " Check state: " + state.name + " should be: " + cursorDialogueReply.getInt(8) + " and is: " + state.value);
                         if (gamePanel.getStateHandler().getState(cursorDialogueReply.getString(7)).value == cursorDialogueReply.getInt(8)) {
-                            System.out.println("True");
                             Dialogue followingDialogue = getDialogueFromDB(cursorDialogueReply.getString(3));
                             dialogue.addReply(cursorDialogueReply.getString(2), followingDialogue, cursorDialogueReply.getString(4), cursorDialogueReply.getString(5), cursorDialogueReply.getInt(6));
                         }
@@ -706,6 +837,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return new GameState("NULL", 0);
     }
 
+    private void addState(String name, int initialValue) {
+        ContentValues contentValues= new ContentValues();
+        contentValues.put(TABLE_STATE_COL_NAME, name);
+        contentValues.put(TABLE_STATE_COL_VALUE, initialValue);
+        getWritableDatabase().insert(TABLE_STATE_NAME, null, contentValues);
+    }
+
     public void setState(GameState state)
     {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -730,7 +868,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Player player = gamePanel.getPlayer();
         Cursor playerSave = getPlayerSaveCursor();
         if (playerSave.getCount() == 1) {
-            System.out.println("Reload Player State.");
+            //System.out.println("Reload Player State.");
             playerSave.moveToFirst();
             player.teleport(playerSave.getInt(2), playerSave.getInt(3), Direction.valueOf(playerSave.getString(4)));
             player.setMunchiesMeter(playerSave.getInt(5));
@@ -765,7 +903,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void initInventory()
     {
-        System.out.println("Reload Inventory");
+        //System.out.println("Reload Inventory");
         Inventory inventory = gamePanel.getPlayer().getInventory();
         Cursor savedInventory = getInventoryCursor();
         if (savedInventory.getCount() > 0) {
@@ -820,7 +958,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor command = getCommandCursor(npc.getName(), npc.getSceneIndex(), npc.getX(), npc.getY());
         if (command.getCount() > 0) {
             while (command.moveToNext()) {
-                System.out.println("Found Command!");
                 //check State
                 if (gamePanel.getStateHandler().getState(command.getString(6)).value == command.getInt(7)) {
 
@@ -875,6 +1012,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("DELETE FROM " + TABLE_NPC_NAME + " WHERE " + TABLE_NPC_COL_ID + " = " + cursor.getInt(0) + ";");
         }
     }
+
+
+    public void saveDialogue(Dialogue dialogue) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_NPC_MOVE_NAME);
+
+        ContentValues cv = new ContentValues();
+        cv.put(TABLE_DIALOGUE_SAVE_COL_DIALOGUE_NAME, dialogue.getName());
+        cv.put(TABLE_DIALOGUE_SAVE_COL_CURRENT_TEXT, dialogue.getCurrentText());
+        db.insert(TABLE_DIALOGUE_SAVE_NAME, null, cv);
+    }
+
+    public Dialogue getSavedDialogue() {
+        Cursor cursor = getSavedDialogueCursor();
+        if (cursor.getCount() == 0)
+            return null;
+        cursor.moveToFirst();
+        Dialogue dialogue = gamePanel.getInteractionHandler().getDialogueFromDatabase(cursor.getString(1));
+        dialogue.setCurrentText(cursor.getInt(2)-1);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_DIALOGUE_SAVE_NAME + ";");
+
+        return dialogue;
+    }
+
+    public boolean isDialogueSaved() {
+        if (getSavedDialogueCursor().getCount() == 1)
+            return true;
+        return false;
+    }
+
     //Cursors:
 
     private Cursor getAllScenesCursor()
@@ -979,6 +1148,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 TABLE_NPC_MOVE_COL_ON_X + " = " + startX + " AND " +
                 TABLE_NPC_MOVE_COL_ON_Y + " = " + startY + " );";
         return db.rawQuery(selectCommandQuery, null);
+    }
+
+    private Cursor getSavedDialogueCursor() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_DIALOGUE_SAVE_NAME + ";";
+        return db.rawQuery(selectQuery, null);
+    }
+
+    private Cursor getQuestCursor() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_QUEST_NAME + ";";
+        return db.rawQuery(selectQuery, null);
+    }
+
+    private Cursor getQuestEntryCursor(String questName){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_QUEST_ENTRY_NAME + " WHERE " + TABLE_QUEST_ENTRY_COL_QUEST_NAME + " = '" + questName + "';";
+        return db.rawQuery(selectQuery, null);
     }
 
     private int getIntFromString(String aString)

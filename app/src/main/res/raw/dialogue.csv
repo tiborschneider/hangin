@@ -55,11 +55,10 @@ useLighter;BOTTOM
 noLighter;BOTTOM
 lighterOff;BOTTOM
 npcDoesNotInteract;TOP
-greenGuyNormalDialogue1;TOP
-greenGuyNormalDialogue2;TOP
-greenGuyTeachesRolling;TOP
-greenGuyTeachesRollingNot;TOP
-greenGuyNormalDialogue3;TOP
+strangeGuyInitialDialogue;TOP
+strangeGuyInitialDialogueSmoke;TOP
+strangeGuyInitialDialogueSmokeYes;TOP
+strangeGuyInitialDialogueSmokeNot;TOP
 initialDialogue;TOP
 initialDialogue2;TOP
 katiaSmokeFirstWeed;TOP
@@ -81,3 +80,9 @@ fireDialogueUse;BOTTOM
 fireDialogueSmoke;BOTTOM
 fireDialogueRoll;BOTTOM
 fireDialogueSmokeLighter;BOTTOM
+rollOneNotLearned;TOP
+hiddenLootboxFound;TOP
+strangeGuyDialogueWait;TOP
+strangeGuyDialogue1;TOP
+signInfo2;TOP
+hallo;TOP

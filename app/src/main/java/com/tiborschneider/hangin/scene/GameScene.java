@@ -95,6 +95,41 @@ public class GameScene {
             }
         }
 
+        Paint shadowPaint = new Paint();
+        shadowPaint.setAlpha(99);
+
+        //draw Shadow of houses
+        for (int ix = 0; ix < InterfaceElement.numTiles; ix++) {
+            for (int iy = 0; iy < InterfaceElement.numTiles; iy++) {
+                if (!tiles[ix][iy].isHouseOutside()) {
+                    //check for horizontal shadow
+                    if (iy < InterfaceElement.numTiles - 1 && tiles[ix][iy + 1].isHouseOutside()) {
+                        //draw horizontal shadow
+                        Bitmap shadow;
+                        if (ix > 0 && !tiles[ix - 1][iy + 1].isHouseOutside()) {
+                            shadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_shadow_tl);
+                        } else {
+                            shadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_shadow_tc);
+                        }
+                        canvas.drawBitmap(shadow, ix * InterfaceElement.tileSize, iy * InterfaceElement.tileSize, shadowPaint);
+                    } else if (ix > 0 && tiles[ix - 1][iy].isHouseOutside()) {
+                        //draw vertical shadow
+                        Bitmap shadow;
+                        if (iy < InterfaceElement.numTiles - 1 && !tiles[ix - 1][iy + 1].isHouseOutside()) {
+                            shadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_shadow_rb);
+                        } else {
+                            shadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_shadow_rc);
+                        }
+                        canvas.drawBitmap(shadow, ix * InterfaceElement.tileSize, iy * InterfaceElement.tileSize, shadowPaint);
+                    } else if (ix > 0 && iy < InterfaceElement.numTiles - 1 && tiles[ix - 1][iy + 1].isHouseOutside()) {
+                        //draw corner shadow
+                        Bitmap shadow = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_shadow_tr);
+                        canvas.drawBitmap(shadow, ix * InterfaceElement.tileSize, iy * InterfaceElement.tileSize, shadowPaint);
+                    }
+                }
+            }
+        }
+
         //draw Lootboxes
         for (int i = 0; i < numLootbox; i++) {
             lootboxes[i].draw(canvas, stonedPaint);
@@ -135,9 +170,9 @@ public class GameScene {
 
     public boolean canWalkUp(int aX, int aY)
     {
-        if (aX >= 0 && aX < InterfaceElement.numTiles && aY >= 0 && aY < InterfaceElement.numTiles)
+        if (aX >= 0 && aX < InterfaceElement.numTiles && aY >= 0 && aY < InterfaceElement.numTiles) {
             return tiles[aX][aY].canWalkUp();
-        else return false;
+        } else return false;
     }
 
     public boolean canWalkDown(int aX, int aY)
@@ -263,44 +298,76 @@ public class GameScene {
         return false;
     }
 
-    public boolean isLootboxInView(int aX, int aY, Direction aDir)
+    public boolean isLootboxInView(int x, int y, Direction aDir)
     {
         switch (aDir) {
             case UP:
-                aY--;
+                if (y <= 0)
+                    return false;
+                if (!tiles[x][y].canWalkUp() || !tiles[x][y-1].canWalkDown())
+                    return false;
+                y--;
                 break;
             case DOWN:
-                aY++;
+                if (y >= InterfaceElement.numTiles - 1)
+                    return false;
+                if (!tiles[x][y].canWalkDown() || !tiles[x][y+1].canWalkUp())
+                    return false;
+                y++;
                 break;
             case LEFT:
-                aX--;
+                if (x <= 0)
+                    return false;
+                if (!tiles[x][y].canWalkLeft() || !tiles[x-1][y].canWalkRight())
+                    return false;
+                x--;
                 break;
             case RIGHT:
-                aX++;
+                if (x >= InterfaceElement.numTiles - 1)
+                    return false;
+                if (!tiles[x][y].canWalkRight() || !tiles[x+1][y].canWalkLeft())
+                    return false;
+                x++;
                 break;
         }
-        return checkLootbox(aX, aY);
+        return checkLootbox(x, y);
     }
 
-    public boolean isNpcInView(int aX, int aY, Direction aDir)
+    public boolean isNpcInView(int x, int y, Direction aDir)
     {
         switch (aDir) {
             case UP:
-                aY--;
+                if (y <= 0)
+                    return false;
+                if (!tiles[x][y].canWalkUp() || !tiles[x][y-1].canWalkDown())
+                    return false;
+                y--;
                 break;
             case DOWN:
-                aY++;
+                if (y >= InterfaceElement.numTiles - 1)
+                    return false;
+                if (!tiles[x][y].canWalkDown() || !tiles[x][y+1].canWalkUp())
+                    return false;
+                y++;
                 break;
             case LEFT:
-                aX--;
+                if (x <= 0)
+                    return false;
+                if (!tiles[x][y].canWalkLeft() || !tiles[x-1][y].canWalkRight())
+                    return false;
+                x--;
                 break;
             case RIGHT:
-                aX++;
+                if (x >= InterfaceElement.numTiles - 1)
+                    return false;
+                if (!tiles[x][y].canWalkRight() || !tiles[x+1][y].canWalkLeft())
+                    return false;
+                x++;
                 break;
             default:
                 return false;
         }
-        return checkNpc(aX, aY);
+        return checkNpc(x, y);
     }
 
     public boolean checkNpc(int aX, int aY)
@@ -351,15 +418,31 @@ public class GameScene {
     public boolean isInteractiveInView(int x, int y, Direction direction) {
         switch (direction) {
             case UP:
+                if (y <= 0)
+                    return false;
+                if (!tiles[x][y].canWalkUp() || !tiles[x][y-1].canWalkDown())
+                    return false;
                 y--;
                 break;
             case DOWN:
+                if (y >= InterfaceElement.numTiles - 1)
+                    return false;
+                if (!tiles[x][y].canWalkDown() || !tiles[x][y+1].canWalkUp())
+                    return false;
                 y++;
                 break;
             case LEFT:
+                if (x <= 0)
+                    return false;
+                if (!tiles[x][y].canWalkLeft() || !tiles[x-1][y].canWalkRight())
+                    return false;
                 x--;
                 break;
             case RIGHT:
+                if (x >= InterfaceElement.numTiles - 1)
+                    return false;
+                if (!tiles[x][y].canWalkRight() || !tiles[x+1][y].canWalkLeft())
+                    return false;
                 x++;
                 break;
             default:

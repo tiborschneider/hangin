@@ -55,6 +55,13 @@ public abstract class InterfaceElement {
     public static int statusBarMeterMaximumWidth = 284;
     public static int statusBarMeterHeight = 24;
     public static int statusBarTextLength = 70;
+    public static int questMainHeight = 748;
+    public static int questMainWidth = 800;
+    public static int questMainSelectionWidth = 776;
+    public static int questMainSelectionHeight = 106;
+    public static int questSingleHeight = 778;
+    public static int questSingleWidth = 800;
+    public static int questSingleNumText = 9;
 
     protected int x;
     protected int y;
@@ -69,7 +76,6 @@ public abstract class InterfaceElement {
     {
         //initialize tile display parameters
         float corrFactor = ((float) GamePanel.screenWidth)/((float) originalScreenWidth);
-        System.out.println("scale all Distances with corr Factor: " + corrFactor);
         borderWidth *= corrFactor;
         borderWidth = (int)(0.5+corrFactor*borderWidth);
         borderSmallWidth = (int)(0.5+corrFactor*borderSmallWidth);
@@ -113,6 +119,12 @@ public abstract class InterfaceElement {
         statusBarMeterMaximumWidth = (int)(0.5+corrFactor*statusBarMeterMaximumWidth);
         statusBarMeterHeight = (int)(0.5+corrFactor*statusBarMeterHeight);
         statusBarTextLength = (int)(0.5+corrFactor*statusBarTextLength);
+        questMainHeight = (int)(0.5+corrFactor*questMainHeight);
+        questMainWidth = (int)(0.5+corrFactor*questMainWidth);
+        questMainSelectionWidth = (int)(0.5+corrFactor*questMainSelectionWidth);
+        questMainSelectionHeight = (int)(0.5+corrFactor*questMainSelectionHeight);
+        questSingleHeight = (int)(0.5+corrFactor*questSingleHeight);
+        questSingleWidth = (int)(0.5+corrFactor*questSingleWidth);
 
         InterfaceElement.gameBorderSize = (GamePanel.screenWidth - InterfaceElement.tileSize * InterfaceElement.numTiles)/2;
 

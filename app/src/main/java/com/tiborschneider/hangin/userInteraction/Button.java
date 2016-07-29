@@ -11,6 +11,7 @@ public enum Button {
     INTERACT,
     DROP,
     INVENTORY,
+    QUESTS,
     SETTINGS,
     NDEF
 }

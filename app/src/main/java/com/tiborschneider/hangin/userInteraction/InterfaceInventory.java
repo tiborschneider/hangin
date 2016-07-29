@@ -62,7 +62,6 @@ public class InterfaceInventory extends InterfaceElement {
         //Paint background and Title
         tempCanvas.drawBitmap(image, 0, 0, null);
         TextPaint paint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.BLACK);
         int textColor = context.getResources().getColor(R.color.interfaceText);
         paint.setColor(textColor);
         paint.setTextSize(bigTextSize);

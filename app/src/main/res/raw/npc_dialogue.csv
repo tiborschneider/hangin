@@ -1,6 +1,7 @@
-greenGuy;greenGuyNormalDialogue2;greenGuyRelations;1;abilityRollJoints;1;NULL;0
-greenGuy;greenGuyNormalDialogue1;greenGuyRelations;0;NULL;0;NULL;0
-greenGuy;greenGuyNormalDialogue3;greenGuyRelations;1;abilityRollJoints;2;NULL;0
+strangeGuy;strangeGuyInitialDialogue;strangeGuyRelations;0;playerHasSomethingToSmoke;0;NULL;0
+strangeGuy;strangeGuyDialogue1;strangeGuyTTP;0;strangeGuyRelations;1;NULL;0
+strangeGuy;strangeGuyInitialDialogueSmoke;strangeGuyRelations;0;playerHasSomethingToSmoke;1;NULL;0
+strangeGuy;strangeGuyDialogueWait;NULL;0;NULL;0;NULL;0
 katia;katiaSmokeFirstWeed;katiaRelations;1;playerHasWeed;1;NULL;0
 katia;katiaSmokeFirstBigJoint;katiaRelations;1;playerHasJoint;3;playerHasWeed;0
 katia;katiaSmokeFirstJoint;katiaRelations;1;playerHasJoint;2;playerHasWeed;0

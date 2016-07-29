@@ -11,6 +11,7 @@ import com.tiborschneider.hangin.state.GameState;
  */
 public class Dialogue {
     private int currentText = 0;
+    private String name;
     private int numText = 0;
     private int numReplies = 0;
     public static int maxNumText = 20;
@@ -27,9 +28,10 @@ public class Dialogue {
     private DialoguePosition dialoguePosition;
     private GamePanel gamePanel;
 
-    public Dialogue(GamePanel aGamePanel, DialoguePosition aDialoguePosition) {
+    public Dialogue(GamePanel aGamePanel, DialoguePosition aDialoguePosition, String aName) {
         dialoguePosition = aDialoguePosition;
         gamePanel = aGamePanel;
+        name = aName;
     }
 
     public boolean addTextElement(String line1, String line2, String aTextAction, String aTextSetState, int aTextSetValue)
@@ -147,5 +149,17 @@ public class Dialogue {
 
     public int getReplyStateValueToChange(int index) {
         return replySetValue[index];
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getCurrentText() {
+        return currentText;
+    }
+
+    public void setCurrentText(int currentText) {
+        this.currentText = currentText;
     }
 }
