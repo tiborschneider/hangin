@@ -22,7 +22,7 @@ public class QuestHandler {
     public int getNumQuestsToShow() {
         int ret = 0;
         for (int i = 0; i < numQuests; i++) {
-            if (quests[i].getTextToShow()[0] != null)
+            if (quests[i].getNumTextToShow() != 0)
                 ret++;
         }
         return ret;

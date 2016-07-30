@@ -134,27 +134,30 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             startGame = false;
             startNewGame();
         }
-        player.update();
 
-        //update animation tiles
-        scenes[currentScene].update();
+        //update Game Graphics only if no interface is active
+        if (!interactionHandler.isInterfaceActive() || interactionHandler.isDialogueActive()) {
+            player.update();
 
-        //update npc on the same GameScene
-        player.update();
+            //update animation tiles
+            scenes[currentScene].update();
 
-        //update animation tiles
-        for (int i = 0; i < numNpc; i++)
-            if (npc[i] != null && npc[i].isOnScene(scenes[currentScene]))
-                npc[i].update();
+            //update npc on the same GameScene¨
+            for (int i = 0; i < numNpc; i++)
+                if (npc[i] != null && npc[i].isOnScene(scenes[currentScene]))
+                    npc[i].update();
 
-        //check game Jumps
-        if (GameJumpHandler.jumpsAllowed && player.getTmpX() == 0 && player.getTmpY() == 0 && scenes[currentScene].isJumpTile(player.getX(), player.getY()))
-        {
-            stateHandler.updateTimeToPass();
-            int nextScene = scenes[currentScene].getTargetScene(player.getX(), player.getY());
-            player.teleport(scenes[currentScene].getXTarget(player.getX(), player.getY()), scenes[currentScene].getYTarget(player.getX(), player.getY()));
-            currentScene = nextScene;
-            GameJumpHandler.jumpsAllowed = false;
+            //check game Jumps
+            if (GameJumpHandler.jumpsAllowed && player.getTmpX() == 0 && player.getTmpY() == 0 && scenes[currentScene].isJumpTile(player.getX(), player.getY())) {
+                stateHandler.updateTimeToPass();
+                int nextScene = scenes[currentScene].getTargetScene(player.getX(), player.getY());
+                player.teleport(scenes[currentScene].getXTarget(player.getX(), player.getY()), scenes[currentScene].getYTarget(player.getX(), player.getY()));
+                currentScene = nextScene;
+                GameJumpHandler.jumpsAllowed = false;
+            }
+        } else {
+            //update Interface
+            interactionHandler.update();
         }
     }
 

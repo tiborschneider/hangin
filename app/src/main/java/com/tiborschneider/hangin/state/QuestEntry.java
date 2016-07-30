@@ -43,9 +43,9 @@ public class QuestEntry {
 
     public boolean isTrue() {
         for (int i = 0; i < numCondition; i++) {
-            if (i == 1) {
+            if (i == 0) {
                 //check first Condition with greater or equal!
-                if (stateHandler.getState(condition[i].name).value > condition[i].value)
+                if (stateHandler.getState(condition[i].name).value < condition[i].value)
                     return false;
             } else {
                 if (stateHandler.getState(condition[i].name).value != condition[i].value)

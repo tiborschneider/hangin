@@ -18,7 +18,7 @@ import com.tiborschneider.hangin.R;
 public class Player extends GameObject {
     private int motionCounter = 0;
     private int prevMotionCounter = 0;
-    private int animationSpeed = 32;
+    private int animationSpeed = 16;
     private static int meterMaximum = 100;
     private Inventory inventory;
     private int munchiesMeter = 0;
@@ -35,7 +35,7 @@ public class Player extends GameObject {
 
     public Player(GamePanel aGamePanel, Context aContext, int aX, int aY)
     {
-        super(aGamePanel, aContext, Direction.RIGHT, aX, aY, 4);
+        super(aGamePanel, aContext, Direction.RIGHT, aX, aY, 8);
         context = aContext;
         inventory = new Inventory(context, gamePanel);
 
@@ -244,7 +244,7 @@ public class Player extends GameObject {
     {
         int imageNr = 0;
         if (tmpX != 0 || tmpY != 0) {
-            imageNr = (motionCounter/4) + 1;
+            imageNr = (motionCounter/2) + 1;
         }
         switch (direction)
         {

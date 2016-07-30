@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.text.TextPaint;
 
 import com.tiborschneider.hangin.R;
@@ -23,15 +22,24 @@ public class InterfaceQuestSelection extends InterfaceElement {
     private int xPosQuestEntry;
     private int xPosSelection;
     private int yPosSelection;
+    private int xPosUp;
+    private int yPosUp;
+    private int xPosDown;
+    private int yPosDown;
     private int[] yPosQuestEntry = new int[numQuestsOnScreen];
     private Bitmap image;
     private Bitmap selectionImage;
     private Bitmap starImage;
+    private Bitmap upImage;
+    private Bitmap downImage;
     private Context context;
     private QuestHandler questHandler;
     private int currentIndex = 0;
     private int topEntryIndex = 0;
-    private boolean[] listTrue;
+    private Quest[] listQuests;
+    //private boolean[] listTrue;
+    private boolean[] listChanged;
+    private boolean[] listFinished;
     private int numQuestsToShow;
     private int numQuests;
 
@@ -39,30 +47,52 @@ public class InterfaceQuestSelection extends InterfaceElement {
         this.context = context;
         this.questHandler = GamePanel.getGamePanel().getQuestHandler();
 
+        //update finished State of all Quests
+        questHandler.checkFinished();
+
         image = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_quest_main_window);
-        selectionImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_quest_main_selection);
+        selectionImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_select);
         starImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_star);
+        upImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_up);
+        downImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.ui_down);
 
         x = (GamePanel.screenWidth - questMainWidth) / 2;
         y = 2*statusBarOuterMargin + statusBarHeight - gameBorderSize + x;
 
+        xPosUp = GamePanel.screenWidth/2 - navigationButtonSize/2;
+        yPosUp = y + 2* borderWidth + 2*innerTextMargin + bigTextSize - navigationButtonSize + navigationButtonOffset;
+        xPosDown = xPosUp;
+        yPosDown = y + questMainHeight - borderWidth - navigationButtonOffset;
+
         xPosTitleText = x + borderWidth + innerTextMargin;
         yPosTitleText = y + borderWidth + innerTextMargin + bigTextSize + textOffset;
 
-        xPosSelection = x + borderWidth - borderSmallWidth;
-        yPosSelection = y + 2*borderWidth + 2*innerTextMargin + bigTextSize - borderSmallWidth;
+        xPosSelection = x + borderWidth + innerTextMargin;
+        yPosSelection = y + 2*borderWidth + 2*innerTextMargin + bigTextSize + innerTextMargin + normalTextSize/2 - selectionHeight/2;
 
-        xPosQuestEntry = x + borderWidth + innerTextMargin;
+        xPosQuestEntry = x + borderWidth + 2*innerTextMargin + selectionWidth;
         for (int i = 0; i < numQuestsOnScreen; i++)
             yPosQuestEntry[i] = y + 2*borderWidth + 2*innerTextMargin + bigTextSize + innerTextMargin + normalTextSize + textOffset + i*(normalTextSize + 2*innerTextMargin + borderSmallWidth);
 
-        //init listTrue
+        updateQuestStatus();
+
+    }
+
+    public void updateQuestStatus() {
         numQuestsToShow = questHandler.getNumQuestsToShow();
         numQuests = questHandler.getNumQuests();
-        listTrue = new boolean[numQuests];
+        listQuests = new Quest[numQuestsToShow];
+        //listTrue = new boolean[numQuestsToShow];
+        listChanged = new boolean[numQuestsToShow];
+        listFinished = new boolean[numQuestsToShow];
+        int index = 0;
         for (int i = 0; i < numQuests; i++) {
-            if (questHandler.getQuest(i) != null) {
-                listTrue[i] = questHandler.getQuest(i).isTrue();
+            Quest quest = questHandler.getQuest(i);
+            if (quest != null && quest.isTrue()) {
+                listQuests[index] = quest;
+                listChanged[index] = quest.isChanged();
+                listFinished[index] = quest.isFinished();
+                index++;
             }
         }
     }
@@ -90,18 +120,25 @@ public class InterfaceQuestSelection extends InterfaceElement {
 
         //draw Entries
         paint.setTextSize(normalTextSize);
-        int counter = 0;
-        for (int i = 0; i < numQuestsOnScreen; i++) {
-            if (listTrue[i + topEntryIndex] && questHandler.getQuest(i + topEntryIndex) != null) {
-                if (questHandler.getQuest(i + topEntryIndex).isFinished()) {
-                    canvas.drawText(questHandler.getQuest(i + topEntryIndex).getQuestName(), xPosQuestEntry, yPosQuestEntry[counter++], grayPaint);
-                } else {
-                    if (questHandler.getQuest(i + topEntryIndex).isChanged()) {
-                        canvas.drawBitmap(starImage, xPosQuestEntry - innerTextMargin/2, yPosQuestEntry[counter], null);
-                    }
-                    canvas.drawText(questHandler.getQuest(i + topEntryIndex).getQuestName(), xPosQuestEntry, yPosQuestEntry[counter++], paint);
+
+        for (int i = 0; (i < numQuestsOnScreen && i < numQuestsToShow); i++) {
+            if (listFinished[i + topEntryIndex]) {
+                canvas.drawText(listQuests[i + topEntryIndex].getQuestName(), xPosQuestEntry, yPosQuestEntry[i], grayPaint);
+            } else {
+                canvas.drawText(listQuests[i + topEntryIndex].getQuestName(), xPosQuestEntry, yPosQuestEntry[i], paint);
+                if (listChanged[i + topEntryIndex]) {
+                    canvas.drawBitmap(starImage, xPosQuestEntry - innerTextMargin*3/2, yPosQuestEntry[i] - textOffset - normalTextSize - innerTextMargin*3/2, null);
                 }
             }
+        }
+
+        //draw Navigation Buttons
+        //draw Up:
+        if (topEntryIndex != 0) {
+            canvas.drawBitmap(upImage, xPosUp, yPosUp, null);
+        }
+        if (numQuestsToShow > topEntryIndex + numQuestsOnScreen) {
+            canvas.drawBitmap(downImage, xPosDown, yPosDown, null);
         }
     }
 
@@ -124,18 +161,10 @@ public class InterfaceQuestSelection extends InterfaceElement {
     }
 
     public Quest getSelectedQuest() {
-        return questHandler.getQuest(getSelectedIndex());
+        return listQuests[getSelectedIndex()];
     }
 
     public int getSelectedIndex() {
-        int counter = currentIndex + 1;
-        for (int i = 0; i < numQuests; i++) {
-            if (listTrue[i])
-                counter--;
-            if (counter == 0)
-                return i;
-        }
         return currentIndex;
-
     }
 }

@@ -87,6 +87,7 @@ public class Quest {
     }
 
     public void setFinished() {
+        System.out.println("setFinished");
         GameState questState = getQuestState();
         questState.value = 2;
         stateHandler.setState(questState);
@@ -124,7 +125,12 @@ public class Quest {
     }
 
     public String getQuestStateName() {
-        return "_questState_" + questName;
+        return "_questState_" + questName.replace(" ", "_");
+    }
+
+
+    public static String getQuestStateName(String s) {
+        return "_questState_" + s.replace(" ","_");
     }
 
     private GameState getLastShownState() {
@@ -132,6 +138,10 @@ public class Quest {
     }
 
     public String getLastShownStateName() {
-        return "_questLastShown_" + questName;
+        return "_questLastShown_" + questName.replace(" ","_");
+    }
+
+    public static String getLastShownStateName(String s) {
+        return "_questLastShown_" + s.replace(" ","_");
     }
 }

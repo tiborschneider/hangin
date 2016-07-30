@@ -57,11 +57,13 @@ public abstract class InterfaceElement {
     public static int statusBarTextLength = 70;
     public static int questMainHeight = 748;
     public static int questMainWidth = 800;
-    public static int questMainSelectionWidth = 776;
-    public static int questMainSelectionHeight = 106;
-    public static int questSingleHeight = 778;
+    //public static int questMainSelectionWidth = 776;
+    //public static int questMainSelectionHeight = 106;
+    public static int questSingleHeight = 748;
     public static int questSingleWidth = 800;
     public static int questSingleNumText = 9;
+    public static int navigationButtonSize = 100;
+    public static int navigationButtonOffset = 30;
 
     protected int x;
     protected int y;
@@ -121,10 +123,12 @@ public abstract class InterfaceElement {
         statusBarTextLength = (int)(0.5+corrFactor*statusBarTextLength);
         questMainHeight = (int)(0.5+corrFactor*questMainHeight);
         questMainWidth = (int)(0.5+corrFactor*questMainWidth);
-        questMainSelectionWidth = (int)(0.5+corrFactor*questMainSelectionWidth);
-        questMainSelectionHeight = (int)(0.5+corrFactor*questMainSelectionHeight);
+        //questMainSelectionWidth = (int)(0.5+corrFactor*questMainSelectionWidth);
+        //questMainSelectionHeight = (int)(0.5+corrFactor*questMainSelectionHeight);
         questSingleHeight = (int)(0.5+corrFactor*questSingleHeight);
         questSingleWidth = (int)(0.5+corrFactor*questSingleWidth);
+        navigationButtonSize = (int)(0.5+corrFactor*navigationButtonSize);
+        navigationButtonOffset = (int)(0.5+corrFactor*navigationButtonOffset);
 
         InterfaceElement.gameBorderSize = (GamePanel.screenWidth - InterfaceElement.tileSize * InterfaceElement.numTiles)/2;
 
@@ -139,5 +143,9 @@ public abstract class InterfaceElement {
         Matrix matrix = new Matrix();
         matrix.postScale(scaleWidth, scaleHeight);
         return Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, false);
+    }
+
+    public void update() {
+        return;
     }
 }

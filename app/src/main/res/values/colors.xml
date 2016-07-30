@@ -6,4 +6,5 @@
     <color name="interfaceText">#253537</color>
     <color name="interfaceGrayText">#669399</color>
     <color name="interfaceWhiteText">#E4EEEF</color>
+    <color name="interfaceRed">#B03F33</color>
 </resources>

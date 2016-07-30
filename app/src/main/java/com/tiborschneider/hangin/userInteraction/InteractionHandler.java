@@ -49,6 +49,10 @@ public class InteractionHandler {
         this.questHandler = questHandler;
     }
 
+    public boolean isInterfaceActive() {
+        return interfaceActive;
+    }
+
     public void onButtonPress(Button button)
     {
         if (!interfaceActive)
@@ -173,6 +177,7 @@ public class InteractionHandler {
 
     private void closeQuestInfo() {
         interfaceQuestInfo = null;
+        interfaceQuestSelection.updateQuestStatus();
         //gamePanel.redrawScene();
     }
 
@@ -453,5 +458,15 @@ public class InteractionHandler {
     public void restoreSavedDialogue() {
         if (gamePanel.getDatabaseHelper().isDialogueSaved())
             this.createDialogue(gamePanel.getDatabaseHelper().getSavedDialogue());
+    }
+
+    public void update() {
+        if (interfaceQuestInfo != null) {
+            interfaceQuestInfo.update();
+        }
+    }
+
+    public boolean isDialogueActive() {
+        return (interfaceDialogue != null);
     }
 }

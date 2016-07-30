@@ -189,6 +189,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override public void onCreate(SQLiteDatabase db)
     {
+
+        System.out.println("Delete all Tables");
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SCENE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TILE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_JUMP_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DIALOGUE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DIAL_TEXT_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DIAL_REPLY_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOOTBOX_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NPC_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NPC_DIALOGUE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_STATE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYER_SAVE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_INVENTORY_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NPC_MOVE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DIALOGUE_SAVE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUEST_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUEST_ENTRY_NAME);
+
         System.out.println("Create all Tables");
         String sqlQuery = "CREATE TABLE " + TABLE_SCENE_NAME + " ( " +
                 TABLE_SCENE_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -244,6 +263,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 TABLE_DIAL_REPLY_COL_CONDITION_STATE + " STRING, " +
                 TABLE_DIAL_REPLY_COL_CONDITION_VALUE + " INTEGER);";
         db.execSQL(sqlQuery);
+
+        System.out.println("create Database");
 
         sqlQuery = "CREATE TABLE " + TABLE_LOOTBOX_NAME + " ( " +
                 TABLE_LOOTBOX_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -360,23 +381,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
-        System.out.println("Delete all Tables");
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SCENE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TILE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_JUMP_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DIALOGUE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DIAL_TEXT_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DIAL_REPLY_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOOTBOX_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NPC_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NPC_DIALOGUE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_STATE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYER_SAVE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_INVENTORY_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NPC_MOVE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DIALOGUE_SAVE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUEST_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUEST_ENTRY_NAME);
         onCreate(db);
     }
 
@@ -540,19 +544,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(TABLE_LOOTBOX_COL_VISIBLE, visible);
 
             String item = "";
-            if (!row[3].equals("null")) item = row[4];
+            if (!row[4].equals("null")) item = row[4];
             contentValues.put(TABLE_LOOTBOX_COL_ITEM1, item);
             item = "";
-            if (!row[4].equals("null")) item = row[5];
+            if (!row[5].equals("null")) item = row[5];
             contentValues.put(TABLE_LOOTBOX_COL_ITEM2, item);
             item = "";
-            if (!row[5].equals("null")) item = row[6];
+            if (!row[6].equals("null")) item = row[6];
             contentValues.put(TABLE_LOOTBOX_COL_ITEM3, item);
             item = "";
-            if (!row[6].equals("null")) item = row[7];
+            if (!row[7].equals("null")) item = row[7];
             contentValues.put(TABLE_LOOTBOX_COL_ITEM4, item);
             item = "";
-            if (!row[7].equals("null")) item = row[8];
+            if (!row[8].equals("null")) item = row[8];
             contentValues.put(TABLE_LOOTBOX_COL_ITEM5, item);
             db.insert(TABLE_LOOTBOX_NAME, null, contentValues);
         }
@@ -672,6 +676,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(TABLE_QUEST_COL_FINAL_CONDITION_STATE, row[1]);
             contentValues.put(TABLE_QUEST_COL_FINAL_CONDITION_VALUE, Integer.parseInt(row[2]));
             db.insert(TABLE_QUEST_NAME, null, contentValues);
+
+            //add special State for Quest
+            addState(db, Quest.getQuestStateName(row[0]), 0);
+            addState(db, Quest.getLastShownStateName(row[0]), 0);
         }
 
         inputStream = context.getResources().openRawResource(R.raw.quest_entries);
@@ -724,6 +732,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 else
                     System.out.println("Error while getting Tiles from db from Scene " + sceneIndex);
 
+                allTiles.close();
+
                 //get Jumps
                 allJumps = getAllJumpsOfSceneCursor(sceneIndex);
                 if (allJumps.getCount() != 0)
@@ -732,6 +742,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 else
                     System.out.println("Error while getting Jumps from DB from Scene " + sceneIndex);
 
+                allJumps.close();
+
                 //get Lootboxes
                 allLootboxes = getLootboxCursor(sceneIndex);
                 if (allLootboxes.getCount() != 0) {
@@ -739,18 +751,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         Lootbox lootbox = new Lootbox(context, allLootboxes.getInt(2), allLootboxes.getInt(3));
                         lootbox.setVisible(allLootboxes.getInt(4) != 0);
                         for (int i = 5; i < 10; i++) {
-                            if (!allLootboxes.getString(i).equals("") && !allLootboxes.getString(i).equals("null"))
+                            if (!allLootboxes.getString(i).equals(""))
                                 lootbox.addItem(ItemType.valueOf(allLootboxes.getString(i)));
                         }
                         gameScene[sceneIndex].addLootbox(lootbox);
                     }
                 }
 
+                allLootboxes.close();
+
             }
         } else {
-
             System.out.println("Error while getting Scenes from db");
         }
+
+        allScenes.close();
         return gameScene;
     }
 
@@ -762,6 +777,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 gamePanel.newNpc(cursorNpc.getString(1), cursorNpc.getString(2), Direction.valueOf(cursorNpc.getString(6)), cursorNpc.getInt(4), cursorNpc.getInt(5), cursorNpc.getInt(3), cursorNpc.getInt(7));
             }
         }
+        cursorNpc.close();
     }
 
     public void getAllQuestsFromDB() {
@@ -782,12 +798,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     }
                 }
                 questHandler.addQuest(quest);
-
-                //add special State for Quest
-                addState(quest.getQuestStateName(), 0);
-                addState(quest.getLastShownStateName(), 0);
             }
         }
+        cursorQuests.close();
     }
 
     public Dialogue getDialogueFromDB(String aDialogue)
@@ -815,11 +828,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         }
                     }
                 }
+                cursorDialogueReply.close();
+                cursorDialogueText.close();
+                cursorDialogue.close();
+
                 return dialogue;
             }
+            cursorDialogue.close();
         } else if (cursorDialogue.getCount() > 1) {
             System.out.println("FATAL ERROR: multiple Dialogues with the same name");
         }
+        cursorDialogue.close();
         System.out.println("FATAL ERROR: Could not create Dialogue");
         return null;
     }
@@ -834,14 +853,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursorState.moveToFirst();
             return new GameState(cursorState.getString(1), cursorState.getInt(2), (cursorState.getInt(3) == 1));
         }
+        cursorState.close();
         return new GameState("NULL", 0);
     }
 
-    private void addState(String name, int initialValue) {
+    private void addState(SQLiteDatabase db, String name, int initialValue) {
         ContentValues contentValues= new ContentValues();
         contentValues.put(TABLE_STATE_COL_NAME, name);
         contentValues.put(TABLE_STATE_COL_VALUE, initialValue);
-        getWritableDatabase().insert(TABLE_STATE_NAME, null, contentValues);
+        contentValues.put(TABLE_STATE_COL_SPECIAL, 0);
+        db.insert(TABLE_STATE_NAME, null, contentValues);
     }
 
     public void setState(GameState state)
@@ -856,10 +877,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = getNpcDialogueCursor(aNpc);
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()){
-                if (gamePanel.getStateHandler().getState(cursor.getString(3)).value == cursor.getInt(4) && gamePanel.getStateHandler().getState(cursor.getString(5)).value == cursor.getInt(6) && gamePanel.getStateHandler().getState(cursor.getString(7)).value == cursor.getInt(8))
-                    return cursor.getString(2);
+                if (gamePanel.getStateHandler().getState(cursor.getString(3)).value == cursor.getInt(4) && gamePanel.getStateHandler().getState(cursor.getString(5)).value == cursor.getInt(6) && gamePanel.getStateHandler().getState(cursor.getString(7)).value == cursor.getInt(8)) {
+                    String ret = cursor.getString(2);
+                    cursor.close();
+                    return ret;
+                }
             }
         }
+        cursor.close();
         return "npcDoesNotInteract";
     }
 
@@ -875,8 +900,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             player.setStonedMeter(playerSave.getInt(6));
             gamePanel.setCurrentScene(playerSave.getInt(1));
             initInventory();
+            playerSave.close();
             return true;
         }
+        playerSave.close();
         return false;
     }
 
@@ -917,6 +944,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
             }
         }
+        savedInventory.close();
     }
 
     public void deleteInventoryItem(String aItem)
@@ -987,10 +1015,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                             }
                         }
                     }
+                    command.close();
                     return true;
                 }
             }
         }
+        command.close();
         return false;
     }
 
@@ -1011,6 +1041,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.insert(TABLE_NPC_NAME, null, contentValues);
             db.execSQL("DELETE FROM " + TABLE_NPC_NAME + " WHERE " + TABLE_NPC_COL_ID + " = " + cursor.getInt(0) + ";");
         }
+        cursor.close();
     }
 
 
@@ -1026,8 +1057,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Dialogue getSavedDialogue() {
         Cursor cursor = getSavedDialogueCursor();
-        if (cursor.getCount() == 0)
+        if (cursor.getCount() == 0) {
+            cursor.close();
             return null;
+        }
         cursor.moveToFirst();
         Dialogue dialogue = gamePanel.getInteractionHandler().getDialogueFromDatabase(cursor.getString(1));
         dialogue.setCurrentText(cursor.getInt(2)-1);
@@ -1035,11 +1068,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_DIALOGUE_SAVE_NAME + ";");
 
+        cursor.close();
         return dialogue;
     }
 
     public boolean isDialogueSaved() {
-        if (getSavedDialogueCursor().getCount() == 1)
+        Cursor cursor = getSavedDialogueCursor();
+        int count = cursor.getCount();
+        cursor.close();
+        if (count == 1)
             return true;
         return false;
     }
