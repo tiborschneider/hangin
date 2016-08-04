@@ -28,7 +28,7 @@ public class QuestEntry {
     }
 
     public void addCondition(GameState condition) {
-        if (numCondition < maxNumCondition - 1) {
+        if (numCondition < maxNumCondition) {
             this.condition[numCondition++] = condition;
         }
     }

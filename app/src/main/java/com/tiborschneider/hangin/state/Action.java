@@ -64,6 +64,7 @@ public class Action {
         if (smokeWithNpc.value != 0) {
             //smoke with NPC
             gamePanel.getPlayer().updateStonedMeter(smokeWithNpc.value);
+            gamePanel.getPlayer().startSmokeAnimation();
             smokeWithNpc.value = 0;
             gamePanel.getStateHandler().setState(smokeWithNpc);
             return;
@@ -135,16 +136,19 @@ public class Action {
                 case 1:
                     //smoke Ugly Joint
                     gamePanel.getPlayer().updateStonedMeter(10);
+                    gamePanel.getPlayer().startSmokeAnimation();
                     gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.UGLY_JOINT));
                     break;
                 case 2:
                     //smoke  Joint
                     gamePanel.getPlayer().updateStonedMeter(20);
+                    gamePanel.getPlayer().startSmokeAnimation();
                     gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.JOINT));
                     break;
                 case 3:
                     //smoke Big Joint
                     gamePanel.getPlayer().updateStonedMeter(50);
+                    gamePanel.getPlayer().startSmokeAnimation();
                     gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.BIG_JOINT));
                     break;
             }
@@ -161,16 +165,19 @@ public class Action {
                 case 1:
                     //smoke Ugly Joint
                     gamePanel.getPlayer().updateStonedMeter(20-stonedOffset);
+                    gamePanel.getPlayer().startSmokeAnimation();
                     gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.UGLY_JOINT));
                     break;
                 case 2:
                     //smoke  Joint
                     gamePanel.getPlayer().updateStonedMeter(30-stonedOffset);
+                    gamePanel.getPlayer().startSmokeAnimation();
                     gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.JOINT));
                     break;
                 case 3:
                     //smoke Big Joint
                     gamePanel.getPlayer().updateStonedMeter(60-stonedOffset);
+                    gamePanel.getPlayer().startSmokeAnimation();
                     gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), ItemType.BIG_JOINT));
                     break;
             }
@@ -203,6 +210,7 @@ public class Action {
 
     private void smokeWeedWithNpc(int stonedModifier, ItemType aType) {
         gamePanel.getPlayer().updateStonedMeter(stonedModifier);
+        gamePanel.getPlayer().startSmokeAnimation();
         if (aType != ItemType.WEED_BAG) {
             gamePanel.getPlayer().useItem(new Item(gamePanel.getContext(), aType));
         } else {

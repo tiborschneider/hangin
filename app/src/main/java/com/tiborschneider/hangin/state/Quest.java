@@ -19,7 +19,7 @@ public class Quest {
     }
 
     public void addQuestEntry(QuestEntry questEntry) {
-        if (numEntries < maxNumEntries -1) {
+        if (numEntries < maxNumEntries) {
             this.questEntry[numEntries++] = questEntry;
         }
     }

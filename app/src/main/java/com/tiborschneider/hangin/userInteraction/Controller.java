@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
+import com.tiborschneider.hangin.character.Direction;
 import com.tiborschneider.hangin.mainGame.GamePanel;
 import com.tiborschneider.hangin.R;
 import com.tiborschneider.hangin.character.Player;
@@ -29,6 +30,7 @@ public class Controller {
     private InteractionHandler interactionHandler;
     private boolean waitForPressRelease = false;
     private boolean waitForInventoryRelease = false;
+    private Button currentButton;
     private static int borderSize = 48;
     private static int baseSpace1 = 100;
     private static int baseSpace2 = 170;
@@ -48,6 +50,7 @@ public class Controller {
     {
         context = aContext;
         player  = aPlayer;
+        currentButton = Button.NDEF;
         interactionHandler  = aInteractionHandler;
         imageButtonUp        = BitmapFactory.decodeResource(context.getResources(), R.drawable.button_up);
         imageButtonUp        = InterfaceElement.resizeImage(imageButtonUp, buttonArrowWidth, buttonArrowLength);
@@ -101,18 +104,24 @@ public class Controller {
 
     public boolean onTouch(MotionEvent e)
     {
+        if (e.getAction() == MotionEvent.ACTION_UP)
+            currentButton = Button.NDEF;
         if (waitForPressRelease) {
-            if (e.getAction() == MotionEvent.ACTION_UP)
+            if (e.getAction() == MotionEvent.ACTION_UP) {
                 waitForPressRelease = false;
+            }
         } else {
-            Button pressedButton = detectButton(e.getX(), e.getY());
+            currentButton = detectButton(e.getX(), e.getY());
             if (InteractionHandler.interfaceActive && e.getAction() == MotionEvent.ACTION_UP) {
                 waitForPressRelease = false;
-                interactionHandler.onButtonPress(pressedButton);
+                interactionHandler.onButtonPress(currentButton);
             } else if (!InteractionHandler.interfaceActive) {
-                if (pressedButton == Button.INTERACT || pressedButton == Button.INVENTORY || pressedButton == Button.QUESTS)
+                if (currentButton == Button.INTERACT || currentButton == Button.INVENTORY || currentButton == Button.QUESTS)
                     waitForPressRelease = true;
-                interactionHandler.onButtonPress(pressedButton);
+                interactionHandler.onButtonPress(currentButton);
+            }
+            if (e.getAction() == MotionEvent.ACTION_UP) {
+                currentButton = Button.NDEF;
             }
         }
 
@@ -146,6 +155,7 @@ public class Controller {
             if (yPrim < xPrim && yPrim < -xPrim)
                 return Button.UP;
         }
+
 
         //check interact button
         centerX = GamePanel.screenWidth - InterfaceElement.gameBorderSize - borderSize - actionButtonWidth/2;
@@ -201,5 +211,11 @@ public class Controller {
         buttonInventoryWidth = (int)(0.5+aFactor*buttonInventoryWidth);
         smallButtonRadius = (int)(0.5+aFactor* smallButtonRadius);
         smallButtonMargin = (int)(0.5+aFactor* smallButtonMargin);
+    }
+
+    public boolean isDirectionButtonPressed() {
+        if (currentButton == Button.UP || currentButton == Button.DOWN || currentButton == Button.LEFT || currentButton == Button.RIGHT)
+            return true;
+        return false;
     }
 }

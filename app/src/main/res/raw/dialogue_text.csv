@@ -145,8 +145,25 @@ rollOneNotLearned;How do i roll Joints? I've never;done that before. Maby someon
 rollOneNotLearned;can teach me how,,,;;1;NULL;NULL;0
 hiddenLootboxFound;Woow look maaan. There is ;something here!;0;NULL;NULL;0
 strangeGuyDialogueWait;[Strange Guy] ...;;0;NULL;NULL;0
-strangeGuyDialogue1;[Strange Guy] H... hey! it is g...;good t... to see you.;0;NULL;NULL;0
+strangeGuyDialogue1;[Strange Guy] H... hey! it is g...;good t... to see you.;0;NULL;strangeGuyRelations;2
 signInfo2;Be Aware: Sometimes, the police;rushes in! In such cases, stay;0;NULL;NULL;0
 signInfo2;calm and throw your weed in ;the next bush. But don't forget;1;NULL;NULL;0
 signInfo2;it there!;;2;NULL;NULL;0
 hallo;ddds;;0;NULL;NULL;0
+carlFirstDialogue;[Carl] Hello. I don't remember;your face. Are you new here?;0;NULL;NULL;0
+carlFirstDialogue2Normal;[You] Yeas, i just arrived here.;;0;NULL;NULL;0
+carlFirstDialogue2Normal;[Carl] Ah! What can i do for ;you?;1;NULL;NULL;0
+carlFirstDialogue2Special;[You] No, i was here since years.;I was just hiding all the time.;0;NULL;NULL;0
+carlFirstDialogue2Special;[you smile sarcastically] I was ;sneaking around just like a ;1;NULL;NULL;0
+carlFirstDialogue2Special;Ninja!;;2;NULL;NULL;0
+carlFirstDialogue2Special;[Carl] [He laughs] I like you. ;just jokin' around. Do you ;3;NULL;NULL;0
+carlFirstDialogue2Special;want to smoke one?;;4;NULL;NULL;0
+carlFirstDialogue2Special;[You] Yeah sure!;;5;CONSUME;smokeWithNpc;40
+carlFirstDialogue2Special;[Carl] Now, what brings you to;my humble home?;6;NULL;NULL;0
+carlFirstDialogue3Exploring;[You] I was just exploring and ;tought to come by for a chat.;0;NULL;NULL;0
+carlFirstDialogue3Exploring;[Carl] Yeah cool. Isn't this place;beautiful?;1;NULL;NULL;0
+carlFirstDialogue3AskStrange;[You] On the was here, i have ;met a person, who didn't talk;0;NULL;NULL;0
+carlFirstDialogue3AskStrange;much. Do you know him?;;1;NULL;NULL;0
+carlFirstDialogue3AskStrange;[Carl] Ah, surely you mean my ;Brother! Yes, he was always;2;NULL;NULL;0
+carlFirstDialogue3AskStrange;a quiet man. But he is totally ;kind. He just has to get used ;3;NULL;moveKatia;1
+carlFirstDialogue3AskStrange;to you. Tell him that i have sent;you. Maby this will help!;4;NULL;strangeGuyRelations;3

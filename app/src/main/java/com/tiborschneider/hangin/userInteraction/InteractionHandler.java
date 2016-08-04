@@ -469,4 +469,8 @@ public class InteractionHandler {
     public boolean isDialogueActive() {
         return (interfaceDialogue != null);
     }
+
+    public Controller getController() {
+        return controller;
+    }
 }

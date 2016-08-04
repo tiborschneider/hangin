@@ -3,7 +3,9 @@ package com.tiborschneider.hangin.character;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 
 import com.tiborschneider.hangin.dialogue.Dialogue;
 import com.tiborschneider.hangin.mainGame.GamePanel;
@@ -20,17 +22,11 @@ import java.util.Random;
  */
 public class NonPlayerCharacter extends GameObject {
 
-    public static int numImages = 8;
-    public static int originalImageSize= 64;
     private String name;
     private String imageBaseName;
     boolean randomMovement = false;
-    private int motionCounter = 0;
-    private int prevMotionCounter = 0;
-    private int animationSpeed = 16;
     private static int changeOfNotMovingRandom = 8;
     private GameScene currentScene;
-    private Bitmap[][] imageArray = new Bitmap[4][9];
     private Queue<MoveCommand> queue;
 
     public NonPlayerCharacter(GamePanel aGamePanel, Context aContext, String aName, String aImageBaseName, Direction aDirection, int aX, int aY, GameScene aGameScene, int aSpeed)
@@ -91,19 +87,13 @@ public class NonPlayerCharacter extends GameObject {
         }
         updateMovement();
 
-        //update StepCounter
-        prevMotionCounter = motionCounter;
-        if (dx != 0 || dy != 0) {
-            motionCounter++;
-            if (motionCounter == animationSpeed) {
-                motionCounter = 0;
-            }
-            updateImage();
-        } else {
-            motionCounter = 0;
-            if (prevMotionCounter != 0)
-                updateImage();
-        }
+        updateStepCounter();
+    }
+
+    @Override
+    public void draw(Canvas canvas, Paint stonedPaint)
+    {
+        canvas.drawBitmap(image, x* InterfaceElement.tileSize + tmpX + InterfaceElement.gameBorderSize, y* InterfaceElement.tileSize + tmpY + 2*InterfaceElement.statusBarOuterMargin + InterfaceElement.statusBarHeight + playerDisplayOffset, stonedPaint);
     }
 
     public boolean isOnScene(GameScene aGameScene)
@@ -160,33 +150,6 @@ public class NonPlayerCharacter extends GameObject {
         return name;
     }
 
-    @Override
-    public void updateImage()
-    {
-        int imageNr = 0;
-        if (tmpX != 0 || tmpY != 0) {
-            imageNr = (motionCounter/4)+1;
-        }
-        switch (direction)
-        {
-            case UP:
-                image = imageArray[0][imageNr];
-                break;
-            case DOWN:
-                image = imageArray[2][imageNr];
-                break;
-            case LEFT:
-                image = imageArray[1][imageNr];
-                break;
-            case RIGHT:
-                image = imageArray[3][imageNr];
-                break;
-            default:
-                image = imageArray[0][0];
-        }
-    }
-
-
     public void loadImages() {
 
         imageArray = GameObject.cutCharacterAnimation(imageBaseName, 9);
@@ -206,5 +169,12 @@ public class NonPlayerCharacter extends GameObject {
 
     public int getSceneIndex() {
         return gamePanel.getSceneId(currentScene);
+    }
+
+    @Override
+    protected boolean continueWalking() {
+        if (queue.peek() != null)
+            return true;
+        return false;
     }
 }

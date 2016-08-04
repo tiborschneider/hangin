@@ -7,6 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 
 import com.tiborschneider.hangin.mainGame.GamePanel;
+import com.tiborschneider.hangin.userInteraction.Controller;
+import com.tiborschneider.hangin.userInteraction.InteractionHandler;
 import com.tiborschneider.hangin.userInteraction.InterfaceElement;
 
 /**
@@ -26,6 +28,12 @@ public abstract class GameObject {
     protected Bitmap image;
     protected Context context;
     protected GamePanel gamePanel;
+    protected int motionCounter = 0;
+    protected Bitmap[][] imageArray = new Bitmap[4][9];
+    protected int prevMotionCounter = 0;
+    protected int updateTime = 2;
+    protected final int numAnimations = 8;
+    protected int animationSpeed = updateTime * numAnimations;
 
     public GameObject(GamePanel aGamePanel, Context aContext, Direction aDirection, int aX, int aY, int aSpeed)
     {
@@ -75,7 +83,7 @@ public abstract class GameObject {
 
     public void draw(Canvas canvas, Paint stonedPaint)
     {
-        canvas.drawBitmap(image, x* InterfaceElement.tileSize + tmpX + InterfaceElement.gameBorderSize, y* InterfaceElement.tileSize + tmpY + 2*InterfaceElement.statusBarOuterMargin + InterfaceElement.statusBarHeight + playerDisplayOffset, stonedPaint);
+
     }
 
     public void walk(Direction aDir)
@@ -129,7 +137,30 @@ public abstract class GameObject {
 
     public void updateImage()
     {
-        //has to be overridden in sub Class!
+        int imageNr = 0;
+        if (tmpX != 0 || tmpY != 0 || continueWalking()) {
+            imageNr = (motionCounter/updateTime) + 1;
+            System.out.println("imageNr: " + imageNr);
+        } else {
+            System.out.println("Stop Animation");
+        }
+        switch (direction)
+        {
+            case UP:
+                image = imageArray[0][imageNr];
+                break;
+            case DOWN:
+                image = imageArray[2][imageNr];
+                break;
+            case LEFT:
+                image = imageArray[1][imageNr];
+                break;
+            case RIGHT:
+                image = imageArray[3][imageNr];
+                break;
+            default:
+                image = imageArray[0][0];
+        }
     }
 
     public static Bitmap[][] cutCharacterAnimation(String name, int numAnimations) {
@@ -144,4 +175,24 @@ public abstract class GameObject {
         return image;
     }
 
+    protected boolean continueWalking() {
+        return true;
+    }
+
+    protected void updateStepCounter() {
+
+        //update StepCounter
+        prevMotionCounter = motionCounter;
+        if (dx != 0 || dy != 0 || continueWalking()) {
+            motionCounter++;
+            if (motionCounter == animationSpeed) {
+                motionCounter = 0;
+            }
+            updateImage();
+        } else {
+            motionCounter = 0;
+            if (prevMotionCounter != 0)
+                updateImage();
+        }
+    }
 }

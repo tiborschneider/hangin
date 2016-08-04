@@ -2,23 +2,20 @@ package com.tiborschneider.hangin.character;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 
 import com.tiborschneider.hangin.scene.GameJumpHandler;
 import com.tiborschneider.hangin.mainGame.GamePanel;
 import com.tiborschneider.hangin.userInteraction.InterfaceElement;
 import com.tiborschneider.hangin.item.Item;
 import com.tiborschneider.hangin.item.ItemType;
-import com.tiborschneider.hangin.R;
 
 /**
  * Created by Tibor Schneider on 19.06.2016.
  */
 public class Player extends GameObject {
-    private int motionCounter = 0;
-    private int prevMotionCounter = 0;
-    private int animationSpeed = 16;
     private static int meterMaximum = 100;
     private Inventory inventory;
     private int munchiesMeter = 0;
@@ -27,11 +24,13 @@ public class Player extends GameObject {
     private int nextStonedMeter = 0;
     private int stonedMeterCounter = 0;
     private int munchiesMeterCounter = 0;
+    private SmokeAnimation smokeAnimation = null;
     private static int maxTimeToDecayStoned = 160;
     private static int minTimeToDecayStoned = 80;
     private static int maxTimeToDecayMunchies = 320;
     private static int minTimeToDecayMunchies = 80;
-    private Bitmap[][] imageArray = new Bitmap[4][9];
+    //private Bitmap[][] imageArray = new Bitmap[4][9];
+
 
     public Player(GamePanel aGamePanel, Context aContext, int aX, int aY)
     {
@@ -41,6 +40,8 @@ public class Player extends GameObject {
 
         //get all Images
         imageArray = GameObject.cutCharacterAnimation("player", 9);
+
+        smokeAnimation = new SmokeAnimation(context, 0, 0);
 
         //scale all Images
         for (int i = 0; i < 4; i++) {
@@ -77,18 +78,8 @@ public class Player extends GameObject {
         }
 
         //update StepCounter
-        prevMotionCounter = motionCounter;
-        if (dx != 0 || dy != 0) {
-            motionCounter++;
-            if (motionCounter == animationSpeed) {
-                motionCounter = 0;
-            }
-            updateImage();
-        } else {
-            motionCounter = 0;
-            if (prevMotionCounter != 0)
-                updateImage();
-        }
+        updateStepCounter();
+
         if (nextStonedMeter > stonedMeter) {
             //gamePanel.redrawScene();
             stonedMeter++;
@@ -96,6 +87,18 @@ public class Player extends GameObject {
             //gamePanel.redrawScene();
             stonedMeter--;
         }
+
+        //update Smoke Animaiton
+        if (!smokeAnimation.isFinished()) {
+                smokeAnimation.update();
+        }
+    }
+
+    @Override
+    public void draw(Canvas canvas, Paint stonedPaint)
+    {
+        canvas.drawBitmap(image, x* InterfaceElement.tileSize + tmpX + InterfaceElement.gameBorderSize, y* InterfaceElement.tileSize + tmpY + 2*InterfaceElement.statusBarOuterMargin + InterfaceElement.statusBarHeight + playerDisplayOffset, stonedPaint);
+        smokeAnimation.draw(canvas);
     }
 
     public boolean hasItem(Item aItem)
@@ -140,6 +143,11 @@ public class Player extends GameObject {
 
     public void consumeItem(Item aItem)
     {
+        if (aItem.getItemType() == ItemType.JOINT ||
+                aItem.getItemType() == ItemType.UGLY_JOINT ||
+                aItem.getItemType() == ItemType.BIG_JOINT) {
+            startSmokeAnimation();
+        }
         updateMunchiesMeter(aItem.getMunchiesChange());
         updateStonedMeter(aItem.getStonedChange());
         useItem(aItem);
@@ -239,32 +247,6 @@ public class Player extends GameObject {
         }
     }
 
-    @Override
-    public void updateImage()
-    {
-        int imageNr = 0;
-        if (tmpX != 0 || tmpY != 0) {
-            imageNr = (motionCounter/2) + 1;
-        }
-        switch (direction)
-        {
-            case UP:
-                image = imageArray[0][imageNr];
-                break;
-            case DOWN:
-                image = imageArray[2][imageNr];
-                break;
-            case LEFT:
-                image = imageArray[1][imageNr];
-                break;
-            case RIGHT:
-                image = imageArray[3][imageNr];
-                break;
-            default:
-                image = imageArray[0][0];
-        }
-    }
-
     public int getStonedMeter() {
         return stonedMeter;
     }
@@ -280,5 +262,20 @@ public class Player extends GameObject {
     public void setStonedMeter(int stonedMeter) {
         this.stonedMeter = stonedMeter;
         this.nextStonedMeter = stonedMeter;
+    }
+
+    @Override
+    protected boolean continueWalking() {
+        if ( GamePanel.getGamePanel().getInteractionHandler() != null) {
+            if (GamePanel.getGamePanel().getInteractionHandler().getController() != null) {
+                return GamePanel.getGamePanel().getInteractionHandler().getController().isDirectionButtonPressed();
+            }
+        }
+        return false;
+    }
+
+    public void startSmokeAnimation() {
+        if (smokeAnimation.isFinished())
+            smokeAnimation.restart(x, y);
     }
 }

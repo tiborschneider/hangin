@@ -54,3 +54,9 @@ fireDialogueUse;Joint;fireDialogueSmoke;CONSUME;smokeAtCampfire;2;playerHasJoint
 fireDialogueUse;Big joint;fireDialogueSmoke;CONSUME;smokeAtCampfire;3;playerHasJoint;3
 fireDialogueRoll;us Lighter;fireDialogueSmokeLighter;NULL;smokeAtCampfireRolledJoint;1;playerHasLighter;1
 fireDialogueRoll;use Fire;fireDialogueSmoke;CONSUME;smokeAtCampfireRolledJoint;2;playerHasLighter;0
+carlFirstDialogue;Yes;carlFirstDialogue2Normal;NULL;NULL;0;NULL;0
+carlFirstDialogue;No, was hiding;carlFirstDialogue2Special;NULL;NULL;0;NULL;0
+carlFirstDialogue2Normal;Just exploring;carlFirstDialogue3Exploring;NULL;NULL;0;NULL;0
+carlFirstDialogue2Normal;this Strange Guy?;carlFirstDialogue3AskStrange;NULL;NULL;0;strangeGuyRelations;2
+carlFirstDialogue2Special;just exploring;carlFirstDialogue3Exploring;NULL;NULL;0;NULL;0
+carlFirstDialogue2Special;this strange guy?;carlFirstDialogue3AskStrange;NULL;NULL;0;strangeGuyRelations;2
