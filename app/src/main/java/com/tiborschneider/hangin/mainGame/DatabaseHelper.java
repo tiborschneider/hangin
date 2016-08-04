@@ -800,6 +800,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return gameScene;
     }
 
+
+
+    public GameScene getGameScene(int sceneIndex) {
+        GameScene scene = new GameScene(gamePanel, context);
+
+        //get Tiles
+        Cursor allTiles = getAllTilesOfSceneCursor(sceneIndex);
+        if (allTiles.getCount() != 0) {
+            while (allTiles.moveToNext()) {
+                boolean isInteractive = (!allTiles.getString(6).equals("null"));
+                //System.out.println("create new Tile: " + allTiles.getString(2) + ", " + allTiles.getString(3));
+                scene.createNewTile(allTiles.getInt(4), allTiles.getInt(5), TileType.valueOf(allTiles.getString(2)), TileForegroundType.valueOf(allTiles.getString(3)), isInteractive);
+                if (isInteractive) {
+                    scene.addDialogueToTile(allTiles.getInt(4), allTiles.getInt(5), allTiles.getString(6));
+
+                }
+            }
+        }
+        else
+            System.out.println("Error while getting Tiles from db from Scene " + sceneIndex);
+
+        allTiles.close();
+
+        //get Jumps
+        Cursor allJumps = getAllJumpsOfSceneCursor(sceneIndex);
+        if (allJumps.getCount() != 0)
+            while (allJumps.moveToNext())
+                scene.addNewJump(allJumps.getInt(4), allJumps.getInt(2), allJumps.getInt(3), allJumps.getInt(5), allJumps.getInt(6));
+
+        allJumps.close();
+
+
+        //get Lootboxes
+        Cursor allLootboxes = getLootboxCursor(sceneIndex);
+        if (allLootboxes.getCount() != 0) {
+            while (allLootboxes.moveToNext()) {
+                Lootbox lootbox = new Lootbox(context, allLootboxes.getInt(2), allLootboxes.getInt(3));
+                lootbox.setVisible(allLootboxes.getInt(4) != 0);
+                for (int i = 5; i < 10; i++) {
+                    if (!allLootboxes.getString(i).equals(""))
+                        lootbox.addItem(ItemType.valueOf(allLootboxes.getString(i)));
+                }
+                scene.addLootbox(lootbox);
+            }
+        }
+
+        allLootboxes.close();
+
+        return scene;
+    }
+
     public void getAllNpc()
     {
         Cursor cursorNpc = getNpcCursor();
@@ -1014,7 +1065,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean getCommandFromDatabase(NonPlayerCharacter npc) {
-        Cursor command = getCommandCursor(npc.getName(), npc.getSceneIndex(), npc.getX(), npc.getY());
+        Cursor command = getCommandCursor(npc.getName(), npc.getCurrentScene(), npc.getX(), npc.getY());
         if (command.getCount() > 0) {
             while (command.moveToNext()) {
                 //check State
@@ -1243,6 +1294,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         else
             return Integer.parseInt(aString);
     }
-
 
 }

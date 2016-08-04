@@ -157,7 +157,7 @@ public class GameScene {
             if (lootboxes[i] != null && lootboxes[i].getX() == aX && lootboxes[i].getY() == aY)
                 ret = false;
         }
-        if (gamePanel.getNpc(this, aX, aY) != null)
+        if (gamePanel.getNpc(gamePanel.getCurrentScene(), aX, aY) != null)
             ret = false;
         return ret;
     }
@@ -373,7 +373,7 @@ public class GameScene {
 
     public boolean checkNpc(int aX, int aY)
     {
-        return (gamePanel.getNpc(this, aX, aY) != null);
+        return (gamePanel.getNpc(gamePanel.getCurrentScene(), aX, aY) != null);
     }
 
     public NonPlayerCharacter getNpc(int aX, int aY, Direction aDir)
@@ -413,7 +413,7 @@ public class GameScene {
 
     public NonPlayerCharacter getNpc(int aX, int aY)
     {
-        return gamePanel.getNpc(this, aX, aY);
+        return gamePanel.getNpc(gamePanel.getCurrentScene(), aX, aY);
     }
 
     public boolean isInteractiveInView(int x, int y, Direction direction) {

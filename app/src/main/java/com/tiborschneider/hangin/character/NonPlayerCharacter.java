@@ -26,15 +26,16 @@ public class NonPlayerCharacter extends GameObject {
     private String imageBaseName;
     boolean randomMovement = false;
     private static int changeOfNotMovingRandom = 8;
-    private GameScene currentScene;
+    //private GameScene currentScene;
+    private int currentScene;
     private Queue<MoveCommand> queue;
 
-    public NonPlayerCharacter(GamePanel aGamePanel, Context aContext, String aName, String aImageBaseName, Direction aDirection, int aX, int aY, GameScene aGameScene, int aSpeed)
+    public NonPlayerCharacter(GamePanel aGamePanel, Context aContext, String aName, String aImageBaseName, Direction aDirection, int aX, int aY, int aSceneIndex, int aSpeed)
     {
         super(aGamePanel, aContext, aDirection, aX, aY, aSpeed);
         name = aName;
         imageBaseName = aImageBaseName;
-        currentScene = aGameScene;
+        currentScene = aSceneIndex;
         queue = new LinkedList<>();
         loadImages();
     }
@@ -52,7 +53,7 @@ public class NonPlayerCharacter extends GameObject {
             if (command != null) {
                 if (command.isJump()) {
                     queue.poll();
-                    teleport(gamePanel.getScene(command.getJumpToScene()), command.getJumpToX(), command.getJumpToY(), prevDirection);
+                    teleport(command.getJumpToScene(), command.getJumpToX(), command.getJumpToY(), prevDirection);
                     Direction newDirection = queue.poll().getDirection();
                     if (newDirection != prevDirection)
                         walk(newDirection);
@@ -82,7 +83,7 @@ public class NonPlayerCharacter extends GameObject {
                 }
 
                 //save new Position
-                gamePanel.getDatabaseHelper().updateNpcPosition(this, gamePanel.getSceneId(currentScene), x, y, direction);
+                gamePanel.getDatabaseHelper().updateNpcPosition(this, currentScene, x, y, direction);
             }
         }
         updateMovement();
@@ -96,14 +97,14 @@ public class NonPlayerCharacter extends GameObject {
         canvas.drawBitmap(image, x* InterfaceElement.tileSize + tmpX + InterfaceElement.gameBorderSize, y* InterfaceElement.tileSize + tmpY + 2*InterfaceElement.statusBarOuterMargin + InterfaceElement.statusBarHeight + playerDisplayOffset, stonedPaint);
     }
 
-    public boolean isOnScene(GameScene aGameScene)
+    public boolean isOnScene(int sceneIndex)
     {
-        return (currentScene == aGameScene);
+        return (currentScene == sceneIndex);
     }
 
-    public void teleport(GameScene aGameScene, int aX, int aY, Direction aDirection)
+    public void teleport(int sceneIndex, int aX, int aY, Direction aDirection)
     {
-        currentScene = aGameScene;
+        currentScene = sceneIndex;
         x = aX;
         y = aY;
         direction = aDirection;
@@ -167,9 +168,13 @@ public class NonPlayerCharacter extends GameObject {
         updateImage();
     }
 
-    public int getSceneIndex() {
-        return gamePanel.getSceneId(currentScene);
+    public int getCurrentScene() {
+        return currentScene;
     }
+
+    //public int getSceneIndex() {
+    //    return gamePanel.getSceneId(currentScene);
+    //}
 
     @Override
     protected boolean continueWalking() {

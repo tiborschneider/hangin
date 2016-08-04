@@ -35,7 +35,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     private static int numNpc = 30;
     private static GamePanel theGamePanel;
     private MainThread thread;
-    private GameScene[] scenes = new GameScene[numScenes];
+    private GameScene scene;
     private NonPlayerCharacter[] npc = new NonPlayerCharacter[numNpc];
     private int currentScene = 0;
     private int lastScene = -1;
@@ -69,48 +69,43 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         //create Quest Handler
         questHandler = new QuestHandler();
 
-        long timeStart = System.currentTimeMillis();
 
         //create Database
         databaseHelper = new DatabaseHelper(context, this);
-        long timeDB = System.currentTimeMillis();
-        System.out.println("loading database took " + (timeDB - timeStart));
 
         //create State Handler
         stateHandler = new StateHandler(this, databaseHelper);;
-        long timeState = System.currentTimeMillis();
-        System.out.println("loading states from db took " + (timeState - timeDB));
 
-        //load Images
-        imageHandler = new ImageHandler();
-        long timeImages = System.currentTimeMillis();
-        System.out.println("loading Images took " + (timeImages - timeState));
-
-        //load Scenes
-        scenes = databaseHelper.getGameScenes();
-        long timeScenes = System.currentTimeMillis();
-        System.out.println("loading scenes from db took " + (timeScenes - timeImages));
-
-        //load NPCs
-        databaseHelper.getAllNpc();
-        long timeNpc = System.currentTimeMillis();
-        System.out.println("loading npcs from db took " + (timeNpc - timeScenes));
-
-        //load Quests
-        databaseHelper.getAllQuestsFromDB();
-        long timeQuests = System.currentTimeMillis();
-        System.out.println("loading npcs from db took " + (timeQuests - timeNpc));
 
         //create Player
         player = new Player(this, context, 5, 5);
-
-        //create Controller for Player
-        interactionHandler = new InteractionHandler(context, player, thread, this, questHandler);
 
         //get Saved States of Player
         if (!databaseHelper.initSavedPlayer()) {
             startGame = true;
         }
+
+
+        long timeStart = System.currentTimeMillis();
+
+        //load Images
+        imageHandler = new ImageHandler();
+
+        //load Scenes
+        //scenes = databaseHelper.getGameScenes();
+        scene = databaseHelper.getGameScene(currentScene);
+        long timeEnd = System.currentTimeMillis();
+        System.out.println("loading scenes from db took " + (timeEnd - timeStart));
+
+        //load NPCs
+        databaseHelper.getAllNpc();
+
+        //load Quests
+        databaseHelper.getAllQuestsFromDB();
+
+        //create Controller for Player
+        interactionHandler = new InteractionHandler(context, player, thread, this, questHandler);
+
     }
 
 
@@ -165,19 +160,20 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             player.update();
 
             //update animation tiles
-            scenes[currentScene].update();
+            scene.update();
 
             //update npc on the same GameScene¨
             for (int i = 0; i < numNpc; i++)
-                if (npc[i] != null && npc[i].isOnScene(scenes[currentScene]))
+                if (npc[i] != null && npc[i].isOnScene(currentScene))
                     npc[i].update();
 
             //check game Jumps
-            if (GameJumpHandler.jumpsAllowed && player.getTmpX() == 0 && player.getTmpY() == 0 && scenes[currentScene].isJumpTile(player.getX(), player.getY())) {
+            if (GameJumpHandler.jumpsAllowed && player.getTmpX() == 0 && player.getTmpY() == 0 && scene.isJumpTile(player.getX(), player.getY())) {
                 stateHandler.updateTimeToPass();
-                int nextScene = scenes[currentScene].getTargetScene(player.getX(), player.getY());
-                player.teleport(scenes[currentScene].getXTarget(player.getX(), player.getY()), scenes[currentScene].getYTarget(player.getX(), player.getY()));
+                int nextScene = scene.getTargetScene(player.getX(), player.getY());
+                player.teleport(scene.getXTarget(player.getX(), player.getY()), scene.getYTarget(player.getX(), player.getY()));
                 currentScene = nextScene;
+                scene = databaseHelper.getGameScene(currentScene);
                 GameJumpHandler.jumpsAllowed = false;
             }
         } else {
@@ -204,15 +200,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
                 lastPaintValue = stonedLevel;
                 lastScene = currentScene;
                 //create Scene image
-                scenes[currentScene].createSceneImage(stonedPaint);
+                scene.createSceneImage(stonedPaint);
             }
 
-            scenes[currentScene].draw(canvas, stonedPaint);
+            scene.draw(canvas, stonedPaint);
             player.draw(canvas, stonedPaint);
 
             //npc npc on the same GameScene
             for (int i = 0; i < numNpc; i++) {
-                if (npc[i] != null && npc[i].isOnScene(scenes[currentScene])) {
+                if (npc[i] != null && npc[i].isOnScene(currentScene)) {
                     npc[i].draw(canvas, stonedPaint);
                 }
             }
@@ -240,24 +236,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         return interactionHandler.onTouch(e);
     }
 
-    public boolean isWalkable(int aX, int aY) { return scenes[currentScene].isWalkable(aX, aY); }
+    public boolean isWalkable(int aX, int aY) { return scene.isWalkable(aX, aY); }
 
-    public boolean canWalkUp(int aX, int aY) {return scenes[currentScene].canWalkUp(aX, aY);}
+    public boolean canWalkUp(int aX, int aY) {return scene.canWalkUp(aX, aY);}
 
-    public boolean canWalkDown(int aX, int aY) {return scenes[currentScene].canWalkDown(aX, aY);}
+    public boolean canWalkDown(int aX, int aY) {return scene.canWalkDown(aX, aY);}
 
-    public boolean canWalkLeft(int aX, int aY) {return scenes[currentScene].canWalkLeft(aX, aY);}
+    public boolean canWalkLeft(int aX, int aY) {return scene.canWalkLeft(aX, aY);}
 
-    public boolean canWalkRight(int aX, int aY) {return scenes[currentScene].canWalkRight(aX, aY);}
+    public boolean canWalkRight(int aX, int aY) {return scene.canWalkRight(aX, aY);}
 
-    public GameScene getScene() { return scenes[currentScene]; }
+    public GameScene getScene() { return scene; }
 
-    public GameScene getScene(int index) {
-        if (index >= 0 && index < numScenes) {
-            return scenes[index];
-        }
-        return null;
-    }
 
     public MainThread getThread()
     {
@@ -283,27 +273,20 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         return stateHandler;
     }
 
-    public void newNpc(String aName, String aImageBaseName, Direction aDirection, int aX, int aY, GameScene aGameScene, int aSpeed)
-    {
-        for (int i = 0; i < numNpc; i++)
-            if (npc[i] == null)
-                npc[i] = new NonPlayerCharacter(this, context, aName, aImageBaseName, aDirection, aX, aY, aGameScene, aSpeed);
-    }
-
     public void newNpc(String aName, String aImageBaseName, Direction aDirection, int aX, int aY, int gameSceneIndex, int aSpeed)
     {
         for (int i = 0; i < numNpc; i++) {
             if (npc[i] == null) {
-                npc[i] = new NonPlayerCharacter(this, context, aName, aImageBaseName, aDirection, aX, aY, scenes[gameSceneIndex], aSpeed);
+                npc[i] = new NonPlayerCharacter(this, context, aName, aImageBaseName, aDirection, aX, aY, gameSceneIndex, aSpeed);
                 break;
             }
         }
     }
 
-    public NonPlayerCharacter getNpc(GameScene aScene, int aX, int aY)
+    public NonPlayerCharacter getNpc(int currentScene, int aX, int aY)
     {
         for (int i = 0; i < numNpc; i++)
-            if (npc[i] != null && npc[i].isOnScene(aScene) && npc[i].getX() == aX && npc[i].getY() == aY)
+            if (npc[i] != null && npc[i].isOnScene(currentScene) && npc[i].getX() == aX && npc[i].getY() == aY)
                 return npc[i];
         return null;
     }
@@ -333,14 +316,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         return theGamePanel;
     }
 
-    public int getSceneId(GameScene scene) {
-        for (int i = 0; i < numScenes; i++) {
-            if (scenes[i] == scene) {
-                return i;
-            }
-        }
-        return -1;
-    }
 
     public boolean isPlayerOn(int x, int y) {
         if (player.getX() == x && player.getY() == y) {
