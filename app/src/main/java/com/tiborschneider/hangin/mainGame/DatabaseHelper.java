@@ -366,16 +366,48 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sqlQuery);
 
         System.out.println("Initialize all Tables with data from CSV files.");
+
+        //long timeStart = System.currentTimeMillis();
+
         readScenesFromCSV(db);
+        //long timeScenes = System.currentTimeMillis();
+        //System.out.println("loading Scenes took " + (timeScenes - timeStart));
+
         readTilesFromCSV(db);
+        //long timeTiles = System.currentTimeMillis();
+        //System.out.println("loading Tiles took " + (timeTiles - timeScenes));
+
         readJumpsFromCSV(db);
+        //long timeJumps = System.currentTimeMillis();
+        //System.out.println("loading Jumps took " + (timeJumps - timeTiles));
+
         readDialogueFromCSV(db);
+        //long timeDialogues = System.currentTimeMillis();
+        //System.out.println("loading Dialogues took " + (timeDialogues - timeJumps));
+
         readLootboxesFromCSV(db);
+        //long timeLootboxes = System.currentTimeMillis();
+        //System.out.println("loading Lootboxes took " + (timeLootboxes - timeDialogues));
+
         readStateFromCSV(db);
+        //long timeStates = System.currentTimeMillis();
+        //System.out.println("loading States took " + (timeStates - timeLootboxes));
+
         readNpcDialogueFromCSV(db);
+        //long timeNpcDialogues = System.currentTimeMillis();
+        //System.out.println("loading NpcDialogue took " + (timeNpcDialogues - timeStates));
+
         readNpcFromCSV(db);
+        //long timeNpc = System.currentTimeMillis();
+        //System.out.println("loading Npc took " + (timeNpc - timeNpcDialogues));
+
         readNpcMoveFromCSV(db);
+        //long timeNpcMoves = System.currentTimeMillis();
+        //System.out.println("loading NpcMoves took " + (timeNpcMoves - timeNpc));
+
         readQuestsFromCSV(db);
+        //long timeQuests = System.currentTimeMillis();
+        //System.out.println("loading Quests took " + (timeQuests - timeNpcMoves));
     }
 
 
@@ -670,7 +702,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues;
 
         for (String[] row : questList) {
-            System.out.println("Insert Data");
             contentValues = new ContentValues();
             contentValues.put(TABLE_QUEST_COL_NAME, row[0]);
             contentValues.put(TABLE_QUEST_COL_FINAL_CONDITION_STATE, row[1]);
@@ -687,7 +718,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<String[]> questEntryList = csv.read();
 
         for (String[] row : questEntryList) {
-            System.out.println("insert Data 2");
             contentValues = new ContentValues();
             contentValues.put(TABLE_QUEST_ENTRY_COL_QUEST_NAME, row[0]);
             contentValues.put(TABLE_QUEST_ENTRY_COL_TEXT, row[1]);
@@ -722,7 +752,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 if (allTiles.getCount() != 0) {
                     while (allTiles.moveToNext()) {
                         boolean isInteractive = (!allTiles.getString(6).equals("null"));
-                        gameScene[sceneIndex].createNewTile(allTiles.getInt(4), allTiles.getInt(5), TileType.valueOf(allTiles.getString(2)), TileForegroundType.NULL.valueOf(allTiles.getString(3)), isInteractive);
+                        //System.out.println("create new Tile: " + allTiles.getString(2) + ", " + allTiles.getString(3));
+                        gameScene[sceneIndex].createNewTile(allTiles.getInt(4), allTiles.getInt(5), TileType.valueOf(allTiles.getString(2)), TileForegroundType.valueOf(allTiles.getString(3)), isInteractive);
                         if (isInteractive) {
                             gameScene[sceneIndex].addDialogueToTile(allTiles.getInt(4), allTiles.getInt(5), allTiles.getString(6));
 

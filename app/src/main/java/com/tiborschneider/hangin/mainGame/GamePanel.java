@@ -17,6 +17,7 @@ import com.tiborschneider.hangin.scene.GameJumpHandler;
 import com.tiborschneider.hangin.scene.GameScene;
 import com.tiborschneider.hangin.state.QuestHandler;
 import com.tiborschneider.hangin.state.StateHandler;
+import com.tiborschneider.hangin.tile.ImageHandler;
 import com.tiborschneider.hangin.userInteraction.InteractionHandler;
 import com.tiborschneider.hangin.userInteraction.InterfaceElement;
 
@@ -42,6 +43,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     private InteractionHandler interactionHandler;
     private DatabaseHelper databaseHelper;
     private StateHandler stateHandler;
+    private ImageHandler imageHandler;
     boolean startGame = false;
     float lastPaintValue = 0.0f;
     private QuestHandler questHandler;
@@ -67,14 +69,37 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         //create Quest Handler
         questHandler = new QuestHandler();
 
+        long timeStart = System.currentTimeMillis();
+
         //create Database
         databaseHelper = new DatabaseHelper(context, this);
-        stateHandler = new StateHandler(this, databaseHelper);
+        long timeDB = System.currentTimeMillis();
+        System.out.println("loading database took " + (timeDB - timeStart));
 
-        //load Scenes, NPC's and Quests from Database;
+        //create State Handler
+        stateHandler = new StateHandler(this, databaseHelper);;
+        long timeState = System.currentTimeMillis();
+        System.out.println("loading states from db took " + (timeState - timeDB));
+
+        //load Images
+        imageHandler = new ImageHandler();
+        long timeImages = System.currentTimeMillis();
+        System.out.println("loading Images took " + (timeImages - timeState));
+
+        //load Scenes
         scenes = databaseHelper.getGameScenes();
+        long timeScenes = System.currentTimeMillis();
+        System.out.println("loading scenes from db took " + (timeScenes - timeImages));
+
+        //load NPCs
         databaseHelper.getAllNpc();
+        long timeNpc = System.currentTimeMillis();
+        System.out.println("loading npcs from db took " + (timeNpc - timeScenes));
+
+        //load Quests
         databaseHelper.getAllQuestsFromDB();
+        long timeQuests = System.currentTimeMillis();
+        System.out.println("loading npcs from db took " + (timeQuests - timeNpc));
 
         //create Player
         player = new Player(this, context, 5, 5);
@@ -326,6 +351,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     public QuestHandler getQuestHandler() {
         return questHandler;
+    }
+
+    public ImageHandler getImageHandler() {
+        return imageHandler;
     }
 
 }

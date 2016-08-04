@@ -28,11 +28,18 @@ public abstract class GameTile {
     protected boolean isInteractive = false;
     protected boolean isAnimation = false;
     protected Bitmap image;
+    protected Bitmap accentImage = null;
+    protected Bitmap foregroundImage = null;
+    protected int accentOffsetX = 0;
+    protected int accentOffsetY = 0;
     protected TileType type;
     protected TileForegroundType foregroundType;
+    protected ImageHandler imageHandler;
 
     public GameTile(Context context, TileType setType, TileForegroundType setForegroundType)
     {
+        imageHandler = GamePanel.getGamePanel().getImageHandler();
+
         type = setType;
         foregroundType = setForegroundType;
 
@@ -41,9 +48,8 @@ public abstract class GameTile {
 
         //set Image for all and let dem override if necessary
         String imageName = type.name().toLowerCase();
-        if (!imageName.equals("grass") && !imageName.matches("sign(.*)")) {
-            int imageId = context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
-            image = BitmapFactory.decodeResource(context.getResources(), imageId);
+        if (!imageName.equals("grass") && !imageName.matches("sign(.*)") && !imageName.equals("stone")) {
+            image = imageHandler.getImage(imageName);
         }
 
         switch (type)
@@ -51,8 +57,13 @@ public abstract class GameTile {
             case GRASS:
                 setRandomGrassImage(context);
                 //randomize accent
-                image = drawAccent(image);
-
+                if (randInt(1,4) == 1)
+                {
+                    String accentName = "grass_accent" + randInt(1, 6);
+                    accentImage = imageHandler.getImage(accentName);
+                    accentOffsetX = randInt(-10,10+(InterfaceElement.tileSize/2));
+                    accentOffsetY = randInt(-10,10+(InterfaceElement.tileSize/2));
+                }
                 break;
             case STONE:
                 setRandomStoneImage(context);
@@ -170,9 +181,7 @@ public abstract class GameTile {
         //add ForegroundTile
         if (foregroundType != TileForegroundType.NULL && !foregroundType.name().matches("HOUSE_OUTSIDE_DECO_DOOR(.*)")) {
             imageName = foregroundType.name().toLowerCase();
-            int imageId = context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
-            accent = BitmapFactory.decodeResource(context.getResources(), imageId);
-            image = overlay(image, accent);
+            foregroundImage = imageHandler.getImage(imageName);
 
             //change Flags
             switch (foregroundType) {
@@ -244,36 +253,10 @@ public abstract class GameTile {
         }
 
         //resize Image
-        float scale = ((float) InterfaceElement.tileSize) / image.getWidth();
-        Matrix matrix = new Matrix();
-        matrix.postScale(scale,scale);
-        image = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, false);
-    }
-
-
-    private Bitmap overlay(Bitmap bmp1, Bitmap bmp2) {
-        Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
-        Canvas canvas = new Canvas(bmOverlay);
-        canvas.drawBitmap(bmp1, new Matrix(), null);
-        canvas.drawBitmap(bmp2, new Matrix(), null);
-        return bmOverlay;
-    }
-
-    private Bitmap drawAccent(Bitmap image) {
-        Bitmap bmOverlay = Bitmap.createBitmap(image.getWidth(), image.getHeight(), image.getConfig());
-        Canvas canvas = new Canvas(bmOverlay);
-        canvas.drawBitmap(image, 0, 0, null);
-        if (randInt(1,4
-        ) == 1)
-        {
-            String accentName = "grass_accent" + randInt(1, 6);
-            int accentId = GamePanel.getGamePanel().getContext().getResources().getIdentifier(accentName, "drawable", GamePanel.getGamePanel().getContext().getPackageName());
-            Bitmap accent = BitmapFactory.decodeResource(GamePanel.getGamePanel().getContext().getResources(), accentId);
-            accent = InterfaceElement.resizeImage(accent, accent.getWidth()/2, accent.getHeight()/2);
-            canvas.drawBitmap(accent, randInt(-10,10+(InterfaceElement.tileSize/2)), randInt(-10,10+(InterfaceElement.tileSize/2)), null);
-        }
-        return bmOverlay;
-
+        //float scale = ((float) InterfaceElement.tileSize) / image.getWidth();
+        //Matrix matrix = new Matrix();
+        //matrix.postScale(scale,scale);
+        //image = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, false);
     }
 
     public Bitmap getBitmap()
@@ -318,15 +301,13 @@ public abstract class GameTile {
     private void setRandomGrassImage(Context context)
     {
         String imageName = "grass" + randInt(1, 10);
-        int imageId = context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
-        image = BitmapFactory.decodeResource(context.getResources(), imageId);
+        image = imageHandler.getImage(imageName);
     }
 
     private void setRandomStoneImage(Context context)
     {
         String imageName = "stone" + randInt(1, 6);
-        int imageId = context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
-        image = BitmapFactory.decodeResource(context.getResources(), imageId);
+        image = imageHandler.getImage(imageName);
     }
 
     public boolean update() {
@@ -371,5 +352,14 @@ public abstract class GameTile {
 
     public boolean isHouseOutside() {
         return type.name().matches("HOUSE_OUTSIDE(.*)");
+    }
+
+    public void draw(Canvas canvas, int x, int y, Paint stonedPaint) {
+        canvas.drawBitmap(image, x, y, stonedPaint);
+        if (accentImage != null)
+            canvas.drawBitmap(accentImage, x + accentOffsetX, y + accentOffsetY, stonedPaint);
+        if (foregroundImage != null) {
+            canvas.drawBitmap(foregroundImage, x, y, stonedPaint);
+        }
     }
 }

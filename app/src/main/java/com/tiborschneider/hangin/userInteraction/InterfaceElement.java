@@ -11,6 +11,7 @@ import com.tiborschneider.hangin.mainGame.GamePanel;
  * Created by Tibor Schneider on 22.06.2016.
  */
 public abstract class InterfaceElement {
+    private static float corrFactor;
     public static int originalScreenWidth = 1080;
     public static int tileSize = 64;
     public static int numTiles = 16;
@@ -77,7 +78,7 @@ public abstract class InterfaceElement {
     public static void initSizes()
     {
         //initialize tile display parameters
-        float corrFactor = ((float) GamePanel.screenWidth)/((float) originalScreenWidth);
+        corrFactor = ((float) GamePanel.screenWidth)/((float) originalScreenWidth);
         borderWidth *= corrFactor;
         borderWidth = (int)(0.5+corrFactor*borderWidth);
         borderSmallWidth = (int)(0.5+corrFactor*borderSmallWidth);
@@ -147,5 +148,9 @@ public abstract class InterfaceElement {
 
     public void update() {
         return;
+    }
+
+    public static float getCorrFactor() {
+        return corrFactor;
     }
 }

@@ -140,7 +140,6 @@ public abstract class GameObject {
         int imageNr = 0;
         if (tmpX != 0 || tmpY != 0 || continueWalking()) {
             imageNr = (motionCounter/updateTime) + 1;
-            System.out.println("imageNr: " + imageNr);
         } else {
             System.out.println("Stop Animation");
         }

@@ -89,7 +89,8 @@ public class GameScene {
         {
             for (int iy = 0; iy < InterfaceElement.numTiles; iy++)
             {
-                canvas.drawBitmap(tiles[ix][iy].getBitmap(), ix* InterfaceElement.tileSize, iy* InterfaceElement.tileSize, stonedPaint);
+                tiles[ix][iy].draw(canvas, ix*InterfaceElement.tileSize, iy * InterfaceElement.tileSize, stonedPaint);
+                //canvas.drawBitmap(tiles[ix][iy].getBitmap(), ix* InterfaceElement.tileSize, iy* InterfaceElement.tileSize, stonedPaint);
                 if (isJumpTile(ix, iy) && !DoorTile.isDoorTile(tiles[ix][iy].getForegroundType()))
                     canvas.drawBitmap(jumpImage, ix* InterfaceElement.tileSize, iy* InterfaceElement.tileSize, stonedPaint);
             }

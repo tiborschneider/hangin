@@ -30,7 +30,7 @@ public class AnimatedTile extends InteractiveTile {
             numAnimations = 5;
             animationImages = new Bitmap[numAnimations];
             updateTime = 3;
-            fullImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.campfire_animation);
+            fullImage = imageHandler.getImage("campfire_animation");
         } else if (tileType.name().matches("WATER(.*)")) {
             numAnimations = 8;
             animationImages = new Bitmap[numAnimations];
@@ -38,7 +38,7 @@ public class AnimatedTile extends InteractiveTile {
             currentImage = randInt(0,7);
             offsetX = randInt(-5,5);
             offsetY = randInt(-5,5);
-            fullImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.water_animation);
+            fullImage = imageHandler.getImage("water_animation");
         } else {
             return;
         }

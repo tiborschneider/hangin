@@ -26,21 +26,21 @@ public class DoorTile extends InteractiveTile {
         if (foregroundType == TileForegroundType.HOUSE_OUTSIDE_DECO_DOOR_B) {
             animationImages = new Bitmap[numAnimations];
             walkable = true;
-            animationImages[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_outside_deco_door_b1);
-            animationImages[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_outside_deco_door_b2);
-            animationImages[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_outside_deco_door_b3);
-            animationImages[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_outside_deco_door_b4);
-            animationImages[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_outside_deco_door_b5);
-            animationImages[5] = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_outside_deco_door_b6);
+            animationImages[0] = imageHandler.getImage("house_outside_deco_door_b1");
+            animationImages[1] = imageHandler.getImage("house_outside_deco_door_b2");
+            animationImages[2] = imageHandler.getImage("house_outside_deco_door_b3");
+            animationImages[3] = imageHandler.getImage("house_outside_deco_door_b4");
+            animationImages[4] = imageHandler.getImage("house_outside_deco_door_b5");
+            animationImages[5] = imageHandler.getImage("house_outside_deco_door_b6");
         } else if (foregroundType == TileForegroundType.HOUSE_OUTSIDE_DECO_DOOR_T) {
             animationImages = new Bitmap[numAnimations];
             walkable = false;
-            animationImages[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_outside_deco_door_t1);
-            animationImages[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_outside_deco_door_t2);
-            animationImages[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_outside_deco_door_t3);
-            animationImages[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_outside_deco_door_t4);
-            animationImages[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_outside_deco_door_t5);
-            animationImages[5] = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_outside_deco_door_t6);
+            animationImages[0] = imageHandler.getImage("house_outside_deco_door_t1");
+            animationImages[1] = imageHandler.getImage("house_outside_deco_door_t2");
+            animationImages[2] = imageHandler.getImage("house_outside_deco_door_t3");
+            animationImages[3] = imageHandler.getImage("house_outside_deco_door_t4");
+            animationImages[4] = imageHandler.getImage("house_outside_deco_door_t5");
+            animationImages[5] = imageHandler.getImage("house_outside_deco_door_t6");
         }
     }
 
